@@ -75,4 +75,7 @@ dependencies {
     //Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1'
 
+    //Rich edit text
+    implementation 'com.github.jkennethcarino:RTextEditorView:0.1.1'
+
 }
