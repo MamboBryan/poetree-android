@@ -3,20 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_main"
-    app:startDestination="@id/mainFragment">
+    app:startDestination="@id/poemsFragment">
 
     <fragment
-        android:id="@+id/mainFragment"
-        android:name="com.mambo.poetree.ui.MainFragment"
+        android:id="@+id/poemsFragment"
+        android:name="com.mambo.poetree.ui.PoemsFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" >
+        tools:layout="@layout/fragment_poems" >
         <action
-            android:id="@+id/action_mainFragment_to_createFragment"
-            app:destination="@id/createFragment" />
+            android:id="@+id/action_poemsFragment_to_editFragment2"
+            app:destination="@id/editFragment" />
     </fragment>
     <fragment
-        android:id="@+id/createFragment"
-        android:name="com.mambo.poetree.CreateFragment"
-        android:label="fragment_create"
-        tools:layout="@layout/fragment_create" />
+        android:id="@+id/editFragment"
+        android:name="com.mambo.poetree.ui.edit.EditFragment"
+        android:label="Edit"
+        tools:layout="@layout/fragment_edit" >
+        <argument
+            android:name="poem"
+            app:argType="com.mambo.poetree.data.model.Poem"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 </navigation>

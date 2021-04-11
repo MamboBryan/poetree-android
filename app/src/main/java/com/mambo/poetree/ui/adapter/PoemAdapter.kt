@@ -2,14 +2,19 @@ package com.mambo.poetree.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mambo.poetree.data.model.Poem
 import com.mambo.poetree.databinding.ItemPoemBinding
 import com.mambo.poetree.utils.GradientUtils
+import org.ocpsoft.prettytime.PrettyTime
 
-class PoemAdapter : RecyclerView.Adapter<PoemAdapter.PoemViewHolder>() {
 
-    private val poems = ArrayList<Poem>()
+class PoemAdapter(
+    private val listener: OnPoemClickListener
+) : ListAdapter<Poem, PoemAdapter.PoemViewHolder>(POEM_COMPARATOR) {
+
     private val gradientUtils = GradientUtils()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PoemViewHolder {
@@ -19,27 +24,54 @@ class PoemAdapter : RecyclerView.Adapter<PoemAdapter.PoemViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: PoemViewHolder, position: Int) {
-        val currentItem = poems[position]
+        val currentItem = getItem(position)
         holder.bind(currentItem)
     }
 
-    override fun getItemCount(): Int {
-        return poems.size
-    }
+    companion object {
+        private val POEM_COMPARATOR =
+            object : DiffUtil.ItemCallback<Poem>() {
+                override fun areItemsTheSame(
+                    oldItem: Poem,
+                    newItem: Poem
+                ): Boolean {
+                    return oldItem.id == newItem.id
+                }
 
-    fun insert(poems: ArrayList<Poem>) {
-        this.poems.addAll(poems)
-        notifyDataSetChanged()
+                override fun areContentsTheSame(
+                    oldItem: Poem,
+                    newItem: Poem
+                ): Boolean {
+                    return oldItem == newItem
+                }
+            }
     }
 
     inner class PoemViewHolder(private val binding: ItemPoemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        private val prettyTime = PrettyTime()
+
+        init {
+
+            binding.root.setOnClickListener {
+
+                val position = adapterPosition
+
+                if (position != RecyclerView.NO_POSITION) {
+                    val poem = getItem(position)
+                    listener.onPoemClicked(poem)
+                }
+
+            }
+
+        }
+
         fun bind(poem: Poem) {
             binding.apply {
 
                 tvPoemUser.text = poem.user.username
-                tvPoemDate.text = "$adapterPosition days ago"
+                tvPoemDate.text = prettyTime.format(poem.date)
                 tvPoemTitle.text = poem.title
                 ivPoemImage.setImageDrawable(
                     gradientUtils.getGradientBackground(adapterPosition)
@@ -49,4 +81,9 @@ class PoemAdapter : RecyclerView.Adapter<PoemAdapter.PoemViewHolder>() {
         }
 
     }
+
+    interface OnPoemClickListener {
+        fun onPoemClicked(poem: Poem)
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.mambo.poetree
+package com.mambo.poetree.utils
 
 import android.content.Context
 import android.content.Context.CONNECTIVITY_SERVICE
@@ -8,6 +8,7 @@ import android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET
 import android.net.NetworkRequest
 import android.util.Log
 import androidx.lifecycle.LiveData
+import com.mambo.poetree.DoesNetworkHaveInternet
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

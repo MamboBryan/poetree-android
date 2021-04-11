@@ -6,11 +6,17 @@
         <item name="colorPrimaryVariant">@color/primary_700</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/secondary_300</item>
+        <item name="colorSecondary">@color/secondary_400</item>
         <item name="colorSecondaryVariant">@color/secondary_600</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="android:colorBackground">@color/color_background_light</item>
+        <item name="colorOnBackground">@color/color_on_background_light</item>
+        <item name="colorSurface">@color/color_surface_light</item>
+        <item name="colorOnSurface">@color/color_on_surface_light</item>
+        <item name="colorError">@color/error_light</item>
+        <item name="colorOnError">@color/white</item>
     </style>
 </resources>
