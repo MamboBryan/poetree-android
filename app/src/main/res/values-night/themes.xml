@@ -13,13 +13,13 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
 
         <!-- Customize your theme here. -->
-        <item name="android:colorBackground">@color/color_background_dark</item>
-        <item name="colorOnBackground">@color/color_on_background_dark</item>
+        <item name="android:colorBackground">@color/color_background</item>
+        <item name="colorOnBackground">@color/color_on_background</item>
 
-        <item name="colorSurface">@color/color_surface_dark</item>
-        <item name="colorOnSurface">@color/color_on_surface_dark</item>
+        <item name="colorSurface">@color/color_surface</item>
+        <item name="colorOnSurface">@color/color_on_surface</item>
 
-        <item name="colorError">@color/error_dark</item>
+        <item name="colorError">@color/error</item>
         <item name="colorOnError">@color/black</item>
     </style>
 </resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--DARK THEME COLORS-->
+    <color name="error">#e66666</color>
+    <color name="loading">#ffe666</color>
+    <color name="success">#93e75d</color>
+
+    <color name="color_background">#111624</color>
+    <color name="color_on_background">#FFFFFFFF</color>
+    <color name="color_surface">#11182C</color>
+    <color name="color_on_surface">#FFFFFFFF</color>
+</resources>

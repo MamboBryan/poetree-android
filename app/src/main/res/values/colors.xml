@@ -38,21 +38,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    //LIGHT THEME COLORS
-    <color name="error_light">#d91a1a</color>
-    <color name="processing_light">#e6c100</color>
-    <color name="success_light">#64dd17</color>
-    <color name="color_background_light">#fdfdff</color>
-    <color name="color_on_background_light">#000000</color>
-    <color name="color_surface_light">#ffffff</color>
-    <color name="color_on_surface_light">#000000</color>
+    <!--LIGHT THEME COLORS-->
+    <color name="error">#d91a1a</color>
+    <color name="loading">#e6c100</color>
+    <color name="success">#64dd17</color>
+    <color name="color_background">#fdfdff</color>
+    <color name="color_on_background">#000000</color>
+    <color name="color_surface">#ffffff</color>
+    <color name="color_on_surface">#000000</color>
 
-    //DARK THEME COLORS
-    <color name="error_dark">#e66666</color>
-    <color name="processing_dark">#ffe666</color>
-    <color name="success_dark">#93e75d</color>
-    <color name="color_background_dark">#111624</color>
-    <color name="color_on_background_dark">#FFFFFFFF</color>
-    <color name="color_surface_dark">#11182C</color>
-    <color name="color_on_surface_dark">#FFFFFFFF</color>
 </resources>
