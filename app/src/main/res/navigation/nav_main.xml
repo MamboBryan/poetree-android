@@ -7,12 +7,15 @@
 
     <fragment
         android:id="@+id/poemsFragment"
-        android:name="com.mambo.poetree.ui.PoemsFragment"
+        android:name="com.mambo.poetree.ui.poems.PoemsFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_poems" >
         <action
             android:id="@+id/action_poemsFragment_to_editFragment2"
             app:destination="@id/editFragment" />
+        <action
+            android:id="@+id/action_poemsFragment_to_settingFragment"
+            app:destination="@id/settingFragment" />
     </fragment>
     <fragment
         android:id="@+id/editFragment"
@@ -25,4 +28,9 @@
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.mambo.poetree.ui.settings.SettingFragment"
+        android:label="@string/settings"
+        tools:layout="@layout/fragment_setting" />
 </navigation>

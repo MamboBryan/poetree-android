@@ -3,7 +3,7 @@
     <style name="Theme.Poetree" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary_500</item>
-        <item name="colorPrimaryVariant">@color/primary_700</item>
+        <item name="colorPrimaryVariant">@color/primary_500</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/secondary_400</item>
@@ -18,5 +18,9 @@
         <item name="colorOnSurface">@color/color_on_surface</item>
         <item name="colorError">@color/error</item>
         <item name="colorOnError">@color/white</item>
+    </style>
+
+    <style name="Theme.SplashTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 </resources>

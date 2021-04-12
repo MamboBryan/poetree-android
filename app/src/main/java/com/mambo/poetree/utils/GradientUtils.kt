@@ -5,6 +5,7 @@ import android.graphics.drawable.GradientDrawable
 import com.mambo.poetree.data.model.GradientColor
 
 class GradientUtils {
+
     private val gradients: MutableList<GradientColor> = ArrayList()
 
     init {

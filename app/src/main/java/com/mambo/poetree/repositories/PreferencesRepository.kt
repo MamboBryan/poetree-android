@@ -1,11 +1,12 @@
 package com.mambo.poetree.repositories
 
 import android.content.Context
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
@@ -20,14 +21,19 @@ class PreferencesRepository @Inject constructor(@ApplicationContext context: Con
     private val dataStore = context.dataStore
 
     private object PreferencesKeys {
-        val DARK_MODE = intPreferencesKey("dark_mode")
+        val DARK_MODE = booleanPreferencesKey("dark_mode")
     }
 
-    suspend fun updateDarkMode(darkMode: Int) {
+    suspend fun updateDarkMode(isDarkModeEnabled: Boolean) {
         dataStore.edit { preferences ->
-            preferences[PreferencesKeys.DARK_MODE] = darkMode
+            preferences[PreferencesKeys.DARK_MODE] = isDarkModeEnabled
         }
     }
+
+    val darkModeFlow: Flow<Boolean> =
+        dataStore.data.map { preferences ->
+            preferences[PreferencesKeys.DARK_MODE] ?: false
+        }
 
     val preferencesFlow = dataStore.data
         .catch { exception ->

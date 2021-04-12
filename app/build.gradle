@@ -97,4 +97,11 @@ dependencies {
     //Pretty time
     implementation 'org.ocpsoft.prettytime:prettytime:4.0.4.Final'
 
+    //binding delegate
+    def delegate_version = '1.0.0'
+    implementation "com.github.Zhuinden:fragmentviewbindingdelegate-kt:$delegate_version"
+
+    //iOS style switch
+    implementation 'com.github.zcweng:switch-button:0.0.3@aar'
+
 }

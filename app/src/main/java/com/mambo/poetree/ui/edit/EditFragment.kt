@@ -18,6 +18,7 @@ import com.mambo.poetree.databinding.FragmentEditBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
+
 @AndroidEntryPoint
 class EditFragment : Fragment() {
 
@@ -69,6 +70,8 @@ class EditFragment : Fragment() {
                 viewModel.poemContent = content.toString()
             }
 
+            setUpEmotionCheck()
+
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
@@ -88,5 +91,9 @@ class EditFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun setUpEmotionCheck() {
+
     }
 }

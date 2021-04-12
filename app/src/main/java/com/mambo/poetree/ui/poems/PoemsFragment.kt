@@ -1,4 +1,4 @@
-package com.mambo.poetree.ui
+package com.mambo.poetree.ui.poems
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,7 +18,6 @@ import com.mambo.poetree.R
 import com.mambo.poetree.data.model.Poem
 import com.mambo.poetree.databinding.FragmentPoemsBinding
 import com.mambo.poetree.ui.adapter.PoemAdapter
-import com.mambo.poetree.ui.poems.PoemsViewModel
 import com.mambo.poetree.utils.onQueryTextChanged
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
