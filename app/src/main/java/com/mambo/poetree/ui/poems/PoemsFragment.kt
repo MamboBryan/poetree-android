@@ -10,6 +10,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.onNavDestinationSelected
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -46,6 +47,10 @@ class PoemsFragment : Fragment(), PoemAdapter.OnPoemClickListener {
         binding.apply {
 
             toolbarPoems.inflateMenu(R.menu.menu_fragment_poems)
+            toolbarPoems.setOnMenuItemClickListener { item ->
+                item.onNavDestinationSelected(findNavController()) ||
+                        super.onOptionsItemSelected(item)
+            }
             val menu = toolbarPoems.menu
 
             val searchItem = menu.findItem(R.id.action_search)
