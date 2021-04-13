@@ -13,6 +13,8 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
 
         <!-- Customize your theme here. -->
+        <item name="fontFamily">@font/google_sans</item>
+
         <item name="android:colorBackground">@color/color_background</item>
         <item name="colorOnBackground">@color/color_on_background</item>
 
