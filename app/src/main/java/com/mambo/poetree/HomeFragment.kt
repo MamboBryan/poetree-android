@@ -1,69 +1,55 @@
-package com.mambo.poetree.ui.poems
+package com.mambo.poetree
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.mambo.poetree.R
 import com.mambo.poetree.data.model.Poem
-import com.mambo.poetree.databinding.FragmentPoemsBinding
+import com.mambo.poetree.databinding.FragmentHomeBinding
 import com.mambo.poetree.ui.adapter.PoemAdapter
-import com.mambo.poetree.utils.onQueryTextChanged
+import com.mambo.poetree.ui.poems.PoemsFragmentDirections
+import com.mambo.poetree.ui.poems.PoemsViewModel
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class PoemsFragment : Fragment(), PoemAdapter.OnPoemClickListener {
+class HomeFragment : Fragment(R.layout.fragment_home), PoemAdapter.OnPoemClickListener {
 
-    private var _binding: FragmentPoemsBinding? = null
-    private val binding get() = _binding!!
-
+    private val binding by viewBinding(FragmentHomeBinding::bind)
     private val viewModel by viewModels<PoemsViewModel>()
     private val adapter = PoemAdapter(this)
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        _binding = FragmentPoemsBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
 
-            toolbarPoems.inflateMenu(R.menu.menu_fragment_poems)
-            toolbarPoems.setOnMenuItemClickListener { item ->
+            toolbar.setOnMenuItemClickListener { item ->
                 item.onNavDestinationSelected(findNavController()) ||
                         super.onOptionsItemSelected(item)
             }
-            val menu = toolbarPoems.menu
 
+            NavigationUI.setupWithNavController(toolbar, findNavController())
+//            val menu = toolbarPoems.menu
+//
 //            val searchItem = menu.findItem(R.id.action_search)
 //            val searchView = searchItem.actionView as SearchView
-
+//
 //            searchView.onQueryTextChanged {
 //                viewModel.updateQuery(it)
 //            }
 
             initializeRecyclerview()
-
-            btnAdd.setOnClickListener {
-                viewModel.onCreatePoemClicked()
-            }
 
         }
 
@@ -72,8 +58,23 @@ class PoemsFragment : Fragment(), PoemAdapter.OnPoemClickListener {
             viewModel.onCreateOrUpdateResult(result)
         }
 
-        viewModel.poems.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+        viewModel.poems.observe(viewLifecycleOwner) { poems ->
+            binding.apply {
+
+                layoutHomeRecycler.stateLoading.isVisible = false
+                layoutHomeRecycler.stateEmpty.isVisible = false
+                layoutHomeRecycler.stateError.isVisible = false
+                layoutHomeRecycler.stateContent.isVisible = false
+
+                when {
+                    poems.isEmpty() -> layoutHomeRecycler.stateEmpty.isVisible = true
+                    poems.isNotEmpty() -> layoutHomeRecycler.stateContent.isVisible = true
+                    poems == null -> layoutHomeRecycler.stateError.isVisible = true
+                }
+
+            }
+
+            adapter.submitList(poems)
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
@@ -111,8 +112,8 @@ class PoemsFragment : Fragment(), PoemAdapter.OnPoemClickListener {
 
     private fun initializeRecyclerview() {
         binding.apply {
-            rvMain.setHasFixedSize(true)
-            rvMain.adapter = adapter
+            layoutHomeRecycler.recyclerView.setHasFixedSize(true)
+            layoutHomeRecycler.recyclerView.adapter = adapter
 
             ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
                 0,
@@ -130,7 +131,7 @@ class PoemsFragment : Fragment(), PoemAdapter.OnPoemClickListener {
                     val poem = adapter.currentList[viewHolder.adapterPosition]
                     viewModel.onPoemSwiped(poem)
                 }
-            }).attachToRecyclerView(rvMain)
+            }).attachToRecyclerView(layoutHomeRecycler.recyclerView)
         }
 
     }
@@ -138,5 +139,4 @@ class PoemsFragment : Fragment(), PoemAdapter.OnPoemClickListener {
     override fun onPoemClicked(poem: Poem) {
         viewModel.onPoemSelected(poem)
     }
-
 }
