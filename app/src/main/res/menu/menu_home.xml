@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/editFragment"
-        android:icon="@drawable/ic_baseline_add_circle_outline_24"
+        android:icon="@drawable/ic_baseline_create_24"
         android:title="Create"
         app:showAsAction="always" />
 </menu>

@@ -23,6 +23,24 @@ class GradientUtils {
 
     }
 
+    companion object{
+
+        fun getGradientBackground(): GradientDrawable {
+
+            val gd = GradientDrawable(
+                GradientDrawable.Orientation.BL_TR,
+                intArrayOf(
+                    Color.parseColor("#4facfe"),
+                    Color.parseColor("#00f2fe")
+                )
+            )
+
+            gd.cornerRadius = 0f
+
+            return gd
+        }
+    }
+
     fun getGradientBackground(position: Int): GradientDrawable {
 
         val index = position % 10

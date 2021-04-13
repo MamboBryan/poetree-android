@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import com.github.onecode369.wysiwyg.WYSIWYG
 import com.google.android.material.snackbar.Snackbar
 import com.mambo.poetree.R
 import com.mambo.poetree.databinding.FragmentEditBinding
@@ -39,16 +40,26 @@ class EditFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        NavigationUI.setupWithNavController(binding.toolbarCreate, findNavController())
-
         binding.apply {
 
-            toolbarCreate.setOnMenuItemClickListener { item ->
+            NavigationUI.setupWithNavController(toolbarEdit, findNavController())
+            toolbarEdit.setOnMenuItemClickListener { item ->
 
                 when (item.itemId) {
 
                     R.id.menu_item_save -> {
                         viewModel.onSave()
+                        true
+                    }
+
+                    R.id.menu_item_preview -> {
+                        openPreviewBottomSheet()
+                        true
+                    }
+
+                    R.id.menu_item_stash -> {
+                        Snackbar.make(requireView(), viewModel.poemContent, Snackbar.LENGTH_LONG)
+                            .show()
                         true
                     }
 
@@ -65,12 +76,9 @@ class EditFragment : Fragment() {
                 viewModel.poemTitle = title.toString()
             }
 
-            edtContent.setText(viewModel.poemContent)
-            edtContent.addTextChangedListener { content ->
-                viewModel.poemContent = content.toString()
-            }
-
             setUpEmotionCheck()
+
+            setUpWYSIWYGWebView()
 
         }
 
@@ -93,7 +101,66 @@ class EditFragment : Fragment() {
         }
     }
 
+    private fun setUpWYSIWYGWebView() {
+
+        binding.apply {
+
+            val wysiwygEditor = editor
+
+            wysiwygEditor.html = (viewModel.poemContent)
+
+//            wysiwygEditor.setEditorBackgroundColor(R.color.black)
+//            wysiwygEditor.setTextColor(R.color.white)
+//            wysiwygEditor.setEditorFontColor(R.color.color_on_background)
+//            wysiwygEditor.setTextBackgroundColor(R.color.color_on_background)
+
+            wysiwygEditor.setEditorHeight(200)
+            wysiwygEditor.setEditorFontSize(16)
+            wysiwygEditor.setPadding(16, 16, 16, 16)
+
+            wysiwygEditor.setPlaceholder("Insert your notes here...")
+
+            actionUndo.setOnClickListener { wysiwygEditor.undo() }
+
+            actionRedo.setOnClickListener { wysiwygEditor.redo() }
+
+            actionBold.setOnClickListener { wysiwygEditor.setBold() }
+
+            actionItalic.setOnClickListener { wysiwygEditor.setItalic() }
+
+            actionUnderline.setOnClickListener { wysiwygEditor.setUnderline() }
+
+            actionIndent.setOnClickListener { wysiwygEditor.setIndent() }
+
+            actionOutdent.setOnClickListener { wysiwygEditor.setOutdent() }
+
+            actionAlignCenter.setOnClickListener { wysiwygEditor.setAlignCenter() }
+            actionAlignLeft.setOnClickListener { wysiwygEditor.setAlignLeft() }
+            actionAlignRight.setOnClickListener { wysiwygEditor.setAlignRight() }
+
+            actionAlignJustify.setOnClickListener { wysiwygEditor.setAlignJustifyFull() }
+
+            actionBlockquote.setOnClickListener { wysiwygEditor.setBlockquote() }
+
+            actionHeading.setOnClickListener { wysiwygEditor.setHeading(4) }
+
+            editor.setOnTextChangeListener(object : WYSIWYG.OnTextChangeListener {
+                override fun onTextChange(text: String?) {
+                    viewModel.poemContent = text ?: ""
+                }
+
+            })
+
+        }
+
+    }
+
     private fun setUpEmotionCheck() {
 
+    }
+
+    private fun openPreviewBottomSheet() {
+        val bottomSheet = PoemPreviewFragment()
+        bottomSheet.show(childFragmentManager, "BottomSheet")
     }
 }

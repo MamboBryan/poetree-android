@@ -47,4 +47,9 @@
     <color name="color_surface">#ffffff</color>
     <color name="color_on_surface">#000000</color>
 
+    <!--    COLORS FOR NATIVE WYSIWYG-->
+    <color name="colorPrimary">#073bd6</color>
+    <color name="colorPrimaryDark">#042177</color>
+    <color name="colorAccent">#f75c03</color>
+
 </resources>

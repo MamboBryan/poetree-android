@@ -92,7 +92,13 @@ dependencies {
     implementation "com.google.code.gson:gson:$gson_version"
 
     //Rich edit text
-    implementation 'com.github.jkennethcarino:RTextEditorView:0.1.1'
+    def wysiwyg_version = "4.0"
+    implementation "com.github.onecode369:WYSIWYG:$wysiwyg_version"
+    implementation 'com.github.bxute:MarkDEditor:v0.16'
+    implementation 'in.nashapp.androidsummernote:androidsummernote:1.0.5'
+
+    implementation 'com.github.irshulx:laser-native-editor:3.0.3'
+    implementation 'jp.wasabeef:richeditor-android:2.0.0'
 
     //Pretty time
     implementation 'org.ocpsoft.prettytime:prettytime:4.0.4.Final'
@@ -103,5 +109,8 @@ dependencies {
 
     //iOS style switch
     implementation 'com.github.zcweng:switch-button:0.0.3@aar'
+
+    //circular image view
+    implementation 'com.mikhaellopez:circularimageview:4.2.0'
 
 }

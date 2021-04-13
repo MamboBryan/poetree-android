@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/menu_item_save"
-        android:icon="@drawable/ic_baseline_save_24"
+        android:icon="@drawable/ic_baseline_save_alt_24"
         android:title="save"
+        android:visible="true"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_item_preview"
+        android:icon="@drawable/ic_outline_remove_red_eye_24"
+        android:title="Preview"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_item_stash"
+        android:icon="@drawable/ic_outline_watch_later_24"
+        android:title="Stash"
         android:visible="true"
         app:showAsAction="ifRoom" />
 </menu>
