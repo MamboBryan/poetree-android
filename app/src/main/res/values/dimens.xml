@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="fragment_animation_duration">200</dimen>
+    <dimen name="fifty_four_dips">54dp</dimen>
+</resources>

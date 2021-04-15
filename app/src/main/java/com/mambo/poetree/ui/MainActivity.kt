@@ -47,13 +47,16 @@ class MainActivity : AppCompatActivity() {
         val destinationChangedListener =
             NavController.OnDestinationChangedListener { _: NavController?, destination: NavDestination, _: Bundle? ->
                 when (destination.id) {
-                    R.id.editFragment,
-                    R.id.settingFragment -> {
-                        hideBottomNavigation()
+                    R.id.homeFragment,
+                    R.id.libraryFragment,
+                    R.id.accountFragment,
+                    R.id.discoverFragment,
+                    -> {
+                        showBottomNavigation()
                     }
 
                     else -> {
-                        showBottomNavigation()
+                        hideBottomNavigation()
                     }
                 }
             }

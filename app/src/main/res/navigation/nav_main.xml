@@ -37,7 +37,11 @@
         android:id="@+id/homeFragment"
         android:name="com.mambo.poetree.HomeFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_poemFragment"
+            app:destination="@id/poemFragment" />
+    </fragment>
     <fragment
         android:id="@+id/discoverFragment"
         android:name="com.mambo.poetree.DiscoverFragment"
@@ -53,4 +57,12 @@
         android:name="com.mambo.poetree.AccountFragment"
         android:label="fragment_account"
         tools:layout="@layout/fragment_account" />
+    <fragment
+        android:id="@+id/poemFragment"
+        android:name="com.mambo.poetree.ui.poem.PoemFragment"
+        android:label="PoemFragment" >
+        <argument
+            android:name="poem"
+            app:argType="com.mambo.poetree.data.model.Poem" />
+    </fragment>
 </navigation>

@@ -101,7 +101,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), PoemAdapter.OnPoemClickLi
 
                     is PoemsViewModel.PoemsEvent.NavigateToEditPoem -> {
                         val action =
-                            PoemsFragmentDirections.actionPoemsFragmentToEditFragment2(event.poem)
+                            HomeFragmentDirections.actionHomeFragmentToPoemFragment(event.poem)
                         findNavController().navigate(action)
                     }
                 }
