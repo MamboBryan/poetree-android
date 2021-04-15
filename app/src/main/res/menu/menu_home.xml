@@ -6,4 +6,9 @@
         android:icon="@drawable/ic_baseline_create_24"
         android:title="Create"
         app:showAsAction="always" />
+
+    <item
+        android:icon="@drawable/ic_baseline_notifications_none_24"
+        android:title="Create"
+        app:showAsAction="always" />
 </menu>

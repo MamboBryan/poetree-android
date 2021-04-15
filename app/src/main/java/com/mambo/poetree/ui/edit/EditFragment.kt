@@ -109,11 +109,6 @@ class EditFragment : Fragment() {
 
             wysiwygEditor.html = (viewModel.poemContent)
 
-//            wysiwygEditor.setEditorBackgroundColor(R.color.black)
-//            wysiwygEditor.setTextColor(R.color.white)
-//            wysiwygEditor.setEditorFontColor(R.color.color_on_background)
-//            wysiwygEditor.setTextBackgroundColor(R.color.color_on_background)
-
             wysiwygEditor.setEditorHeight(200)
             wysiwygEditor.setEditorFontSize(16)
             wysiwygEditor.setPadding(16, 16, 16, 16)

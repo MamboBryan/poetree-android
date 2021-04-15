@@ -11,7 +11,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mambo.poetree.databinding.FragmentPoemPreviewBinding
-import com.mambo.poetree.utils.GradientUtils
 import dagger.hilt.android.AndroidEntryPoint
 import org.ocpsoft.prettytime.PrettyTime
 import java.util.*
@@ -41,43 +40,29 @@ class PoemPreviewFragment : BottomSheetDialogFragment() {
 
         (requireDialog() as BottomSheetDialog).dismissWithAnimation = true
 
-        binding.apply {
-
-            ivPreviewBg.background = GradientUtils.getGradientBackground()
-
-        }
-
-        setUpPoemTitle()
-        setUpPoemBody()
+        setUpPoemPreview()
         setUpPoemUser()
     }
 
-    private fun setUpPoemTitle() {
-        binding.apply {
-            val wysiwygEditor = editorTitle
-
-//            wysiwygEditor.setEditorHeight(200)
-//            wysiwygEditor.setEditorFontSize(16)
-            wysiwygEditor.setPadding(16, 16, 16, 0)
-
-            wysiwygEditor.html = ("<h2><i><b> ${viewModel.poemTitle} </b></i></h2>")
-            wysiwygEditor.setCode()
-        }
-    }
-
-    private fun setUpPoemBody() {
+    private fun setUpPoemPreview() {
         binding.apply {
 
             val wysiwygEditor = editorContent
 
+            wysiwygEditor.setInputEnabled(false)
+
+            wysiwygEditor.setPadding(16, 32, 32, 32)
+
+            val html =
+                """
+                    <h2><i><b> ${viewModel.poemTitle} </b></i></h2>
+                    <i>${viewModel.poemContent} </i>
+                   
+                """.trimIndent()
+
+            wysiwygEditor.html = html
             wysiwygEditor.setCode()
 
-//            wysiwygEditor.setEditorHeight(200)
-//            wysiwygEditor.setEditorFontSize(16)
-            wysiwygEditor.setPadding(16, 16, 16, 16)
-
-            wysiwygEditor.html = "<i>${viewModel.poemContent}</i>"
-            wysiwygEditor.setCode()
         }
     }
 
@@ -86,7 +71,6 @@ class PoemPreviewFragment : BottomSheetDialogFragment() {
 
             val prettyTime = PrettyTime()
 
-            ivPreviewUser.background = GradientUtils.getGradientBackground()
             tvPreviewDate.text = prettyTime.format(Date())
 
         }

@@ -94,8 +94,6 @@ dependencies {
     //Rich edit text
     def wysiwyg_version = "4.0"
     implementation "com.github.onecode369:WYSIWYG:$wysiwyg_version"
-    implementation 'com.github.bxute:MarkDEditor:v0.16'
-    implementation 'in.nashapp.androidsummernote:androidsummernote:1.0.5'
 
     implementation 'com.github.irshulx:laser-native-editor:3.0.3'
     implementation 'jp.wasabeef:richeditor-android:2.0.0'

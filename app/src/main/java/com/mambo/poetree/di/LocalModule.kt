@@ -2,7 +2,6 @@ package com.mambo.poetree.di
 
 import android.app.Application
 import androidx.room.Room
-import androidx.room.RoomDatabase
 import com.mambo.poetree.data.local.AppDatabase
 import dagger.Module
 import dagger.Provides
@@ -27,5 +26,8 @@ object LocalModule {
 
     @Provides
     fun providePoemsDao(database: AppDatabase) = database.poemsDao()
+
+    @Provides
+    fun provideEmotionsDao(database: AppDatabase) = database.emotionsDao()
 
 }
