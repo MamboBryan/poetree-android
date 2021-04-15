@@ -30,4 +30,7 @@ object LocalModule {
     @Provides
     fun provideEmotionsDao(database: AppDatabase) = database.emotionsDao()
 
+    @Provides
+    fun provideTopicsDao(database: AppDatabase) = database.topicsDao()
+
 }

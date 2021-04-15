@@ -12,7 +12,7 @@ interface PoemsDao {
     suspend fun insertAll(poems: List<Poem>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(poems: Poem)
+    suspend fun insert(poem: Poem)
 
     @Update
     suspend fun update(poem: Poem)

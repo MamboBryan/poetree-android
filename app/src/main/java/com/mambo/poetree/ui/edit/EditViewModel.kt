@@ -57,13 +57,12 @@ class EditViewModel @Inject constructor(
         if (poem != null) {
             val updatedPoem = poem.copy(title = poemTitle, content = poemContent)
             updatePoem(updatedPoem)
-        } else {
 
+        } else {
             val newPoem = Poem(title = poemTitle, content = poemContent, user = getUser())
             createPoem(newPoem)
 
         }
-
     }
 
     private fun showInvalidInputMessage(message: String) {
@@ -97,6 +96,7 @@ class EditViewModel @Inject constructor(
     sealed class EditPoemEvent {
         data class ShowInvalidInputMessage(val message: String) : EditPoemEvent()
         data class NavigateBackWithResult(val result: Int) : EditPoemEvent()
+        data class NavigateToComposition(val poem: Poem) : EditPoemEvent()
     }
 
 }

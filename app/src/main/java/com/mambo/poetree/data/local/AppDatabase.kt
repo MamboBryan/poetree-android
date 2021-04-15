@@ -9,6 +9,7 @@ import com.mambo.poetree.data.model.Poem
 import com.mambo.poetree.data.model.User
 import com.mambo.poetree.di.ApplicationScope
 import com.mambo.poetree.utils.EmotionsUtils
+import com.mambo.poetree.utils.TopicUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,6 +21,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun poemsDao(): PoemsDao
     abstract fun emotionsDao(): EmotionsDao
+    abstract fun topicsDao(): TopicsDao
 
     companion object {
         const val DATABASE_NAME = "app_database"
@@ -35,10 +37,12 @@ abstract class AppDatabase : RoomDatabase() {
 
             val poemDao = database.get().poemsDao()
             val emotionsDao = database.get().emotionsDao()
+            val topicsDao = database.get().topicsDao()
 
             applicationScope.launch {
 
                 val emotionUtils = EmotionsUtils()
+                val topicUtils = TopicUtils()
 
                 poemDao.insert(
                     Poem(
@@ -66,7 +70,9 @@ abstract class AppDatabase : RoomDatabase() {
                     )
                 )
 
+                //prepopulate topics and emotions in DB
                 emotionsDao.insertAll(emotionUtils.getEmotions())
+                topicsDao.insertAll(topicUtils.getTopics())
 
             }
         }

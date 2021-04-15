@@ -13,6 +13,8 @@ data class Poem(
     val id: Int = 0,
     val title: String,
     val content: String,
+    val emotion: String = "",
+    val topic: String = "",
     val date: Date = Date(),
     val user: User
 ) : Parcelable {

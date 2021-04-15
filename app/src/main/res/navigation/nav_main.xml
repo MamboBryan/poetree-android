@@ -20,13 +20,16 @@
     <fragment
         android:id="@+id/editFragment"
         android:name="com.mambo.poetree.ui.edit.EditFragment"
-        android:label="Edit"
+        android:label="Compose"
         tools:layout="@layout/fragment_edit">
         <argument
             android:name="poem"
             android:defaultValue="@null"
             app:argType="com.mambo.poetree.data.model.Poem"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_editFragment_to_composeFragment"
+            app:destination="@id/composeFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingFragment"
@@ -61,6 +64,14 @@
         android:id="@+id/poemFragment"
         android:name="com.mambo.poetree.ui.poem.PoemFragment"
         android:label="PoemFragment" >
+        <argument
+            android:name="poem"
+            app:argType="com.mambo.poetree.data.model.Poem" />
+    </fragment>
+    <fragment
+        android:id="@+id/composeFragment"
+        android:name="com.mambo.poetree.ui.compose.ComposeFragment"
+        android:label="ComposeFragment" >
         <argument
             android:name="poem"
             app:argType="com.mambo.poetree.data.model.Poem" />
