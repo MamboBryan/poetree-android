@@ -3,7 +3,7 @@
     <style name="Theme.Poetree" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary_300</item>
-        <item name="colorPrimaryVariant">@color/color_surface</item>
+        <item name="colorPrimaryVariant">@color/color_background</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/secondary_400</item>

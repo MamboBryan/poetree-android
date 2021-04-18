@@ -10,6 +10,14 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/menu_item_edit"
+        android:icon="@drawable/ic_baseline_create_24"
+        android:title="Edit"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+
+
+    <item
         android:id="@+id/menu_item_preview"
         android:icon="@drawable/ic_outline_remove_red_eye_24"
         android:title="Preview"

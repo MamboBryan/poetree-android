@@ -5,17 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
-import com.github.onecode369.wysiwyg.WYSIWYG
 import com.google.android.material.snackbar.Snackbar
 import com.mambo.poetree.R
 import com.mambo.poetree.databinding.FragmentEditBinding
+import com.mambo.poetree.ui.compose.ViewPagerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -52,8 +51,13 @@ class EditFragment : Fragment() {
                         true
                     }
 
+                    R.id.menu_item_edit -> {
+                        viewModel.onEditClicked()
+                        true
+                    }
+
                     R.id.menu_item_preview -> {
-                        openPreviewBottomSheet()
+                        viewModel.onPreviewClicked()
                         true
                     }
 
@@ -71,16 +75,9 @@ class EditFragment : Fragment() {
 
             }
 
-            edtTitle.setText(viewModel.poemTitle)
-            edtTitle.addTextChangedListener { title ->
-                viewModel.poemTitle = title.toString()
-            }
-
-            setUpEmotionCheck()
-
-            setUpWYSIWYGWebView()
-
         }
+
+        setUpViewPager()
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.editPoemEvent.collect { event ->
@@ -96,66 +93,60 @@ class EditFragment : Fragment() {
                     is EditViewModel.EditPoemEvent.ShowInvalidInputMessage -> {
                         Snackbar.make(requireView(), event.message, Snackbar.LENGTH_LONG).show()
                     }
+                    EditViewModel.EditPoemEvent.NavigateToPreview -> {
+                        showPreview()
+                    }
+
+                    EditViewModel.EditPoemEvent.NavigateToEditView -> {
+                        showEditView()
+                    }
                 }
             }
         }
     }
 
-    private fun setUpWYSIWYGWebView() {
+    private fun showEditView() {
+        binding.apply {
+            viewPagerEdit.setCurrentItem(0, true)
+        }
+
+        updateMenu()
+    }
+
+    private fun showPreview() {
 
         binding.apply {
+            viewPagerEdit.setCurrentItem(1, true)
+        }
 
-            val wysiwygEditor = editor
+        updateMenu()
+    }
 
-            wysiwygEditor.html = (viewModel.poemContent)
+    private fun updateMenu() {
+        binding.apply {
 
-            wysiwygEditor.setEditorHeight(200)
-            wysiwygEditor.setEditorFontSize(16)
-            wysiwygEditor.setPadding(16, 16, 16, 16)
+            val menu = toolbarEdit.menu
+            val position = viewPagerEdit.currentItem
 
-            wysiwygEditor.setPlaceholder("Insert your notes here...")
+            val previewAction = menu.findItem(R.id.menu_item_preview)
+            val editAction = menu.findItem(R.id.menu_item_edit)
 
-            actionUndo.setOnClickListener { wysiwygEditor.undo() }
+            editAction.isVisible = position == 1
+            previewAction.isVisible = position != 1
 
-            actionRedo.setOnClickListener { wysiwygEditor.redo() }
+        }
+    }
 
-            actionBold.setOnClickListener { wysiwygEditor.setBold() }
+    private fun setUpViewPager() {
 
-            actionItalic.setOnClickListener { wysiwygEditor.setItalic() }
+        val fragments = arrayListOf(WriteFragment(), PreviewFragment())
+        val adapter = ViewPagerAdapter(fragments, childFragmentManager, lifecycle)
 
-            actionUnderline.setOnClickListener { wysiwygEditor.setUnderline() }
-
-            actionIndent.setOnClickListener { wysiwygEditor.setIndent() }
-
-            actionOutdent.setOnClickListener { wysiwygEditor.setOutdent() }
-
-            actionAlignCenter.setOnClickListener { wysiwygEditor.setAlignCenter() }
-            actionAlignLeft.setOnClickListener { wysiwygEditor.setAlignLeft() }
-            actionAlignRight.setOnClickListener { wysiwygEditor.setAlignRight() }
-
-            actionAlignJustify.setOnClickListener { wysiwygEditor.setAlignJustifyFull() }
-
-            actionBlockquote.setOnClickListener { wysiwygEditor.setBlockquote() }
-
-            actionHeading.setOnClickListener { wysiwygEditor.setHeading(4) }
-
-            editor.setOnTextChangeListener(object : WYSIWYG.OnTextChangeListener {
-                override fun onTextChange(text: String?) {
-                    viewModel.poemContent = text ?: ""
-                }
-
-            })
-
+        binding.apply {
+            viewPagerEdit.isUserInputEnabled = false
+            viewPagerEdit.adapter = adapter
         }
 
     }
 
-    private fun setUpEmotionCheck() {
-
-    }
-
-    private fun openPreviewBottomSheet() {
-        val bottomSheet = PoemPreviewFragment()
-        bottomSheet.show(childFragmentManager, "BottomSheet")
-    }
 }

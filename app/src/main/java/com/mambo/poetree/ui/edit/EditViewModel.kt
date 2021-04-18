@@ -65,6 +65,23 @@ class EditViewModel @Inject constructor(
         }
     }
 
+    fun onPreviewClicked() {
+        viewModelScope.launch {
+            _editPoemEventChannel.send(EditPoemEvent.NavigateToPreview)
+        }
+    }
+
+    fun onEditClicked() {
+        viewModelScope.launch {
+            _editPoemEventChannel.send(EditPoemEvent.NavigateToEditView)
+        }
+    }
+
+    fun onSaveForLaterClicked() {
+
+    }
+
+
     private fun showInvalidInputMessage(message: String) {
         viewModelScope.launch {
             _editPoemEventChannel.send(EditPoemEvent.ShowInvalidInputMessage(message))
@@ -93,10 +110,23 @@ class EditViewModel @Inject constructor(
         }
     }
 
+    private fun stashPoem(poem: Poem) {
+        viewModelScope.launch {
+            poemsDao.insert(poem)
+            _editPoemEventChannel.send(
+                EditPoemEvent.NavigateBackWithResult(
+                    RESULT_CREATE_OK
+                )
+            )
+        }
+    }
+
+
     sealed class EditPoemEvent {
         data class ShowInvalidInputMessage(val message: String) : EditPoemEvent()
         data class NavigateBackWithResult(val result: Int) : EditPoemEvent()
-        data class NavigateToComposition(val poem: Poem) : EditPoemEvent()
+        object NavigateToPreview : EditPoemEvent()
+        object NavigateToEditView : EditPoemEvent()
     }
 
 }

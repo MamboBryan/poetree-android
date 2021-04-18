@@ -50,7 +50,7 @@ class ComposeFragment : Fragment(R.layout.fragment_choice_parent) {
     private fun setUpViewPager() {
 
         val fragments = arrayListOf(ChoiceEmotionFragment(), ChoiceTopicFragment())
-        val adapter = ChoiceAdapter(fragments, childFragmentManager, lifecycle)
+        val adapter = ViewPagerAdapter(fragments, childFragmentManager, lifecycle)
 
         binding.apply {
             viewPagerChoice.isUserInputEnabled = false
