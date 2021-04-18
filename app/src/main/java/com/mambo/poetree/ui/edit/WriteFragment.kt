@@ -44,7 +44,7 @@ class WriteFragment : Fragment(R.layout.fragment_write) {
             wysiwygEditor.setEditorFontSize(16)
             wysiwygEditor.setPadding(16, 16, 16, 16)
 
-            wysiwygEditor.setPlaceholder("Insert your notes here...")
+            wysiwygEditor.setPlaceholder("Pen down art here...")
 
             actionUndo.setOnClickListener { wysiwygEditor.undo() }
 

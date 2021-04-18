@@ -22,6 +22,6 @@
     </style>
 
     <style name="Theme.SplashTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="android:windowBackground">@drawable/splash_screen</item>
+        <item name="android:windowBackground">@drawable/ic_splash_light</item>
     </style>
 </resources>
