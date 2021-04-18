@@ -1,4 +1,4 @@
-package com.mambo.poetree
+package com.mambo.poetree.ui.home
 
 import android.os.Bundle
 import android.view.View
@@ -7,15 +7,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.mambo.poetree.R
 import com.mambo.poetree.data.model.Poem
 import com.mambo.poetree.databinding.FragmentHomeBinding
 import com.mambo.poetree.ui.adapter.PoemAdapter
+import com.mambo.poetree.ui.compose.TopicAdapter
 import com.mambo.poetree.ui.poems.PoemsFragmentDirections
 import com.mambo.poetree.ui.poems.PoemsViewModel
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
@@ -27,6 +30,8 @@ class HomeFragment : Fragment(R.layout.fragment_home), PoemAdapter.OnPoemClickLi
 
     private val binding by viewBinding(FragmentHomeBinding::bind)
     private val viewModel by viewModels<PoemsViewModel>()
+
+    private val topicsAdapter = TopicAdapter()
     private val adapter = PoemAdapter(this)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -34,20 +39,12 @@ class HomeFragment : Fragment(R.layout.fragment_home), PoemAdapter.OnPoemClickLi
 
         binding.apply {
 
-            toolbar.setOnMenuItemClickListener { item ->
+            toolbarHome.setOnMenuItemClickListener { item ->
                 item.onNavDestinationSelected(findNavController()) ||
                         super.onOptionsItemSelected(item)
             }
 
-            NavigationUI.setupWithNavController(toolbar, findNavController())
-//            val menu = toolbarPoems.menu
-//
-//            val searchItem = menu.findItem(R.id.action_search)
-//            val searchView = searchItem.actionView as SearchView
-//
-//            searchView.onQueryTextChanged {
-//                viewModel.updateQuery(it)
-//            }
+            NavigationUI.setupWithNavController(toolbarHome, findNavController())
 
             initializeRecyclerview()
 
@@ -77,6 +74,10 @@ class HomeFragment : Fragment(R.layout.fragment_home), PoemAdapter.OnPoemClickLi
             adapter.submitList(poems)
         }
 
+        viewModel.topics.observe(viewLifecycleOwner) { topics ->
+            topicsAdapter.submitList(topics)
+        }
+
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.poemsEvent.collect { event ->
                 when (event) {
@@ -101,7 +102,9 @@ class HomeFragment : Fragment(R.layout.fragment_home), PoemAdapter.OnPoemClickLi
 
                     is PoemsViewModel.PoemsEvent.NavigateToEditPoem -> {
                         val action =
-                            HomeFragmentDirections.actionHomeFragmentToPoemFragment(event.poem)
+                            HomeFragmentDirections.actionHomeFragmentToPoemFragment(
+                                event.poem
+                            )
                         findNavController().navigate(action)
                     }
                 }

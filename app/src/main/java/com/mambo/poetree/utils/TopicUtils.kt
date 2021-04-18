@@ -1,7 +1,6 @@
 package com.mambo.poetree.utils
 
-import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
+import androidx.recyclerview.widget.DiffUtil
 import com.mambo.poetree.data.model.Topic
 
 class TopicUtils {
@@ -19,6 +18,23 @@ class TopicUtils {
         const val BEAUTY = "beauty"
         const val DESIRE = "desire"
         const val OTHER = "other"
+
+        val TOPIC_COMPARATOR =
+            object : DiffUtil.ItemCallback<Topic>() {
+                override fun areItemsTheSame(
+                    oldItem: Topic,
+                    newItem: Topic
+                ): Boolean {
+                    return oldItem.id == newItem.id
+                }
+
+                override fun areContentsTheSame(
+                    oldItem: Topic,
+                    newItem: Topic
+                ): Boolean {
+                    return oldItem == newItem
+                }
+            }
     }
 
     init {

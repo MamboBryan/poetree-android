@@ -5,6 +5,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.mambo.poetree.data.local.PoemsDao
 import com.mambo.poetree.data.local.SortOrder
+import com.mambo.poetree.data.local.TopicsDao
 import com.mambo.poetree.data.model.Poem
 import com.mambo.poetree.data.model.User
 import com.mambo.poetree.utils.Result
@@ -19,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PoemsViewModel @Inject constructor(
     private val poemsDao: PoemsDao,
+    topicsDao: TopicsDao
 ) : ViewModel() {
 
     private val query = MutableStateFlow("")
@@ -27,6 +29,9 @@ class PoemsViewModel @Inject constructor(
 
     private val _poems = query.flatMapLatest { poemsDao.getPoems(it) }
     val poems = _poems.asLiveData()
+
+    private val _topics = topicsDao.getAll()
+    val topics = _topics.asLiveData()
 
     private val _poemEventChannel = Channel<PoemsEvent>()
     val poemsEvent = _poemEventChannel.receiveAsFlow()

@@ -2,6 +2,7 @@ package com.mambo.poetree.utils
 
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import androidx.recyclerview.widget.DiffUtil
 import com.mambo.poetree.data.model.Emotion
 
 class EmotionsUtils {
@@ -16,6 +17,23 @@ class EmotionsUtils {
         const val DISGUST = "disgust"
         const val SURPRISE = "surprise"
         const val OTHER = "other"
+
+        val EMOTION_COMPARATOR =
+            object : DiffUtil.ItemCallback<Emotion>() {
+                override fun areItemsTheSame(
+                    oldItem: Emotion,
+                    newItem: Emotion
+                ): Boolean {
+                    return oldItem.id == newItem.id
+                }
+
+                override fun areContentsTheSame(
+                    oldItem: Emotion,
+                    newItem: Emotion
+                ): Boolean {
+                    return oldItem == newItem
+                }
+            }
     }
 
     init {

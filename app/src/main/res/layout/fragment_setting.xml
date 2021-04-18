@@ -47,6 +47,14 @@
                     android:orientation="horizontal"
                     android:padding="16dp">
 
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="16dp"
+                        android:src="@drawable/ic_baseline_dark_mode_24" />
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

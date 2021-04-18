@@ -6,6 +6,7 @@ import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mambo.poetree.data.model.Emotion
 import com.mambo.poetree.data.model.Poem
+import com.mambo.poetree.data.model.Topic
 import com.mambo.poetree.data.model.User
 import com.mambo.poetree.di.ApplicationScope
 import com.mambo.poetree.utils.EmotionsUtils
@@ -15,7 +16,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
 
-@Database(entities = [Poem::class, Emotion::class], exportSchema = false, version = 1)
+@Database(
+    entities = [Poem::class, Emotion::class, Topic::class],
+    exportSchema = false,
+    version = 1
+)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
@@ -51,13 +56,13 @@ abstract class AppDatabase : RoomDatabase() {
                         """
                             Hidden in the waves
                             Blossoming forth 
-                            \n
+                            
                             The way the pen behaves
                             Like a cooking pot filled with broth
-                            \n
+                            
                             The gem concealed in caves
                             Emerging slowly like a sloth
-                            \n
+                            
                             This is one of my faves
                             Uncover the veil and removes the cloth
                         """.trimIndent(),
