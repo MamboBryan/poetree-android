@@ -18,7 +18,6 @@ import com.mambo.poetree.R
 import com.mambo.poetree.data.model.Poem
 import com.mambo.poetree.databinding.FragmentHomeBinding
 import com.mambo.poetree.ui.adapter.PoemAdapter
-import com.mambo.poetree.ui.compose.TopicAdapter
 import com.mambo.poetree.ui.poems.PoemsFragmentDirections
 import com.mambo.poetree.ui.poems.PoemsViewModel
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
@@ -31,7 +30,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), PoemAdapter.OnPoemClickLi
     private val binding by viewBinding(FragmentHomeBinding::bind)
     private val viewModel by viewModels<PoemsViewModel>()
 
-    private val topicsAdapter = TopicAdapter()
     private val adapter = PoemAdapter(this)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -66,16 +64,12 @@ class HomeFragment : Fragment(R.layout.fragment_home), PoemAdapter.OnPoemClickLi
                 when {
                     poems.isEmpty() -> layoutHomeRecycler.stateEmpty.isVisible = true
                     poems.isNotEmpty() -> layoutHomeRecycler.stateContent.isVisible = true
-                    poems == null -> layoutHomeRecycler.stateError.isVisible = true
+                    else -> layoutHomeRecycler.stateError.isVisible = true
                 }
 
             }
 
             adapter.submitList(poems)
-        }
-
-        viewModel.topics.observe(viewLifecycleOwner) { topics ->
-            topicsAdapter.submitList(topics)
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {

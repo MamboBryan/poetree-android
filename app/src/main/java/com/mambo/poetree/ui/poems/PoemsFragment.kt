@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -18,7 +18,6 @@ import com.mambo.poetree.R
 import com.mambo.poetree.data.model.Poem
 import com.mambo.poetree.databinding.FragmentPoemsBinding
 import com.mambo.poetree.ui.adapter.PoemAdapter
-import com.mambo.poetree.utils.onQueryTextChanged
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -72,8 +71,8 @@ class PoemsFragment : Fragment(), PoemAdapter.OnPoemClickListener {
             viewModel.onCreateOrUpdateResult(result)
         }
 
-        viewModel.poems.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+        viewModel.poems.observe(viewLifecycleOwner) { poems ->
+            adapter.submitList(poems)
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {

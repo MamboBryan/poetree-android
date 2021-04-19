@@ -12,6 +12,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,6 +46,7 @@ class EditViewModel @Inject constructor(
     )
 
     fun onSave() {
+
         if (poemTitle.isBlank()) {
             showInvalidInputMessage("Title cannot be empty")
             return
@@ -55,10 +58,40 @@ class EditViewModel @Inject constructor(
         }
 
         if (poem != null) {
+
             val updatedPoem = poem.copy(title = poemTitle, content = poemContent)
+            updateSavedPoem(updatedPoem)
+
+        } else {
+
+            val newPoem = Poem(title = poemTitle, content = poemContent, user = getUser())
+            saveNewPoem(newPoem)
+        }
+    }
+
+    fun onStash() {
+
+        val today = Date()
+
+        val dateFormat = SimpleDateFormat("EEE, MMM d, ''yy")
+        val date = dateFormat.format(today)
+
+        if (poemContent.isBlank()) {
+            showInvalidInputMessage("Content cannot be empty")
+            return
+        }
+
+        if (poemTitle.isBlank()) {
+            poemTitle = "Untitled $date"
+        }
+
+        if (poem != null) {
+
+            val updatedPoem = poem.copy(content = poemContent)
             updatePoem(updatedPoem)
 
         } else {
+
             val newPoem = Poem(title = poemTitle, content = poemContent, user = getUser())
             createPoem(newPoem)
 
@@ -77,10 +110,25 @@ class EditViewModel @Inject constructor(
         }
     }
 
-    fun onSaveForLaterClicked() {
+    private fun saveNewPoem(poem: Poem) {
+        viewModelScope.launch {
 
+            _editPoemEventChannel.send(
+                EditPoemEvent.NavigateToComposeFragment(poem)
+            )
+        }
     }
 
+    private fun updateSavedPoem(poem: Poem) {
+        viewModelScope.launch {
+
+            poemsDao.update(poem)
+
+            _editPoemEventChannel.send(
+                EditPoemEvent.NavigateToComposeFragment(poem)
+            )
+        }
+    }
 
     private fun showInvalidInputMessage(message: String) {
         viewModelScope.launch {
@@ -90,7 +138,9 @@ class EditViewModel @Inject constructor(
 
     private fun updatePoem(poem: Poem) {
         viewModelScope.launch {
+
             poemsDao.update(poem)
+
             _editPoemEventChannel.send(
                 EditPoemEvent.NavigateBackWithResult(
                     RESULT_EDIT_OK
@@ -101,7 +151,9 @@ class EditViewModel @Inject constructor(
 
     private fun createPoem(poem: Poem) {
         viewModelScope.launch {
+
             poemsDao.insert(poem)
+
             _editPoemEventChannel.send(
                 EditPoemEvent.NavigateBackWithResult(
                     RESULT_CREATE_OK
@@ -109,22 +161,11 @@ class EditViewModel @Inject constructor(
             )
         }
     }
-
-    private fun stashPoem(poem: Poem) {
-        viewModelScope.launch {
-            poemsDao.insert(poem)
-            _editPoemEventChannel.send(
-                EditPoemEvent.NavigateBackWithResult(
-                    RESULT_CREATE_OK
-                )
-            )
-        }
-    }
-
 
     sealed class EditPoemEvent {
         data class ShowInvalidInputMessage(val message: String) : EditPoemEvent()
         data class NavigateBackWithResult(val result: Int) : EditPoemEvent()
+        data class NavigateToComposeFragment(val poem: Poem) : EditPoemEvent()
         object NavigateToPreview : EditPoemEvent()
         object NavigateToEditView : EditPoemEvent()
     }

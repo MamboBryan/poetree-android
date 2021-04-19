@@ -73,9 +73,14 @@ class PoemAdapter(
                 tvPoemUser.text = poem.user.username
                 tvPoemDate.text = prettyTime.format(poem.date)
                 tvPoemTitle.text = poem.title
-                ivPoemImage.setImageDrawable(
-                    gradientUtils.getGradientBackground(adapterPosition)
-                )
+
+                val background =
+                    if (poem.emotionName.isEmpty())
+                        GradientUtils.getDefaultPoemBackground()
+                    else
+                        GradientUtils.getGradientBackgroundByEmotion(poem.emotion!!)
+
+                ivPoemImage.setImageDrawable(background)
 
             }
         }

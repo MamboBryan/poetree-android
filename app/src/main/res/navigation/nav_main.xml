@@ -75,5 +75,13 @@
         <argument
             android:name="poem"
             app:argType="com.mambo.poetree.data.model.Poem" />
+        <action
+            android:id="@+id/action_composeFragment_to_poemFragment"
+            app:destination="@id/poemFragment" />
+        <action
+            android:id="@+id/action_composeFragment_to_homeFragment2"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/nav_main"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

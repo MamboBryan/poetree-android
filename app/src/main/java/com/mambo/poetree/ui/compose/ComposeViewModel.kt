@@ -10,16 +10,19 @@ import com.mambo.poetree.data.local.TopicsDao
 import com.mambo.poetree.data.model.Emotion
 import com.mambo.poetree.data.model.Poem
 import com.mambo.poetree.data.model.Topic
+import com.mambo.poetree.utils.Result
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class ComposeViewModel @Inject constructor(
     private val poemsDao: PoemsDao,
-    private val emotionsDao: EmotionsDao,
-    private val topicsDao: TopicsDao,
-    private val state: SavedStateHandle
+    private val state: SavedStateHandle,
+    emotionsDao: EmotionsDao,
+    topicsDao: TopicsDao
 ) : ViewModel() {
 
     companion object {
@@ -39,13 +42,13 @@ class ComposeViewModel @Inject constructor(
     private val _composeEventChannel = Channel<ComposePoemEvent>()
     val composePoemEvent = _composeEventChannel.receiveAsFlow()
 
-    var poemEmotion = state.get<String>(POEM_EMOTION) ?: poem?.emotion ?: ""
+    var emotion: Emotion? = state.get<Emotion>(POEM_EMOTION) ?: poem?.emotion
         set(value) {
             field = value
             state.set(POEM_EMOTION, value)
         }
 
-    var poemTopic = state.get<String>(POEM_TOPIC) ?: poem?.topic ?: ""
+    var topic: Topic? = state.get<Topic>(POEM_TOPIC) ?: poem?.topic
         set(value) {
             field = value
             state.set(POEM_TOPIC, value)
@@ -55,7 +58,7 @@ class ComposeViewModel @Inject constructor(
 
         when {
             position > 0 -> _composeEventChannel.send(ComposePoemEvent.NavigateBack(""))
-            else -> _composeEventChannel.send(ComposePoemEvent.NavigateBack("Are you sure you want to cancel composition?"))
+            else -> onCompositionCanceled()
         }
 
     }
@@ -63,66 +66,106 @@ class ComposeViewModel @Inject constructor(
     fun onNextClicked(position: Int) = viewModelScope.launch {
 
         when {
-            position > 0 -> _composeEventChannel.send(ComposePoemEvent.NavigateBack(""))
-            else -> _composeEventChannel.send(ComposePoemEvent.NavigateBack("Are you sure you want to cancel composition?"))
+            position > 0 -> onComposePoem()
+            else -> _composeEventChannel.send(ComposePoemEvent.NavigateNext)
         }
 
     }
 
-    fun onCompositionCanceled() = viewModelScope.launch {
+    fun onPoemEmotionClicked(updatedEmotion: Emotion?) =
+        viewModelScope.launch {
+
+            emotion = updatedEmotion
+
+            _composeEventChannel.send(ComposePoemEvent.NavigateNext)
+
+        }
+
+    fun onPoemTopicClicked(selectedTopic: Topic) =
+        viewModelScope.launch {
+
+            topic = selectedTopic
+
+        }
+
+    private fun onCompositionCanceled() = viewModelScope.launch {
         _composeEventChannel.send(
-            ComposePoemEvent.NavigateToHomeFragment
+            ComposePoemEvent.NavigateBack("Are you sure you want to cancel composition?")
         )
     }
 
-    fun onPoemEmotionClicked(emotion: Emotion?) = viewModelScope.launch {
+    private fun onComposePoem() {
 
-        if (emotion != null) {
-            poemEmotion = emotion.name
+        if (emotion == null) {
+            showInvalidInputMessage("Choose emotion to proceed")
+            return
         }
 
-        when {
-            poemEmotion.isEmpty() -> {
-                _composeEventChannel.send(
-                    ComposePoemEvent.NavigateNext("Choose an emotion to continue")
-                )
-            }
-            else -> _composeEventChannel.send(ComposePoemEvent.NavigateNext(""))
+        if (topic == null) {
+            showInvalidInputMessage("Choose topic to complete")
+            return
         }
+
+        if (poem != null && poem.id != 0) {
+            val updatedPoem = poem.copy(
+                emotionName = emotion!!.name,
+                emotion = emotion,
+                topicName = topic!!.name,
+                topic = topic
+            )
+
+            updatePoem(updatedPoem)
+
+        } else {
+            val newPoem = poem!!.copy(
+                emotionName = emotion!!.name,
+                emotion = emotion,
+                topicName = topic!!.name,
+                topic = topic
+            )
+
+            createPoem(newPoem)
+
+        }
+
 
     }
 
+    private fun updatePoem(poem: Poem) {
+        viewModelScope.launch {
 
-    fun onPoemTopicClicked(topic: Topic) = viewModelScope.launch {
+            poemsDao.update(poem)
 
-        poemTopic = topic.name
-
-        val newPoem = poem!!.copy(
-            emotion = poemEmotion,
-            topic = poemTopic
-        )
-
-        poemsDao.insert(newPoem)
-
-        when {
-            poemTopic.isEmpty() -> {
-                _composeEventChannel.send(
-                    ComposePoemEvent.NavigateNext("Choose an emotion to continue")
-                )
-            }
-            else -> _composeEventChannel.send(ComposePoemEvent.NavigateToPoem(newPoem))
+            _composeEventChannel.send(
+                ComposePoemEvent.NavigateToPoem(poem)
+            )
         }
-
     }
 
-    fun onComposePoemClicked() {
+    private fun createPoem(poem: Poem) {
+        viewModelScope.launch {
+            poemsDao.insert(poem)
 
+            _composeEventChannel.send(
+                ComposePoemEvent.NavigateToMyLibrary(
+                    Result.RESULT_CREATE_OK
+                )
+            )
+        }
+    }
+
+    private fun showInvalidInputMessage(message: String) {
+        viewModelScope.launch {
+            _composeEventChannel.send(ComposePoemEvent.ShowIncompletePoemMessage(message))
+        }
     }
 
     sealed class ComposePoemEvent {
-        object NavigateToHomeFragment : ComposePoemEvent()
+        object NavigateNext : ComposePoemEvent()
+
         data class NavigateBack(val message: String) : ComposePoemEvent()
-        data class NavigateNext(val message: String) : ComposePoemEvent()
         data class NavigateToPoem(val poem: Poem) : ComposePoemEvent()
+        data class NavigateToMyLibrary(val result: Int) : ComposePoemEvent()
+        data class ShowIncompletePoemMessage(val message: String) : ComposePoemEvent()
     }
 }

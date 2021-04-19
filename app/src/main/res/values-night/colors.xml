@@ -9,4 +9,7 @@
     <color name="color_on_background">#FFFFFFFF</color>
     <color name="color_surface">#212842</color>
     <color name="color_on_surface">#FFFFFFFF</color>
+
+    <color name="color_primary">#527bf3</color>
+    <color name="color_on_primary">#000000</color>
 </resources>

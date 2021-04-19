@@ -1,9 +1,7 @@
 package com.mambo.poetree.ui.edit
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -13,28 +11,19 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.snackbar.Snackbar
 import com.mambo.poetree.R
+import com.mambo.poetree.data.model.Poem
 import com.mambo.poetree.databinding.FragmentEditBinding
 import com.mambo.poetree.ui.compose.ViewPagerAdapter
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 
 @AndroidEntryPoint
-class EditFragment : Fragment() {
+class EditFragment : Fragment(R.layout.fragment_edit) {
 
-    private var _binding: FragmentEditBinding? = null
-    private val binding get() = _binding!!
-
+    private val binding by viewBinding(FragmentEditBinding::bind)
     private val viewModel by viewModels<EditViewModel>()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        _binding = FragmentEditBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -62,8 +51,7 @@ class EditFragment : Fragment() {
                     }
 
                     R.id.menu_item_stash -> {
-                        Snackbar.make(requireView(), viewModel.poemContent, Snackbar.LENGTH_LONG)
-                            .show()
+                        viewModel.onStash()
                         true
                     }
 
@@ -84,15 +72,23 @@ class EditFragment : Fragment() {
                 when (event) {
                     is EditViewModel.EditPoemEvent.NavigateBackWithResult -> {
                         binding.root.clearFocus()
+
                         setFragmentResult(
                             "create_update_request",
                             bundleOf("create_update_result" to event.result)
                         )
+
                         findNavController().popBackStack()
                     }
+
                     is EditViewModel.EditPoemEvent.ShowInvalidInputMessage -> {
                         Snackbar.make(requireView(), event.message, Snackbar.LENGTH_LONG).show()
                     }
+
+                    is EditViewModel.EditPoemEvent.NavigateToComposeFragment -> {
+                        navigateToComposeFragment(event.poem)
+                    }
+
                     EditViewModel.EditPoemEvent.NavigateToPreview -> {
                         showPreview()
                     }
@@ -147,6 +143,11 @@ class EditFragment : Fragment() {
             viewPagerEdit.adapter = adapter
         }
 
+    }
+
+    private fun navigateToComposeFragment(poem: Poem) {
+        val action = EditFragmentDirections.actionEditFragmentToComposeFragment(poem)
+        findNavController().navigate(action)
     }
 
 }

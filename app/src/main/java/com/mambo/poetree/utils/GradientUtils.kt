@@ -2,6 +2,7 @@ package com.mambo.poetree.utils
 
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import com.mambo.poetree.data.model.Emotion
 import com.mambo.poetree.data.model.GradientColor
 
 class GradientUtils {
@@ -23,9 +24,25 @@ class GradientUtils {
 
     }
 
-    companion object{
+    companion object {
 
-        fun getGradientBackground(): GradientDrawable {
+        fun getGradientBackgroundByEmotion(emotion: Emotion): GradientDrawable {
+
+            val gd = GradientDrawable(
+                GradientDrawable.Orientation.BL_TR,
+                intArrayOf(
+                    Color.parseColor(emotion.start),
+                    Color.parseColor(emotion.end)
+                )
+            )
+
+            gd.cornerRadius = 0f
+
+            return gd
+        }
+
+        fun getDefaultPoemBackground(): GradientDrawable {
+
 
             val gd = GradientDrawable(
                 GradientDrawable.Orientation.BL_TR,

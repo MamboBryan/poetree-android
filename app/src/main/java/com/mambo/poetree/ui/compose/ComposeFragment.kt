@@ -2,15 +2,22 @@ package com.mambo.poetree.ui.compose
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.mambo.poetree.R
 import com.mambo.poetree.databinding.FragmentChoiceParentBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
+@AndroidEntryPoint
 class ComposeFragment : Fragment(R.layout.fragment_choice_parent) {
 
     private val binding by viewBinding(FragmentChoiceParentBinding::bind)
@@ -21,14 +28,14 @@ class ComposeFragment : Fragment(R.layout.fragment_choice_parent) {
 
         binding.apply {
 
+            tvComposeTitle.text = viewModel.poem?.title ?: "Untitled"
+
             btnChoiceNext.setOnClickListener {
-                val position = viewPagerChoice.currentItem + 1
-                viewModel.onPreviousClicked(position)
+                viewModel.onNextClicked(getViewPagerCurrentPosition())
             }
 
             btnChoiceBack.setOnClickListener {
-                val position = viewPagerChoice.currentItem - 1
-                viewModel.onNextClicked(position)
+                viewModel.onPreviousClicked(getViewPagerCurrentPosition())
             }
 
             setUpViewPager()
@@ -36,10 +43,45 @@ class ComposeFragment : Fragment(R.layout.fragment_choice_parent) {
             viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 viewModel.composePoemEvent.collect { event ->
                     when (event) {
-                        is ComposeViewModel.ComposePoemEvent.NavigateBack -> TODO()
-                        is ComposeViewModel.ComposePoemEvent.NavigateNext -> TODO()
-                        is ComposeViewModel.ComposePoemEvent.NavigateToPoem -> TODO()
-                        ComposeViewModel.ComposePoemEvent.NavigateToHomeFragment -> TODO()
+                        is ComposeViewModel.ComposePoemEvent.NavigateBack -> {
+
+                            if (event.message.isEmpty()) {
+                                val position = binding.viewPagerChoice.currentItem - 1
+                                setViewPagerItem(position)
+                            } else {
+                                findNavController().popBackStack()
+                            }
+
+                        }
+
+                        is ComposeViewModel.ComposePoemEvent.NavigateNext -> {
+
+                            val position = binding.viewPagerChoice.currentItem + 1
+                            setViewPagerItem(position)
+
+                        }
+
+                        is ComposeViewModel.ComposePoemEvent.NavigateToPoem -> {
+                            val action =
+                                ComposeFragmentDirections.actionComposeFragmentToPoemFragment(event.poem)
+                            findNavController().navigate(action)
+                        }
+
+                        is ComposeViewModel.ComposePoemEvent.NavigateToMyLibrary -> {
+                            setFragmentResult(
+                                "create_update_request",
+                                bundleOf("create_update_result" to event.result)
+                            )
+
+                            findNavController().navigate(
+                                ComposeFragmentDirections.actionComposeFragmentToHomeFragment2()
+                            )
+                        }
+
+                        is ComposeViewModel.ComposePoemEvent.ShowIncompletePoemMessage -> {
+                            Toast.makeText(requireContext(), event.message, Toast.LENGTH_SHORT)
+                                .show()
+                        }
                     }
                 }
             }
@@ -64,19 +106,19 @@ class ComposeFragment : Fragment(R.layout.fragment_choice_parent) {
                     binding.apply {
                         when (position) {
                             1 -> {
-                                textView3.text = "Choose Topic"
+                                textView3.text = "Choose Topic to finish"
 
-                                btnChoiceNext.text = "Finish"
-                                btnChoiceNext.isEnabled = viewModel.poemTopic.isNotEmpty()
+                                btnChoiceNext.text = "Save"
+                                btnChoiceNext.isEnabled = true
 
                                 btnChoiceBack.text = "Back"
                             }
 
                             else -> {
-                                textView3.text = "Choose Emotion"
+                                textView3.text = "Choose Emotion to continue"
 
                                 btnChoiceNext.text = "Next"
-                                btnChoiceNext.isEnabled = viewModel.poemEmotion.isNotEmpty()
+                                btnChoiceNext.isEnabled = viewModel.emotion != null
 
                                 btnChoiceBack.text = "Cancel"
                             }
@@ -93,8 +135,19 @@ class ComposeFragment : Fragment(R.layout.fragment_choice_parent) {
                     //do nothing
                 }
             })
+
+            TabLayoutMediator(tabLayoutChoice, viewPagerChoice) { tab, position ->
+
+            }.attach()
+
         }
 
+    }
+
+    private fun getViewPagerCurrentPosition(): Int {
+        binding.apply {
+            return viewPagerChoice.currentItem
+        }
     }
 
     private fun setViewPagerItem(position: Int) {

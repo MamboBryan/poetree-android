@@ -1,5 +1,6 @@
 package com.mambo.poetree.data.local
 
+import android.util.Log
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -39,6 +40,8 @@ abstract class AppDatabase : RoomDatabase() {
 
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
+
+            Log.i("APP_DATABASE", "onCreate: app database created")
 
             val poemDao = database.get().poemsDao()
             val emotionsDao = database.get().emotionsDao()

@@ -1,6 +1,7 @@
 package com.mambo.poetree.data.model
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
@@ -13,9 +14,12 @@ data class Poem(
     val id: Int = 0,
     val title: String,
     val content: String,
-    val emotion: String = "",
-    val topic: String = "",
+    val emotionName: String = "",
+    @ColumnInfo(defaultValue = "")
+    val emotion: Emotion? = null,
+    val topicName: String = "",
+    @ColumnInfo(defaultValue = "")
+    val topic: Topic? = null,
     val date: Date = Date(),
     val user: User
-) : Parcelable {
-}
+) : Parcelable
