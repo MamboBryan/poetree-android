@@ -39,6 +39,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <!--LIGHT THEME COLORS-->
+    <color name="splash_background">#0842ee</color>
     <color name="error">#d91a1a</color>
     <color name="loading">#e6c100</color>
 

@@ -18,7 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class ComposeFragment : Fragment(R.layout.fragment_choice_parent) {
+class ComposePoemFragment : Fragment(R.layout.fragment_choice_parent) {
 
     private val binding by viewBinding(FragmentChoiceParentBinding::bind)
     private val viewModel by viewModels<ComposeViewModel>()
@@ -63,7 +63,7 @@ class ComposeFragment : Fragment(R.layout.fragment_choice_parent) {
 
                         is ComposeViewModel.ComposePoemEvent.NavigateToPoem -> {
                             val action =
-                                ComposeFragmentDirections.actionComposeFragmentToPoemFragment(event.poem)
+                                ComposePoemFragmentDirections.actionComposeFragmentToPoemFragment(event.poem)
                             findNavController().navigate(action)
                         }
 
@@ -74,7 +74,7 @@ class ComposeFragment : Fragment(R.layout.fragment_choice_parent) {
                             )
 
                             findNavController().navigate(
-                                ComposeFragmentDirections.actionComposeFragmentToHomeFragment2()
+                                ComposePoemFragmentDirections.actionComposeFragmentToHomeFragment2()
                             )
                         }
 

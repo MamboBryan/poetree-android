@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         val destinationChangedListener =
             NavController.OnDestinationChangedListener { _: NavController?, destination: NavDestination, _: Bundle? ->
                 when (destination.id) {
-                    R.id.homeFragment,
+                    R.id.dashboardFragment,
                     R.id.libraryFragment,
                     R.id.accountFragment,
                     R.id.discoverFragment,

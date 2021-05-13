@@ -1,4 +1,4 @@
-package com.mambo.poetree
+package com.mambo.poetree.ui.fragments
 
 import android.os.Bundle
 import android.view.View
@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.onNavDestinationSelected
+import com.mambo.poetree.R
 import com.mambo.poetree.databinding.FragmentAccountBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 
