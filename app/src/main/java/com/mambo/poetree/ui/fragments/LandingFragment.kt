@@ -18,7 +18,7 @@ class LandingFragment : Fragment(R.layout.fragment_landing) {
     private val userIsLoggedIn = false
     private val userHasSetUp = true
 
-    private val isFirstTimeOpeningApp = true
+    private val isFirstTimeOpeningApp = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

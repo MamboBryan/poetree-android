@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.mambo.poetree.R
 import com.mambo.poetree.databinding.FragmentRegisterBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
@@ -16,7 +17,9 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
-            floatingActionButton2.setOnClickListener { finishAccountCreation() }
+            NavigationUI.setupWithNavController(toolbarRegister, findNavController())
+
+            btnRegister.setOnClickListener { finishAccountCreation() }
         }
     }
 

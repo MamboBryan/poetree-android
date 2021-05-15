@@ -7,6 +7,7 @@ import android.os.Looper
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.mambo.poetree.R
 import com.mambo.poetree.databinding.FragmentLoginBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
@@ -19,7 +20,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
-            fabLogin.setOnClickListener {
+
+            NavigationUI.setupWithNavController(toolbarLogin, findNavController())
+
+            btnLogin.setOnClickListener {
 
                 val progressDialog = ProgressDialog(requireContext())
                 progressDialog.setTitle("Login")
