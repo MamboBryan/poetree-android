@@ -14,7 +14,7 @@ class LandingFragment : Fragment(R.layout.fragment_landing) {
 
     private val binding by viewBinding(FragmentLandingBinding::bind)
 
-    private val userIsLoggedIn = true
+    private val userIsLoggedIn = false
     private val userHasSetUp = true
 
     private val isFirstTimeOpeningApp = false
