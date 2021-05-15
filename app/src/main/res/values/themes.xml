@@ -9,8 +9,10 @@
         <item name="colorSecondary">@color/secondary_400</item>
         <item name="colorSecondaryVariant">@color/secondary_600</item>
         <item name="colorOnSecondary">@color/white</item>
+
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+
         <!-- Customize your theme here. -->
         <item name="fontFamily">@font/google_sans</item>
         <item name="android:colorBackground">@color/color_background</item>
