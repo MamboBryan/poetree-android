@@ -1,7 +1,10 @@
 package com.mambo.poetree.ui
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -14,7 +17,6 @@ import com.mambo.poetree.databinding.ActivityMainBinding
 import com.mambo.poetree.ui.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -22,6 +24,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
 
     private val viewModel by viewModels<MainViewModel>()
+
+    private var backIsAlreadyPressed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +44,38 @@ class MainActivity : AppCompatActivity() {
         }
 
         setUpDestinationListener()
+
+    }
+
+    override fun onBackPressed() {
+
+        when (getDestinationId()) {
+
+            R.id.onBoardingFragment,
+            R.id.authenticationFragment,
+            R.id.homeFragment -> {
+
+                if (backIsAlreadyPressed) {
+                    finish()
+                } else {
+                    backIsAlreadyPressed = true
+
+                    Toast.makeText(this, "Press \"BACK\" again to exit", Toast.LENGTH_SHORT)
+                        .show()
+
+                    Handler(Looper.getMainLooper())
+                        .postDelayed(
+                            { backIsAlreadyPressed = false }, 2000
+                        )
+                }
+
+            }
+
+            else -> {
+                super.onBackPressed()
+            }
+
+        }
 
     }
 

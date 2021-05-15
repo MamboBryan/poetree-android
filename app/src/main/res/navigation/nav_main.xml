@@ -91,16 +91,24 @@
         tools:layout="@layout/fragment_landing" >
         <action
             android:id="@+id/action_landingFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_landingFragment_to_authenticationFragment"
-            app:destination="@id/authenticationFragment" />
+            app:destination="@id/authenticationFragment"
+            app:popUpTo="@id/authenticationFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_landingFragment_to_onBoardingFragment"
-            app:destination="@id/onBoardingFragment" />
+            app:destination="@id/onBoardingFragment"
+            app:popUpTo="@id/onBoardingFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_landingFragment_to_setupFragment"
-            app:destination="@id/setupFragment" />
+            app:destination="@id/setupFragment"
+            app:popUpTo="@id/setupFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_landingFragment_to_dashboardFragment"
             app:destination="@id/dashboardFragment"
