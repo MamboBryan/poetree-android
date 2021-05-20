@@ -16,7 +16,7 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
-            floatingActionButton3.setOnClickListener { finishAccountSetup() }
+            btnSetupFinish.setOnClickListener { finishAccountSetup() }
         }
     }
 
