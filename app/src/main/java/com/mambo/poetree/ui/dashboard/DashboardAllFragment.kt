@@ -44,7 +44,6 @@ class DashboardAllFragment : Fragment(R.layout.fragment_dashboard_all),
             }
 
             adapter.submitList(poems)
-            adapter.submitList(poems)
         }
 
     }

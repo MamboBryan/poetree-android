@@ -1,12 +1,29 @@
 package com.mambo.poetree.utils
 
 import com.mambo.poetree.data.model.Haiku
+import com.mambo.poetree.data.model.HaikuEmotion
+import com.mambo.poetree.data.model.HaikuTopic
 
 class HaikuUtils {
 
     val haikus: MutableList<Haiku> = ArrayList()
+    val haikuTopics: MutableList<HaikuTopic> = ArrayList()
+    val haikuEmotions: MutableList<HaikuEmotion> = ArrayList()
 
     init {
+
+        haikuTopics.add(HaikuTopic("love"))
+        haikuTopics.add(HaikuTopic("hate"))
+        haikuTopics.add(HaikuTopic("death"))
+        haikuTopics.add(HaikuTopic("breakup"))
+        haikuTopics.add(HaikuTopic("political"))
+        haikuTopics.add(HaikuTopic("romance"))
+
+        haikuEmotions.add(HaikuEmotion("happiness"))
+        haikuEmotions.add(HaikuEmotion("sadness"))
+        haikuEmotions.add(HaikuEmotion("disgust"))
+        haikuEmotions.add(HaikuEmotion("loathing"))
+        haikuEmotions.add(HaikuEmotion("skiddish"))
 
         haikus.add(
             Haiku(
