@@ -3,19 +3,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/menu_action_like"
         android:icon="@drawable/ic_outline_favorite_border_24"
         android:title="like"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_action_unlike"
+        android:icon="@drawable/ic_baseline_favorite_24"
+        android:title="unlike"
         android:visible="true"
         app:showAsAction="always" />
 
     <item
         android:icon="@drawable/ic_baseline_bookmark_border_24"
         android:title="bookmark"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:icon="@drawable/ic_baseline_bookmark_24"
+        android:title="bookmark"
         android:visible="true"
         app:showAsAction="always" />
 
     <item
-        android:icon="@drawable/ic_baseline_chat_bubble_outline_24"
+        android:id="@+id/menu_action_comments"
+        android:icon="@drawable/ic_baseline_chat_bubble_24"
         android:title="comment"
         android:visible="true"
         app:showAsAction="always" />

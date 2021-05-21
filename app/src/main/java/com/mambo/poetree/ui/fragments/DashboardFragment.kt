@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.snackbar.Snackbar
@@ -18,6 +19,7 @@ import com.mambo.poetree.ui.dashboard.DashboardPoetsFragment
 import com.mambo.poetree.ui.dashboard.DashboardViewModel
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class DashboardFragment : Fragment(R.layout.fragment_dashboard), HaikuAdapter.OnHaikuClickListener {
@@ -40,6 +42,15 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard), HaikuAdapter.On
         }
 
         viewModel.launch()
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.dashboardEvent.collect { event ->
+                when (event) {
+                    is DashboardViewModel.DashboardEvent.NavigateToRead -> onHaikuClicked(event.haiku)
+                }
+            }
+        }
+
     }
 
     private fun setUpViewPager() {
@@ -62,7 +73,8 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard), HaikuAdapter.On
     }
 
     override fun onHaikuClicked(haiku: Haiku) {
-        Snackbar.make(requireView(), haiku.title, Snackbar.LENGTH_SHORT).show()
+        val action = DashboardFragmentDirections.actionDashboardFragmentToReadFragment(haiku)
+        findNavController().navigate(action)
     }
 
 

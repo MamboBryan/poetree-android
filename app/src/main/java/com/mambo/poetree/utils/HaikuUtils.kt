@@ -1,6 +1,7 @@
 package com.mambo.poetree.utils
 
 import com.mambo.poetree.data.model.Haiku
+import com.mambo.poetree.data.model.HaikuComment
 import com.mambo.poetree.data.model.HaikuEmotion
 import com.mambo.poetree.data.model.HaikuTopic
 
@@ -9,6 +10,7 @@ class HaikuUtils {
     val haikus: MutableList<Haiku> = ArrayList()
     val haikuTopics: MutableList<HaikuTopic> = ArrayList()
     val haikuEmotions: MutableList<HaikuEmotion> = ArrayList()
+    val haikuComments: MutableList<HaikuComment> = ArrayList()
 
     init {
 
@@ -24,6 +26,37 @@ class HaikuUtils {
         haikuEmotions.add(HaikuEmotion("disgust"))
         haikuEmotions.add(HaikuEmotion("loathing"))
         haikuEmotions.add(HaikuEmotion("skiddish"))
+
+        haikuComments.add(
+            HaikuComment(
+                "TheRadBrad",
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+            )
+        )
+        haikuComments.add(
+            HaikuComment(
+                "TheRadBrad",
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+            )
+        )
+        haikuComments.add(
+            HaikuComment(
+                "Kajungu",
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+            )
+        )
+        haikuComments.add(
+            HaikuComment(
+                "Mzoboshe",
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+            )
+        )
+        haikuComments.add(
+            HaikuComment(
+                "Alandria",
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+            )
+        )
 
         haikus.add(
             Haiku(

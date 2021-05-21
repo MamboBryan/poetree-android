@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.mikhaellopez.circularimageview.CircularImageView
-        android:id="@+id/circularImageView"
+        android:id="@+id/iv_comment_user_image"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:src="@drawable/poet"
@@ -72,10 +72,10 @@
         android:layout_height="wrap_content"
         android:text="choose image"
         app:layout_constraintBottom_toTopOf="@+id/textInputLayout6"
-        app:layout_constraintEnd_toEndOf="@+id/circularImageView"
+        app:layout_constraintEnd_toEndOf="@+id/iv_comment_user_image"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/circularImageView"
-        app:layout_constraintTop_toBottomOf="@+id/circularImageView" />
+        app:layout_constraintStart_toStartOf="@+id/iv_comment_user_image"
+        app:layout_constraintTop_toBottomOf="@+id/iv_comment_user_image" />
 
     <Button
         android:id="@+id/btn_setup_finish"

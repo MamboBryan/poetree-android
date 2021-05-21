@@ -1,5 +1,7 @@
 package com.mambo.poetree.utils
 
+import android.view.View
+import android.view.WindowManager
 import androidx.appcompat.widget.SearchView
 
 inline fun SearchView.onQueryTextChanged(crossinline listener: (String) -> Unit) {
@@ -14,4 +16,10 @@ inline fun SearchView.onQueryTextChanged(crossinline listener: (String) -> Unit)
         }
 
     })
+}
+
+fun setupFullHeight(bottomSheet: View) {
+    val layoutParams = bottomSheet.layoutParams
+    layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT
+    bottomSheet.layoutParams = layoutParams
 }

@@ -5,7 +5,6 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.google.android.material.snackbar.Snackbar
 import com.mambo.poetree.R
 import com.mambo.poetree.data.model.Haiku
 import com.mambo.poetree.databinding.FragmentDashboardAllBinding
@@ -49,7 +48,7 @@ class DashboardAllFragment : Fragment(R.layout.fragment_dashboard_all),
     }
 
     override fun onHaikuClicked(haiku: Haiku) {
-        Snackbar.make(requireView(), haiku.title, Snackbar.LENGTH_SHORT).show()
+        viewModel.onHaikuClicked(haiku)
     }
 
     private fun initializeRecyclerview() {

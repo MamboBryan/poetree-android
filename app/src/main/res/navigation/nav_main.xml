@@ -169,5 +169,18 @@
     <fragment
         android:id="@+id/dashboardFragment"
         android:name="com.mambo.poetree.ui.fragments.DashboardFragment"
-        android:label="DashboardFragment" />
+        android:label="DashboardFragment" >
+        <action
+            android:id="@+id/action_dashboardFragment_to_readFragment"
+            app:destination="@id/readFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/readFragment"
+        android:name="com.mambo.poetree.ui.read.ReadFragment"
+        android:label="fragment_read"
+        tools:layout="@layout/fragment_read" >
+        <argument
+            android:name="haiku"
+            app:argType="com.mambo.poetree.data.model.Haiku" />
+    </fragment>
 </navigation>
