@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/dashboardFragment"
+        android:id="@+id/flow_feeds"
         android:icon="@drawable/ic_baseline_home_24"
-        android:title="Home" />
+        android:title="Feed" />
 
     <item
         android:id="@+id/discoverFragment"

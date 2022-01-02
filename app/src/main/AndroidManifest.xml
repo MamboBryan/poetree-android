@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name=".PoetreeApp"
+        android:name=".App"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -15,7 +15,8 @@
         android:theme="@style/Theme.Poetree">
         <activity
             android:name=".ui.splash.SplashActivity"
-            android:theme="@style/Theme.SplashTheme">
+            android:theme="@style/Theme.SplashTheme"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<MainViewModel>()
 
-    private var backIsAlreadyPressed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +44,12 @@ class MainActivity : AppCompatActivity() {
 
         setUpDestinationListener()
 
+        initNavigation()
+
+    }
+
+    private fun initNavigation() {
+
     }
 
     override fun onBackPressed() {
@@ -55,17 +60,17 @@ class MainActivity : AppCompatActivity() {
             R.id.authenticationFragment,
             R.id.homeFragment -> {
 
-                if (backIsAlreadyPressed) {
+                if (viewModel.backIsPressed) {
                     finish()
                 } else {
-                    backIsAlreadyPressed = true
+                    viewModel.backIsPressed = true
 
                     Toast.makeText(this, "Press \"BACK\" again to exit", Toast.LENGTH_SHORT)
                         .show()
 
                     Handler(Looper.getMainLooper())
                         .postDelayed(
-                            { backIsAlreadyPressed = false }, 2000
+                            { viewModel.backIsPressed = false }, 2000
                         )
                 }
 
@@ -83,11 +88,11 @@ class MainActivity : AppCompatActivity() {
         val destinationChangedListener =
             NavController.OnDestinationChangedListener { _: NavController?, destination: NavDestination, _: Bundle? ->
                 when (destination.id) {
+                    R.id.flow_feeds,
                     R.id.dashboardFragment,
                     R.id.libraryFragment,
                     R.id.accountFragment,
-                    R.id.discoverFragment,
-                    -> {
+                    R.id.discoverFragment -> {
                         showBottomNavigation()
                     }
 

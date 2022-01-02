@@ -19,8 +19,11 @@ class MainViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
 
     private val _connection = ConnectionLiveData(application)
-    val connection: ConnectionLiveData
-        get() = _connection
+    val connection: ConnectionLiveData get() = _connection
+
+    val isLoggedIn = false
+    var backIsPressed = false
+
 
     private val _poems = (poemsDao.getAll().asLiveData())
     val poems: LiveData<List<Poem>>

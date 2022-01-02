@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val preferencesRepository: PreferencesRepository
+    preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
     private val darkModeFlow = preferencesRepository.darkModeFlow

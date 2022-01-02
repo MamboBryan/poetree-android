@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_main"
-    app:startDestination="@id/landingFragment">
+    app:startDestination="@id/flow_feeds">
 
     <fragment
         android:id="@+id/poemsFragment"
@@ -183,4 +183,5 @@
             android:name="haiku"
             app:argType="com.mambo.poetree.data.model.Haiku" />
     </fragment>
+    <include app:graph="@navigation/flow_feeds" />
 </navigation>
