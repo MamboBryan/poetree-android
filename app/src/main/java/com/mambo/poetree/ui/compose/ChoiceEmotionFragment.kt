@@ -4,9 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.observe
+import com.mambo.data.Emotion
 import com.mambo.poetree.R
-import com.mambo.poetree.data.model.Emotion
 import com.mambo.poetree.databinding.FragmentChoiceChildBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,15 +26,11 @@ class ChoiceEmotionFragment : Fragment(R.layout.fragment_choice_child),
 
     private fun initializeEmotionsRecyclerview() {
 
-        val emotionAdapter = EmotionAdapter(viewModel.emotion, this)
+        val emotionAdapter = EmotionAdapter(null, this)
 
         binding.apply {
             rvChoice.setHasFixedSize(true)
             rvChoice.adapter = emotionAdapter
-        }
-
-        viewModel.emotions.observe(viewLifecycleOwner) { emotions ->
-            emotionAdapter.submitList(emotions)
         }
 
     }

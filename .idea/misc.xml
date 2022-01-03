@@ -3,8 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/layout/fragment_choice_parent.xml" value="0.33" />
         <entry key="app/src/main/res/menu/menu_bottom_nav.xml" value="0.3489583333333333" />
         <entry key="features/home/src/main/res/layout/fragment_feed.xml" value="0.28532608695652173" />
+        <entry key="features/home/src/main/res/layout/item_poem.xml" value="0.3484375" />
+        <entry key="features/home/src/main/res/layout/item_poem_feed.xml" value="0.3489583333333333" />
         <entry key="modules/ui/src/main/res/layout/layout_complete_recycler_horizontal.xml" value="0.2694746376811594" />
         <entry key="modules/ui/src/main/res/layout/layout_complete_recycler_refresh.xml" value="0.2966485507246377" />
         <entry key="modules/ui/src/main/res/layout/layout_complete_recycler_vertical.xml" value="0.2966485507246377" />

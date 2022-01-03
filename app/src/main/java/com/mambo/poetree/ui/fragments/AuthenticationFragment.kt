@@ -39,10 +39,10 @@ class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
     }
 
     private fun navigateToLogin() {
-        findNavController().navigate(R.id.action_authenticationFragment_to_loginFragment)
+
     }
 
     private fun navigateToRegister() {
-        findNavController().navigate(R.id.action_authenticationFragment_to_registerFragment)
+
     }
 }

@@ -3,9 +3,9 @@ package com.mambo.poetree.ui.edit
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mambo.poetree.data.local.PoemsDao
-import com.mambo.poetree.data.model.Poem
-import com.mambo.poetree.data.model.User
+import com.mambo.data.Poem
+import com.mambo.data.User
+import com.mambo.local.PoemsDao
 import com.mambo.poetree.utils.Result.RESULT_CREATE_OK
 import com.mambo.poetree.utils.Result.RESULT_EDIT_OK
 import dagger.hilt.android.lifecycle.HiltViewModel

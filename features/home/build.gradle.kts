@@ -47,6 +47,8 @@ android {
 dependencies {
 
     implementation(project(BuildModules.Commons.ui))
+    implementation(project(BuildModules.Commons.core))
+    implementation(project(BuildModules.Commons.data))
 
     implementation(Dependencies.Libraries.core)
     implementation(Dependencies.Libraries.kotlin)
@@ -54,19 +56,24 @@ dependencies {
     implementation(Dependencies.Libraries.materialDesign)
     implementation(Dependencies.Libraries.constraintLayout)
     implementation(Dependencies.Libraries.legacySupport)
+
     implementation(Dependencies.Libraries.viewModel)
     implementation(Dependencies.Libraries.liveData)
-    implementation(Dependencies.Libraries.delegate)
-    implementation(Dependencies.Libraries.lifecycleExtensions)
     implementation(Dependencies.Libraries.lifecycle)
+    implementation(Dependencies.Libraries.lifecycleExtensions)
     implementation(Dependencies.Libraries.savedState)
     implementation(Dependencies.Libraries.fragment)
     implementation(Dependencies.Libraries.navigationFragment)
     implementation(Dependencies.Libraries.navigationUi)
     implementation(Dependencies.Libraries.coroutines)
     implementation(Dependencies.Libraries.hilt)
+
+    implementation(Dependencies.Libraries.delegate)
     implementation(Dependencies.Libraries.circularImage)
-    kapt(Dependencies.Libraries.hiltKapt)
+    implementation(Dependencies.Libraries.prettyTime)
+    implementation(Dependencies.Libraries.coil)
+
+    kapt(Dependencies.Libraries.hiltCompiler)
 
 }
 

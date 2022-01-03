@@ -5,8 +5,8 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.mambo.data.Haiku
 import com.mambo.poetree.R
-import com.mambo.poetree.data.model.Haiku
 import com.mambo.poetree.databinding.FragmentDashboardAllBinding
 import com.mambo.poetree.ui.adapter.HaikuAdapter
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding

@@ -8,8 +8,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.snackbar.Snackbar
+import com.mambo.data.Haiku
 import com.mambo.poetree.R
-import com.mambo.poetree.data.model.Haiku
 import com.mambo.poetree.databinding.FragmentLibraryBinding
 import com.mambo.poetree.ui.adapter.HaikuAdapter
 import com.mambo.poetree.ui.library.LibraryViewModel

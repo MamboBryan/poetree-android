@@ -53,34 +53,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-
-        when (getDestinationId()) {
-
-            R.id.onBoardingFragment,
-            R.id.authenticationFragment,
-            R.id.homeFragment -> {
-
-                if (viewModel.backIsPressed) {
-                    finish()
-                } else {
-                    viewModel.backIsPressed = true
-
-                    Toast.makeText(this, "Press \"BACK\" again to exit", Toast.LENGTH_SHORT)
-                        .show()
-
-                    Handler(Looper.getMainLooper())
-                        .postDelayed(
-                            { viewModel.backIsPressed = false }, 2000
-                        )
-                }
-
-            }
-
-            else -> {
-                super.onBackPressed()
-            }
-
-        }
+        super.onBackPressed()
 
     }
 
@@ -88,11 +61,7 @@ class MainActivity : AppCompatActivity() {
         val destinationChangedListener =
             NavController.OnDestinationChangedListener { _: NavController?, destination: NavDestination, _: Bundle? ->
                 when (destination.id) {
-                    R.id.flow_feeds,
-                    R.id.dashboardFragment,
-                    R.id.libraryFragment,
-                    R.id.accountFragment,
-                    R.id.discoverFragment -> {
+                    R.id.flow_feeds -> {
                         showBottomNavigation()
                     }
 

@@ -54,29 +54,18 @@ class LandingFragment : Fragment(R.layout.fragment_landing) {
     }
 
     private fun navigateToSetup() {
-        setStartDestination(R.id.setupFragment)
-        findNavController().navigate(R.id.action_landingFragment_to_setupFragment)
+
     }
 
     private fun navigateToOnBoarding() {
-        setStartDestination(R.id.onBoardingFragment)
 
-        val action = LandingFragmentDirections.actionLandingFragmentToOnBoardingFragment()
-        navigate(action)
     }
 
     private fun navigateToDashboard() {
-        setStartDestination(R.id.dashboardFragment)
 
-        val action = LandingFragmentDirections.actionLandingFragmentToDashboardFragment()
-        navigate(action)
     }
 
     private fun navigateToAuthentication() {
-        setStartDestination(R.id.authenticationFragment)
-
-        val action = LandingFragmentDirections.actionLandingFragmentToAuthenticationFragment()
-        navigate(action)
 
     }
 

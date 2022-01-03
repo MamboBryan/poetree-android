@@ -45,8 +45,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         /*
         navigates back to landing screen and clears backstack
          */
-        val action = LoginFragmentDirections.actionLoginFragmentToLandingFragment()
-        findNavController().navigate(action)
+
 
     }
 

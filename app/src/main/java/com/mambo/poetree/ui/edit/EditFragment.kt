@@ -10,8 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.snackbar.Snackbar
+import com.mambo.data.Poem
 import com.mambo.poetree.R
-import com.mambo.poetree.data.model.Poem
 import com.mambo.poetree.databinding.FragmentEditBinding
 import com.mambo.poetree.ui.compose.ViewPagerAdapter
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
@@ -146,8 +146,7 @@ class EditFragment : Fragment(R.layout.fragment_edit) {
     }
 
     private fun navigateToComposeFragment(poem: Poem) {
-        val action = EditFragmentDirections.actionEditFragmentToComposeFragment(poem)
-        findNavController().navigate(action)
+
     }
 
 }

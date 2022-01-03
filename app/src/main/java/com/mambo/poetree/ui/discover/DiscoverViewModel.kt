@@ -5,8 +5,8 @@ import android.os.Looper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.mambo.poetree.data.model.HaikuEmotion
-import com.mambo.poetree.data.model.HaikuTopic
+import com.mambo.data.HaikuEmotion
+import com.mambo.data.HaikuTopic
 import com.mambo.poetree.utils.HaikuUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

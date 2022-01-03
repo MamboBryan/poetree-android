@@ -2,8 +2,8 @@ package com.mambo.poetree.utils
 
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import com.mambo.poetree.data.model.Emotion
-import com.mambo.poetree.data.model.GradientColor
+import com.mambo.data.Emotion
+import com.mambo.data.GradientColor
 
 class GradientUtils {
 

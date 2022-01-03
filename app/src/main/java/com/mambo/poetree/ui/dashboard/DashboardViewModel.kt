@@ -5,7 +5,7 @@ import android.os.Looper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.mambo.poetree.data.model.Haiku
+import com.mambo.data.Haiku
 import com.mambo.poetree.utils.HaikuUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel

@@ -17,6 +17,9 @@
             <option value="$PROJECT_DIR$/features/home" />
             <option value="$PROJECT_DIR$/modules" />
             <option value="$PROJECT_DIR$/modules/core" />
+            <option value="$PROJECT_DIR$/modules/data" />
+            <option value="$PROJECT_DIR$/modules/local" />
+            <option value="$PROJECT_DIR$/modules/remote" />
             <option value="$PROJECT_DIR$/modules/ui" />
           </set>
         </option>

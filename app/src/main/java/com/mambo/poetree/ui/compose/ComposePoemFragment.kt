@@ -62,9 +62,7 @@ class ComposePoemFragment : Fragment(R.layout.fragment_choice_parent) {
                         }
 
                         is ComposeViewModel.ComposePoemEvent.NavigateToPoem -> {
-                            val action =
-                                ComposePoemFragmentDirections.actionComposeFragmentToPoemFragment(event.poem)
-                            findNavController().navigate(action)
+
                         }
 
                         is ComposeViewModel.ComposePoemEvent.NavigateToMyLibrary -> {
@@ -73,9 +71,6 @@ class ComposePoemFragment : Fragment(R.layout.fragment_choice_parent) {
                                 bundleOf("create_update_result" to event.result)
                             )
 
-                            findNavController().navigate(
-                                ComposePoemFragmentDirections.actionComposeFragmentToHomeFragment2()
-                            )
                         }
 
                         is ComposeViewModel.ComposePoemEvent.ShowIncompletePoemMessage -> {
@@ -106,7 +101,7 @@ class ComposePoemFragment : Fragment(R.layout.fragment_choice_parent) {
                     binding.apply {
                         when (position) {
                             1 -> {
-                                textView3.text = "Choose Topic to finish"
+//                                textView3.text = "Choose Topic to finish"
 
                                 btnChoiceNext.text = "Save"
                                 btnChoiceNext.isEnabled = true
@@ -115,10 +110,9 @@ class ComposePoemFragment : Fragment(R.layout.fragment_choice_parent) {
                             }
 
                             else -> {
-                                textView3.text = "Choose Emotion to continue"
+//                                textView3.text = "Choose Emotion to continue"
 
                                 btnChoiceNext.text = "Next"
-                                btnChoiceNext.isEnabled = viewModel.emotion != null
 
                                 btnChoiceBack.text = "Cancel"
                             }

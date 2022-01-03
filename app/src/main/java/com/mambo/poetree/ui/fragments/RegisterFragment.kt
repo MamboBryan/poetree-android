@@ -24,8 +24,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
     }
 
     private fun finishAccountCreation() {
-        val action = RegisterFragmentDirections.actionRegisterFragmentToSetupFragment()
-        findNavController().navigate(action)
+
     }
 
 }

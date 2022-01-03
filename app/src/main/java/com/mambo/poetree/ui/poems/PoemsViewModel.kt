@@ -3,11 +3,10 @@ package com.mambo.poetree.ui.poems
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.mambo.poetree.data.local.PoemsDao
-import com.mambo.poetree.data.local.SortOrder
-import com.mambo.poetree.data.local.TopicsDao
-import com.mambo.poetree.data.model.Poem
-import com.mambo.poetree.data.model.User
+import com.mambo.data.Poem
+import com.mambo.local.PoemsDao
+import com.mambo.local.SortOrder
+import com.mambo.local.TopicsDao
 import com.mambo.poetree.utils.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -36,18 +35,6 @@ class PoemsViewModel @Inject constructor(
     private val _poemEventChannel = Channel<PoemsEvent>()
     val poemsEvent = _poemEventChannel.receiveAsFlow()
 
-    fun updateQuery(newQuery: String) {
-        query.value = newQuery
-    }
-
-    fun updateSortOrder(sortOrder: SortOrder) {
-        this.sortOrder.value = sortOrder
-    }
-
-    fun updatePublished(boolean: Boolean) {
-        isPublished.value = boolean
-    }
-
     fun onCreateOrUpdateResult(result: Int) {
         when (result) {
             Result.RESULT_EDIT_OK -> showTaskConfirmationMessage("Task Updated")
@@ -67,10 +54,6 @@ class PoemsViewModel @Inject constructor(
 
     fun onCreatePoemClicked() = viewModelScope.launch {
         _poemEventChannel.send(PoemsEvent.NavigateToCreatePoem)
-    }
-
-    fun onPoemUpdate(poem: Poem) = viewModelScope.launch {
-        poemsDao.update(poem.copy(user = User("2", "MamboBryan", "blahblah")))
     }
 
     fun onPoemSwiped(poem: Poem) = viewModelScope.launch {

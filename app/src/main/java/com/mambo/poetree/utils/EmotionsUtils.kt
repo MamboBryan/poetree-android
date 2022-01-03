@@ -3,7 +3,7 @@ package com.mambo.poetree.utils
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import androidx.recyclerview.widget.DiffUtil
-import com.mambo.poetree.data.model.Emotion
+import com.mambo.data.Emotion
 
 class EmotionsUtils {
 

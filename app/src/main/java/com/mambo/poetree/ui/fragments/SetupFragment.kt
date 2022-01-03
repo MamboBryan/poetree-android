@@ -21,8 +21,7 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
     }
 
     private fun finishAccountSetup() {
-        val action = SetupFragmentDirections.actionSetupFragmentToLandingFragment()
-        findNavController().navigate(action)
+
     }
 
 }

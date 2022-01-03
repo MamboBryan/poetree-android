@@ -4,9 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.observe
+import com.mambo.data.Topic
 import com.mambo.poetree.R
-import com.mambo.poetree.data.model.Topic
 import com.mambo.poetree.databinding.FragmentChoiceChildBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint

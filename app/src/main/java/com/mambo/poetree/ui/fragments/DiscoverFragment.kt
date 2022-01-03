@@ -7,9 +7,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import com.mambo.data.HaikuEmotion
+import com.mambo.data.HaikuTopic
 import com.mambo.poetree.R
-import com.mambo.poetree.data.model.HaikuEmotion
-import com.mambo.poetree.data.model.HaikuTopic
 import com.mambo.poetree.databinding.FragmentDiscoverBinding
 import com.mambo.poetree.ui.adapter.HaikuEmotionAdapter
 import com.mambo.poetree.ui.adapter.HaikuTopicAdapter

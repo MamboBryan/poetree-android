@@ -6,8 +6,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.mambo.poetree.data.model.Haiku
-import com.mambo.poetree.data.model.HaikuComment
+import com.mambo.data.Haiku
+import com.mambo.data.HaikuComment
 import com.mambo.poetree.utils.HaikuUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.mambo.poetree.data.model.HaikuTopic
+import com.mambo.data.HaikuTopic
 import com.mambo.poetree.databinding.ItemHaikuTopicBinding
 import com.mambo.poetree.utils.GradientUtils
 

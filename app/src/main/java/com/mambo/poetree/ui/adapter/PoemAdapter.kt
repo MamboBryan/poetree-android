@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.mambo.poetree.data.model.Poem
+import com.mambo.data.Poem
 import com.mambo.poetree.databinding.ItemPoemBinding
 import com.mambo.poetree.utils.GradientUtils
 import org.ocpsoft.prettytime.PrettyTime
@@ -74,12 +74,7 @@ class PoemAdapter(
                 tvPoemDate.text = prettyTime.format(poem.date)
                 tvPoemTitle.text = poem.title
 
-                val background =
-                    if (poem.emotionName.isEmpty())
-                        GradientUtils.getDefaultPoemBackground()
-                    else
-                        GradientUtils.getGradientBackgroundByEmotion(poem.emotion!!)
-
+                val background = GradientUtils.getDefaultPoemBackground()
                 ivPoemImage.setImageDrawable(background)
 
             }

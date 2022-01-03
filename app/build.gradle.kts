@@ -98,11 +98,13 @@ dependencies {
     implementation(Dependencies.Libraries.switch)
     implementation(Dependencies.Libraries.circularImage)
     implementation(Dependencies.Libraries.liquidSwipe)
+    implementation(project(mapOf("path" to ":modules:local")))
+    implementation(project(mapOf("path" to ":modules:data")))
 
     testImplementation(Dependencies.Libraries.junit)
 
-    kapt(Dependencies.Libraries.hiltKapt)
-    kapt(Dependencies.Libraries.roomKapt)
+    kapt(Dependencies.Libraries.hiltCompiler)
+    kapt(Dependencies.Libraries.roomCompiler)
 
 }
 

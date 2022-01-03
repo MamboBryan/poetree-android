@@ -1,9 +1,9 @@
 package com.mambo.poetree.utils
 
-import com.mambo.poetree.data.model.Haiku
-import com.mambo.poetree.data.model.HaikuComment
-import com.mambo.poetree.data.model.HaikuEmotion
-import com.mambo.poetree.data.model.HaikuTopic
+import com.mambo.data.Haiku
+import com.mambo.data.HaikuComment
+import com.mambo.data.HaikuEmotion
+import com.mambo.data.HaikuTopic
 
 class HaikuUtils {
 

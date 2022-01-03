@@ -2,12 +2,13 @@ package com.mambo.poetree.ui.compose
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.mambo.data.Topic
+import com.mambo.local.utils.TopicUtils
 import com.mambo.poetree.R
-import com.mambo.poetree.data.model.Topic
 import com.mambo.poetree.databinding.ItemTopicBinding
-import com.mambo.poetree.utils.TopicUtils
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -15,8 +16,28 @@ class TopicAdapter(
     val topic: Topic?,
     val listener: OnTopicClickListener
 ) : ListAdapter<Topic, TopicAdapter.TopicViewHolder>(
-    TopicUtils.TOPIC_COMPARATOR
+    TOPIC_COMPARATOR
 ) {
+
+    companion object {
+        private val TOPIC_COMPARATOR =
+            object : DiffUtil.ItemCallback<Topic>() {
+                override fun areItemsTheSame(
+                    oldItem: Topic,
+                    newItem: Topic
+                ): Boolean {
+                    return oldItem.id == newItem.id
+                }
+
+                override fun areContentsTheSame(
+                    oldItem: Topic,
+                    newItem: Topic
+                ): Boolean {
+                    return oldItem == newItem
+                }
+            }
+    }
+
     var selectedPosition by Delegates.observable(currentList.indexOf(topic)) { _, oldPos, newPos ->
         if (newPos in currentList.indices) {
             notifyItemChanged(oldPos)

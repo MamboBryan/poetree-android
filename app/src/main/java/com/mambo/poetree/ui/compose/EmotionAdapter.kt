@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.mambo.data.Emotion
 import com.mambo.poetree.R
-import com.mambo.poetree.data.model.Emotion
 import com.mambo.poetree.databinding.ItemEmotionBinding
 import com.mambo.poetree.utils.EmojiUtils
 import com.mambo.poetree.utils.EmotionsUtils

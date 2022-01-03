@@ -27,7 +27,7 @@ object Dependencies {
 
         val datastore by lazy {"androidx.datastore:datastore-preferences:${Versions.datastore}"}
         val hilt by lazy{"com.google.dagger:hilt-android:${Versions.hilt}"}
-        val hiltKapt by lazy {"com.google.dagger:hilt-compiler:${Versions.hilt}"}
+        val hiltCompiler by lazy {"com.google.dagger:hilt-compiler:${Versions.hilt}"}
         val navigationFragment by lazy {"androidx.navigation:navigation-fragment-ktx:${Versions.navigation}"}
         val navigationUi by lazy {"androidx.navigation:navigation-ui-ktx:${Versions.navigation}"}
         val viewModel by lazy { "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}" }
@@ -38,7 +38,7 @@ object Dependencies {
         val coroutines by lazy {"org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"}
         val room by lazy {"androidx.room:room-ktx:${Versions.room}"}
         val roomRuntime by lazy {"androidx.room:room-runtime:${Versions.room}" }
-        val roomKapt by lazy {"androidx.room:room-compiler:${Versions.room}" }
+        val roomCompiler by lazy {"androidx.room:room-compiler:${Versions.room}" }
 
         val timber by lazy { "com.jakewharton.timber:timber:${Versions.timber}" }
         val gson by lazy { "com.google.code.gson:gson:${Versions.gson}" }

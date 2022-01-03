@@ -2,8 +2,8 @@ package com.mambo.poetree.ui.poem
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.mambo.poetree.data.local.PoemsDao
-import com.mambo.poetree.data.model.Poem
+import com.mambo.data.Poem
+import com.mambo.local.PoemsDao
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow

@@ -9,8 +9,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
+import com.mambo.data.Haiku
 import com.mambo.poetree.R
-import com.mambo.poetree.data.model.Haiku
 import com.mambo.poetree.databinding.FragmentDashboardBinding
 import com.mambo.poetree.ui.adapter.HaikuAdapter
 import com.mambo.poetree.ui.compose.ViewPagerAdapter
@@ -73,8 +73,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard), HaikuAdapter.On
     }
 
     override fun onHaikuClicked(haiku: Haiku) {
-        val action = DashboardFragmentDirections.actionDashboardFragmentToReadFragment(haiku)
-        findNavController().navigate(action)
+
     }
 
 

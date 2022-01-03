@@ -5,9 +5,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.mambo.data.Poem
+import com.mambo.local.PoemsDao
 import com.mambo.poetree.utils.ConnectionLiveData
-import com.mambo.poetree.data.local.PoemsDao
-import com.mambo.poetree.data.model.Poem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,7 +23,6 @@ class MainViewModel @Inject constructor(
 
     val isLoggedIn = false
     var backIsPressed = false
-
 
     private val _poems = (poemsDao.getAll().asLiveData())
     val poems: LiveData<List<Poem>>

@@ -7,18 +7,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.mambo.data.Poem
 import com.mambo.poetree.R
-import com.mambo.poetree.data.model.Poem
 import com.mambo.poetree.databinding.FragmentHomeBinding
 import com.mambo.poetree.ui.adapter.PoemAdapter
-import com.mambo.poetree.ui.poems.PoemsFragmentDirections
 import com.mambo.poetree.ui.poems.PoemsViewModel
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -90,16 +88,11 @@ class HomeFragment : Fragment(R.layout.fragment_home), PoemAdapter.OnPoemClickLi
                     }
 
                     is PoemsViewModel.PoemsEvent.NavigateToCreatePoem -> {
-                        val action = PoemsFragmentDirections.actionPoemsFragmentToEditFragment2()
-                        findNavController().navigate(action)
+
                     }
 
                     is PoemsViewModel.PoemsEvent.NavigateToEditPoem -> {
-                        val action =
-                            HomeFragmentDirections.actionHomeFragmentToPoemFragment(
-                                event.poem
-                            )
-                        findNavController().navigate(action)
+
                     }
                 }
             }

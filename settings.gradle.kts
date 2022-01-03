@@ -5,3 +5,6 @@ include(
     ":features:home"
 )
 include(":modules:ui")
+include(":modules:local")
+include(":modules:remote")
+include(":modules:data")

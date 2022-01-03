@@ -4,12 +4,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.mambo.poetree.data.local.EmotionsDao
-import com.mambo.poetree.data.local.PoemsDao
-import com.mambo.poetree.data.local.TopicsDao
-import com.mambo.poetree.data.model.Emotion
-import com.mambo.poetree.data.model.Poem
-import com.mambo.poetree.data.model.Topic
+import com.mambo.data.Emotion
+import com.mambo.data.Poem
+import com.mambo.data.Topic
+import com.mambo.local.PoemsDao
+import com.mambo.local.TopicsDao
 import com.mambo.poetree.utils.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -21,7 +20,6 @@ import javax.inject.Inject
 class ComposeViewModel @Inject constructor(
     private val poemsDao: PoemsDao,
     private val state: SavedStateHandle,
-    emotionsDao: EmotionsDao,
     topicsDao: TopicsDao
 ) : ViewModel() {
 
@@ -33,20 +31,11 @@ class ComposeViewModel @Inject constructor(
 
     val poem = state.get<Poem>(POEM)
 
-    private val _emotions = emotionsDao.getAll()
-    val emotions = _emotions.asLiveData()
-
     private val _topics = topicsDao.getAll()
     val topics = _topics.asLiveData()
 
     private val _composeEventChannel = Channel<ComposePoemEvent>()
     val composePoemEvent = _composeEventChannel.receiveAsFlow()
-
-    var emotion: Emotion? = state.get<Emotion>(POEM_EMOTION) ?: poem?.emotion
-        set(value) {
-            field = value
-            state.set(POEM_EMOTION, value)
-        }
 
     var topic: Topic? = state.get<Topic>(POEM_TOPIC) ?: poem?.topic
         set(value) {
@@ -75,8 +64,6 @@ class ComposeViewModel @Inject constructor(
     fun onPoemEmotionClicked(updatedEmotion: Emotion?) =
         viewModelScope.launch {
 
-            emotion = updatedEmotion
-
             _composeEventChannel.send(ComposePoemEvent.NavigateNext)
 
         }
@@ -96,11 +83,6 @@ class ComposeViewModel @Inject constructor(
 
     private fun onComposePoem() {
 
-        if (emotion == null) {
-            showInvalidInputMessage("Choose emotion to proceed")
-            return
-        }
-
         if (topic == null) {
             showInvalidInputMessage("Choose topic to complete")
             return
@@ -108,8 +90,6 @@ class ComposeViewModel @Inject constructor(
 
         if (poem != null && poem.id != 0) {
             val updatedPoem = poem.copy(
-                emotionName = emotion!!.name,
-                emotion = emotion,
                 topicName = topic!!.name,
                 topic = topic
             )
@@ -118,8 +98,6 @@ class ComposeViewModel @Inject constructor(
 
         } else {
             val newPoem = poem!!.copy(
-                emotionName = emotion!!.name,
-                emotion = emotion,
                 topicName = topic!!.name,
                 topic = topic
             )
