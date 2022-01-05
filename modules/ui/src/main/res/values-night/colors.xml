@@ -16,5 +16,5 @@
     <color name="color_on_primary">#000000</color>
 
     <color name="nav_item_active">#ffffff</color>
-    <color name="nav_item_inactive">#042177</color>
+    <color name="nav_item_inactive">#50ffffff</color>
 </resources>

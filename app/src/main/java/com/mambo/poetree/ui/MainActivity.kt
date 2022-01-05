@@ -1,10 +1,7 @@
 package com.mambo.poetree.ui
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -61,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         val destinationChangedListener =
             NavController.OnDestinationChangedListener { _: NavController?, destination: NavDestination, _: Bundle? ->
                 when (destination.id) {
-                    R.id.feedFragment, R.id.exploreFragment -> {
+                    R.id.feedFragment, R.id.exploreFragment, R.id.bookmarksFragment -> {
                         showBottomNavigation()
                     }
 

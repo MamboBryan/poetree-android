@@ -24,7 +24,6 @@
         <item name="collapsingToolbarLayoutStyle">@style/Widget.MaterialComponents.Toolbar.Surface
         </item>
 
-
         <!-- Customize your theme here. -->
         <item name="fontFamily">@font/google_sans</item>
         <item name="android:colorBackground">@color/color_background</item>
@@ -48,7 +47,8 @@
         <item name="colorPrimary">?attr/colorSurface</item>
         <item name="colorPrimaryVariant">?attr/colorSurface</item>
         <item name="colorOnPrimary">?attr/colorOnSurface</item>
-        <item name="background">?attr/colorSurface</item>
+        <item name="android:background">?attr/colorSurface</item>
         <item name="elevation">0dp</item>
     </style>
+
 </resources>

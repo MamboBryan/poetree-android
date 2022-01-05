@@ -15,11 +15,7 @@
         android:name="com.mambo.poetree.ui.fragments.LibraryFragment"
         android:label="fragment_library"
         tools:layout="@layout/fragment_library" />
-    <fragment
-        android:id="@+id/accountFragment"
-        android:name="com.mambo.poetree.ui.fragments.AccountFragment"
-        android:label="fragment_account"
-        tools:layout="@layout/fragment_account" />
     <include app:graph="@navigation/flow_feeds" />
     <include app:graph="@navigation/flow_explore" />
+    <include app:graph="@navigation/flow_bookmarks" />
 </navigation>

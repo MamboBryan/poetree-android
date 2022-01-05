@@ -12,9 +12,9 @@
         android:title="Explore" />
 
     <item
-        android:id="@+id/accountFragment"
+        android:id="@+id/flow_bookmarks"
         android:icon="@drawable/ic_baseline_bookmark_24"
-        android:title="Library" />
+        android:title="Bookmarks" />
 
     <item
         android:id="@+id/libraryFragment"

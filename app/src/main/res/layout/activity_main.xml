@@ -40,6 +40,7 @@
         android:elevation="0dp"
         app:itemIconTint="@drawable/nav_item_color_state"
         app:labelVisibilityMode="unlabeled"
+        app:itemBackground="?attr/colorSurface"
         app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
