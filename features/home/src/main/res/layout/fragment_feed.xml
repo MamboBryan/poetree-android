@@ -28,7 +28,6 @@
                     android:padding="16dp"
                     android:text="Feed"
                     android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                    android:textColor="?attr/colorOnPrimary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

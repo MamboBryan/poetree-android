@@ -12,7 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ChoiceTopicFragment : Fragment(R.layout.fragment_choice_child),
-    TopicAdapter.OnTopicClickListener {
+    MinimalTopicAdapter.OnTopicClickListener {
 
     private val binding by viewBinding(FragmentChoiceChildBinding::bind)
     private val viewModel by viewModels<ComposeViewModel>({ requireParentFragment() })
@@ -26,7 +26,7 @@ class ChoiceTopicFragment : Fragment(R.layout.fragment_choice_child),
 
     private fun initializeEmotionsRecyclerview() {
 
-        val adapter = TopicAdapter(viewModel.topic, this)
+        val adapter = MinimalTopicAdapter(viewModel.topic, this)
 
         binding.apply {
             rvChoice.setHasFixedSize(true)

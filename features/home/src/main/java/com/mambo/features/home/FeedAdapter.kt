@@ -104,7 +104,7 @@ class FeedAdapter : ListAdapter<String, FeedAdapter.FeedViewHolder>(FEED_COMPARA
             binding.apply {
 
                 val duration = times[adapterPosition]
-                val comments = Random.nextInt()
+                val comments = Random.nextInt(100, 10000)
 
                 val message =
                     " \u2022 $duration \u2022 $comments Comments"

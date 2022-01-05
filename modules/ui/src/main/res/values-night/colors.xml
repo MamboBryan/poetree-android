@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--DARK THEME COLORS-->
-    <color name="splash_background">#111524</color>
+    <color name="splash_background">@color/color_primary</color>
 
     <color name="error">#e66666</color>
     <color name="loading">#ffe666</color>
@@ -14,4 +14,7 @@
 
     <color name="color_primary">#527bf3</color>
     <color name="color_on_primary">#000000</color>
+
+    <color name="nav_item_active">#ffffff</color>
+    <color name="nav_item_inactive">#042177</color>
 </resources>

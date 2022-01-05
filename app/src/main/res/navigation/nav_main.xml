@@ -21,4 +21,5 @@
         android:label="fragment_account"
         tools:layout="@layout/fragment_account" />
     <include app:graph="@navigation/flow_feeds" />
+    <include app:graph="@navigation/flow_explore" />
 </navigation>

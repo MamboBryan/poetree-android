@@ -7,19 +7,18 @@
         android:title="Feed" />
 
     <item
-        android:id="@+id/discoverFragment"
-        android:icon="@drawable/ic_baseline_explore_24"
-        android:title="Discover" />
-
-    <item
-        android:id="@+id/libraryFragment"
-        android:icon="@drawable/ic_baseline_bookmarks_24"
-        android:title="Library" />
+        android:id="@+id/flow_explore"
+        android:icon="@drawable/ic_round_offline_bolt_24"
+        android:title="Explore" />
 
     <item
         android:id="@+id/accountFragment"
-        android:icon="@drawable/ic_baseline_person_24"
-        android:title="Account" />
+        android:icon="@drawable/ic_baseline_bookmark_24"
+        android:title="Library" />
 
+    <item
+        android:id="@+id/libraryFragment"
+        android:icon="@drawable/ic_baseline_book_24"
+        android:title="Library" />
 
 </menu>

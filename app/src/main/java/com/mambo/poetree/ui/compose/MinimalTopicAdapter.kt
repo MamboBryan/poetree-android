@@ -6,16 +6,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mambo.data.Topic
-import com.mambo.local.utils.TopicUtils
 import com.mambo.poetree.R
-import com.mambo.poetree.databinding.ItemTopicBinding
+import com.mambo.poetree.databinding.ItemTopicMinimalBinding
 import java.util.*
 import kotlin.properties.Delegates
 
-class TopicAdapter(
+class MinimalTopicAdapter(
     val topic: Topic?,
     val listener: OnTopicClickListener
-) : ListAdapter<Topic, TopicAdapter.TopicViewHolder>(
+) : ListAdapter<Topic, MinimalTopicAdapter.TopicViewHolder>(
     TOPIC_COMPARATOR
 ) {
 
@@ -47,7 +46,7 @@ class TopicAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopicViewHolder {
         val binding =
-            ItemTopicBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemTopicMinimalBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TopicViewHolder(binding)
     }
 
@@ -61,7 +60,7 @@ class TopicAdapter(
     }
 
     inner class TopicViewHolder(
-        val binding: ItemTopicBinding
+        val binding: ItemTopicMinimalBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         init {

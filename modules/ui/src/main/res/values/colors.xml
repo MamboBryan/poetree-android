@@ -55,9 +55,12 @@
     <color name="color_primary">#073bd6</color>
     <color name="color_on_primary">#ffffff</color>
 
+    <color name="nav_item_active">#333333</color>
+    <color name="nav_item_inactive">#cccccc</color>
+
     <!--    COLORS FOR NATIVE WYSIWYG-->
     <color name="colorPrimary">#073bd6</color>
     <color name="colorPrimaryDark">#042177</color>
-    <color name="colorAccent">#f75c03</color>
+    <color name="colorAccent">#2155f0</color>
 
 </resources>

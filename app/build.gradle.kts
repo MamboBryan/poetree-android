@@ -65,8 +65,13 @@ repositories {
 
 dependencies {
 
-    implementation(project(BuildModules.Features.home))
+    implementation(project(BuildModules.Commons.ui))
     implementation(project(BuildModules.Commons.core))
+    implementation(project(BuildModules.Commons.data))
+    implementation(project(BuildModules.Commons.local))
+
+    implementation(project(BuildModules.Features.home))
+    implementation(project(BuildModules.Features.explore))
 
     implementation(Dependencies.Libraries.core)
     implementation(Dependencies.Libraries.kotlin)
@@ -98,8 +103,6 @@ dependencies {
     implementation(Dependencies.Libraries.switch)
     implementation(Dependencies.Libraries.circularImage)
     implementation(Dependencies.Libraries.liquidSwipe)
-    implementation(project(mapOf("path" to ":modules:local")))
-    implementation(project(mapOf("path" to ":modules:data")))
 
     testImplementation(Dependencies.Libraries.junit)
 
