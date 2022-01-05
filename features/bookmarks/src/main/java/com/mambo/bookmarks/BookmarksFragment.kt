@@ -37,10 +37,10 @@ class BookmarksFragment : Fragment(R.layout.fragment_bookmarks) {
             val poems = listOf("Mambo", "Tambo", "Rambo", "Sambo", "Wambo")
 
             binding.apply {
-                layoutState.stateError.isVisible = it == null
-                layoutState.stateLoading.isVisible = it == null
-                layoutState.stateEmpty.isVisible = it.isEmpty()
-                layoutState.stateContent.isVisible = it.isNotEmpty()
+                layoutStateBookmarks.stateError.isVisible = it == null
+                layoutStateBookmarks.stateLoading.isVisible = it == null
+                layoutStateBookmarks.stateEmpty.isVisible = it.isEmpty()
+                layoutStateBookmarks.stateContent.isVisible = it.isNotEmpty()
 
                 adapter.submitList(poems)
             }
@@ -51,9 +51,9 @@ class BookmarksFragment : Fragment(R.layout.fragment_bookmarks) {
 
     private fun initViews() {
         binding.apply {
-            toolbar.title = "Bookmarks"
+            toolbarBookmarks.title = "Bookmarks"
 
-            layoutState.recyclerView.adapter = adapter
+            layoutStateBookmarks.recyclerView.adapter = adapter
         }
     }
 

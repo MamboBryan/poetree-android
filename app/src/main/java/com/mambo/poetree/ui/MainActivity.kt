@@ -58,7 +58,10 @@ class MainActivity : AppCompatActivity() {
         val destinationChangedListener =
             NavController.OnDestinationChangedListener { _: NavController?, destination: NavDestination, _: Bundle? ->
                 when (destination.id) {
-                    R.id.feedFragment, R.id.exploreFragment, R.id.bookmarksFragment -> {
+                    R.id.feedFragment,
+                    R.id.exploreFragment,
+                    R.id.bookmarksFragment,
+                    R.id.libraryFragment -> {
                         showBottomNavigation()
                     }
 

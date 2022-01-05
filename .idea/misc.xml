@@ -12,13 +12,16 @@
         <entry key="app/src/main/res/menu/menu_bottom_nav.xml" value="0.3489583333333333" />
         <entry key="features/bookmarks/src/main/res/layout/fragment_bookmarks.xml" value="0.3489583333333333" />
         <entry key="features/bookmarks/src/main/res/layout/item_bookmark_poem.xml" value="0.3489583333333333" />
-        <entry key="features/bookmarks/src/main/res/layout/item_poem_bookmark.xml" value="0.1" />
+        <entry key="features/bookmarks/src/main/res/layout/item_poem_bookmark.xml" value="0.16" />
         <entry key="features/bookmarks/src/main/res/menu/menu_bookmarks.xml" value="0.3489583333333333" />
         <entry key="features/explore/src/main/res/layout/fragment_explore.xml" value="0.3489583333333333" />
         <entry key="features/explore/src/main/res/layout/item_topic.xml" value="0.3484375" />
         <entry key="features/home/src/main/res/layout/fragment_feed.xml" value="0.28532608695652173" />
         <entry key="features/home/src/main/res/layout/item_poem.xml" value="0.3484375" />
         <entry key="features/home/src/main/res/layout/item_poem_feed.xml" value="0.3489583333333333" />
+        <entry key="features/library/src/main/res/layout/fragment_library.xml" value="0.1537037037037037" />
+        <entry key="features/library/src/main/res/layout/item_poem_library.xml" value="0.22" />
+        <entry key="features/library/src/main/res/layout/item_poem_library_unpublished.xml" value="0.18" />
         <entry key="modules/ui/src/main/res/drawable/ic_home_active.xml" value="0.3645833333333333" />
         <entry key="modules/ui/src/main/res/drawable/ic_splash_dark.xml" value="0.3645833333333333" />
         <entry key="modules/ui/src/main/res/drawable/ic_splash_light.xml" value="0.3651041666666667" />
@@ -27,6 +30,7 @@
         <entry key="modules/ui/src/main/res/layout/layout_complete_recycler_horizontal.xml" value="0.2694746376811594" />
         <entry key="modules/ui/src/main/res/layout/layout_complete_recycler_refresh.xml" value="0.2966485507246377" />
         <entry key="modules/ui/src/main/res/layout/layout_complete_recycler_vertical.xml" value="0.2966485507246377" />
+        <entry key="modules/ui/src/main/res/layout/layout_fragment_generic.xml" value="0.1" />
       </map>
     </option>
   </component>

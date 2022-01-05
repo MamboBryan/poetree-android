@@ -5,17 +5,8 @@
     android:id="@+id/nav_main"
     app:startDestination="@id/flow_feeds">
 
-    <fragment
-        android:id="@+id/discoverFragment"
-        android:name="com.mambo.poetree.ui.fragments.DiscoverFragment"
-        android:label="fragment_discover"
-        tools:layout="@layout/fragment_discover" />
-    <fragment
-        android:id="@+id/libraryFragment"
-        android:name="com.mambo.poetree.ui.fragments.LibraryFragment"
-        android:label="fragment_library"
-        tools:layout="@layout/fragment_library" />
     <include app:graph="@navigation/flow_feeds" />
     <include app:graph="@navigation/flow_explore" />
     <include app:graph="@navigation/flow_bookmarks" />
+    <include app:graph="@navigation/flow_library" />
 </navigation>
