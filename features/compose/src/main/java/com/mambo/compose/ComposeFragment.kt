@@ -1,4 +1,4 @@
-package com.mambo.poetree.ui.edit
+package com.mambo.compose
 
 import android.os.Bundle
 import android.view.View
@@ -10,28 +10,30 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.snackbar.Snackbar
-import com.mambo.data.Poem
-import com.mambo.poetree.R
-import com.mambo.poetree.databinding.FragmentEditBinding
+import com.mambo.compose.databinding.FragmentComposeBinding
 import com.mambo.core.adapters.ViewPagerAdapter
+import com.mambo.data.Poem
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 
 @AndroidEntryPoint
-class EditFragment : Fragment(R.layout.fragment_edit) {
+class ComposeFragment : Fragment(R.layout.fragment_compose) {
 
-    private val binding by viewBinding(FragmentEditBinding::bind)
-    private val viewModel by viewModels<EditViewModel>()
+    private val binding by viewBinding(FragmentComposeBinding::bind)
+    private val viewModel by viewModels<ComposeViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
 
-            NavigationUI.setupWithNavController(toolbarEdit, findNavController())
-            toolbarEdit.setOnMenuItemClickListener { item ->
+            val poem = null
+
+            NavigationUI.setupWithNavController(toolbarCompose, findNavController())
+            toolbarCompose.title = if (poem == null) "Compose" else "Edit"
+            toolbarCompose.setOnMenuItemClickListener { item ->
 
                 when (item.itemId) {
 
@@ -70,7 +72,7 @@ class EditFragment : Fragment(R.layout.fragment_edit) {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.editPoemEvent.collect { event ->
                 when (event) {
-                    is EditViewModel.EditPoemEvent.NavigateBackWithResult -> {
+                    is ComposeViewModel.ComposeEvent.NavigateBackWithResult -> {
                         binding.root.clearFocus()
 
                         setFragmentResult(
@@ -81,19 +83,19 @@ class EditFragment : Fragment(R.layout.fragment_edit) {
                         findNavController().popBackStack()
                     }
 
-                    is EditViewModel.EditPoemEvent.ShowInvalidInputMessage -> {
+                    is ComposeViewModel.ComposeEvent.ShowInvalidInputMessage -> {
                         Snackbar.make(requireView(), event.message, Snackbar.LENGTH_LONG).show()
                     }
 
-                    is EditViewModel.EditPoemEvent.NavigateToComposeFragment -> {
+                    is ComposeViewModel.ComposeEvent.NavigateToEditFragment -> {
                         navigateToComposeFragment(event.poem)
                     }
 
-                    EditViewModel.EditPoemEvent.NavigateToPreview -> {
+                    ComposeViewModel.ComposeEvent.NavigateToPreview -> {
                         showPreview()
                     }
 
-                    EditViewModel.EditPoemEvent.NavigateToEditView -> {
+                    ComposeViewModel.ComposeEvent.NavigateToComposeView -> {
                         showEditView()
                     }
                 }
@@ -102,27 +104,20 @@ class EditFragment : Fragment(R.layout.fragment_edit) {
     }
 
     private fun showEditView() {
-        binding.apply {
-            viewPagerEdit.setCurrentItem(0, true)
-        }
-
+        binding.apply { viewpagerCompose.setCurrentItem(0, true) }
         updateMenu()
     }
 
     private fun showPreview() {
-
-        binding.apply {
-            viewPagerEdit.setCurrentItem(1, true)
-        }
-
+        binding.apply { viewpagerCompose.setCurrentItem(1, true) }
         updateMenu()
     }
 
     private fun updateMenu() {
         binding.apply {
 
-            val menu = toolbarEdit.menu
-            val position = viewPagerEdit.currentItem
+            val menu = toolbarCompose.menu
+            val position = viewpagerCompose.currentItem
 
             val previewAction = menu.findItem(R.id.menu_item_preview)
             val editAction = menu.findItem(R.id.menu_item_edit)
@@ -139,8 +134,8 @@ class EditFragment : Fragment(R.layout.fragment_edit) {
         val adapter = ViewPagerAdapter(fragments, childFragmentManager, lifecycle)
 
         binding.apply {
-            viewPagerEdit.isUserInputEnabled = false
-            viewPagerEdit.adapter = adapter
+            viewpagerCompose.isUserInputEnabled = false
+            viewpagerCompose.adapter = adapter
         }
 
     }

@@ -14,4 +14,8 @@ class PoemRepository @Inject constructor() {
         return poemsDao.getAll()
     }
 
+    suspend fun save(poem: Poem) = poemsDao.insert(poem)
+
+    suspend fun update(poem: Poem) = poemsDao.update(poem)
+
 }

@@ -1,11 +1,10 @@
-package com.mambo.poetree.ui.edit
+package com.mambo.compose
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.mambo.poetree.R
-import com.mambo.poetree.databinding.FragmentPreviewBinding
+import com.mambo.compose.databinding.FragmentPreviewBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -13,7 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class PreviewFragment : Fragment(R.layout.fragment_preview) {
 
     private val binding by viewBinding(FragmentPreviewBinding::bind)
-    private val viewModel by viewModels<EditViewModel>({ requireParentFragment() })
+    private val viewModel by viewModels<ComposeViewModel>({ requireParentFragment() })
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -54,10 +53,10 @@ class PreviewFragment : Fragment(R.layout.fragment_preview) {
 
             val html =
                 """
-                        <h2><i><b> $title </b></i></h2>
-                        <i>$content </i>
+                    <h2><i><b> $title </b></i></h2>
+                    <i>$content </i>
                        
-                    """.trimIndent()
+                """.trimIndent()
 
             wysiwygEditor.html = html
             wysiwygEditor.setCode()

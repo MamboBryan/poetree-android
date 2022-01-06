@@ -74,6 +74,7 @@ dependencies {
     implementation(project(BuildModules.Features.explore))
     implementation(project(BuildModules.Features.bookmarks))
     implementation(project(BuildModules.Features.library))
+    implementation(project(BuildModules.Features.compose))
 
     implementation(Dependencies.Libraries.core)
     implementation(Dependencies.Libraries.kotlin)

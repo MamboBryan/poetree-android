@@ -30,10 +30,12 @@
         app:layout_constraintTop_toBottomOf="@+id/edtTitle" />
 
     <HorizontalScrollView
+        android:elevation="4dp"
         android:id="@+id/horizontalScrollView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:scrollbarSize="0.5dp"
+        android:background="?attr/colorSurface"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -108,7 +110,7 @@
                 android:background="@null"
                 android:contentDescription="@null"
                 android:padding="12dp"
-                android:src="@drawable/ic_baseline_format_indent_decrease_24"
+                android:src="@drawable/ic_baseline_format_indent_increase_24"
                 app:tint="?attr/colorOnBackground" />
 
             <ImageView

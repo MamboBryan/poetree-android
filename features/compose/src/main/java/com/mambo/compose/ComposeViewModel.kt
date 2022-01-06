@@ -1,13 +1,13 @@
-package com.mambo.poetree.ui.edit
+package com.mambo.compose
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mambo.core.repository.PoemRepository
+import com.mambo.core.utils.Result.RESULT_CREATE_OK
+import com.mambo.core.utils.Result.RESULT_EDIT_OK
 import com.mambo.data.Poem
 import com.mambo.data.User
-import com.mambo.local.PoemsDao
-import com.mambo.poetree.utils.Result.RESULT_CREATE_OK
-import com.mambo.poetree.utils.Result.RESULT_EDIT_OK
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -17,8 +17,8 @@ import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class EditViewModel @Inject constructor(
-    private val poemsDao: PoemsDao,
+class ComposeViewModel @Inject constructor(
+    private val repository: PoemRepository,
     private val state: SavedStateHandle
 ) : ViewModel() {
 
@@ -36,7 +36,7 @@ class EditViewModel @Inject constructor(
             state.set("poem_content", value)
         }
 
-    private val _editPoemEventChannel = Channel<EditPoemEvent>()
+    private val _editPoemEventChannel = Channel<ComposeEvent>()
     val editPoemEvent = _editPoemEventChannel.receiveAsFlow()
 
     private fun getUser() = User(
@@ -88,86 +88,65 @@ class EditViewModel @Inject constructor(
         if (poem != null) {
 
             val updatedPoem = poem.copy(content = poemContent)
-            updatePoem(updatedPoem)
+            update(updatedPoem)
 
         } else {
 
             val newPoem = Poem(title = poemTitle, content = poemContent, user = getUser())
-            createPoem(newPoem)
+            save(newPoem)
 
         }
     }
 
     fun onPreviewClicked() {
-        viewModelScope.launch {
-            _editPoemEventChannel.send(EditPoemEvent.NavigateToPreview)
-        }
+        updateUi(ComposeEvent.NavigateToPreview)
     }
 
     fun onEditClicked() {
-        viewModelScope.launch {
-            _editPoemEventChannel.send(EditPoemEvent.NavigateToEditView)
-        }
+        updateUi(ComposeEvent.NavigateToComposeView)
     }
 
     private fun saveNewPoem(poem: Poem) {
-        viewModelScope.launch {
-
-            _editPoemEventChannel.send(
-                EditPoemEvent.NavigateToComposeFragment(poem)
-            )
-        }
+        updateUi(ComposeEvent.NavigateToEditFragment(poem))
     }
 
-    private fun updateSavedPoem(poem: Poem) {
-        viewModelScope.launch {
+    private fun updateSavedPoem(poem: Poem) = viewModelScope.launch {
 
-            poemsDao.update(poem)
+        repository.update(poem)
+        updateUi(ComposeEvent.NavigateToEditFragment(poem))
 
-            _editPoemEventChannel.send(
-                EditPoemEvent.NavigateToComposeFragment(poem)
-            )
-        }
     }
+
 
     private fun showInvalidInputMessage(message: String) {
-        viewModelScope.launch {
-            _editPoemEventChannel.send(EditPoemEvent.ShowInvalidInputMessage(message))
-        }
+        updateUi(ComposeEvent.ShowInvalidInputMessage(message))
     }
 
-    private fun updatePoem(poem: Poem) {
-        viewModelScope.launch {
+    private fun update(poem: Poem) = viewModelScope.launch {
 
-            poemsDao.update(poem)
+        repository.update(poem)
+        updateUi(ComposeEvent.NavigateBackWithResult(RESULT_EDIT_OK))
 
-            _editPoemEventChannel.send(
-                EditPoemEvent.NavigateBackWithResult(
-                    RESULT_EDIT_OK
-                )
-            )
-        }
     }
 
-    private fun createPoem(poem: Poem) {
-        viewModelScope.launch {
 
-            poemsDao.insert(poem)
+    private fun save(poem: Poem) = viewModelScope.launch {
 
-            _editPoemEventChannel.send(
-                EditPoemEvent.NavigateBackWithResult(
-                    RESULT_CREATE_OK
-                )
-            )
-        }
+        repository.save(poem)
+        updateUi(ComposeEvent.NavigateBackWithResult(RESULT_CREATE_OK))
+
     }
 
-    sealed class EditPoemEvent {
-        data class ShowInvalidInputMessage(val message: String) : EditPoemEvent()
-        data class NavigateBackWithResult(val result: Int) : EditPoemEvent()
-        data class NavigateToComposeFragment(val poem: Poem) : EditPoemEvent()
-        object NavigateToPreview : EditPoemEvent()
-        object NavigateToEditView : EditPoemEvent()
+    private fun updateUi(event: ComposeEvent) = viewModelScope.launch {
+        _editPoemEventChannel.send(event)
+    }
+
+    sealed class ComposeEvent {
+        data class ShowInvalidInputMessage(val message: String) : ComposeEvent()
+        data class NavigateBackWithResult(val result: Int) : ComposeEvent()
+        data class NavigateToEditFragment(val poem: Poem) : ComposeEvent()
+        object NavigateToPreview : ComposeEvent()
+        object NavigateToComposeView : ComposeEvent()
     }
 
 }

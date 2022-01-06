@@ -1,4 +1,4 @@
-package com.mambo.poetree.utils
+package com.mambo.core.utils
 
 object Result {
     const val RESULT_OK = 200

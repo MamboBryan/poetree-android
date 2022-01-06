@@ -5,6 +5,7 @@ object BuildModules {
         const val explore = ":features:explore"
         const val bookmarks = ":features:bookmarks"
         const val library = ":features:library"
+        const val compose = ":features:compose"
     }
 
     object Commons {

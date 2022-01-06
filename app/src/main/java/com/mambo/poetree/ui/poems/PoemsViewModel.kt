@@ -7,7 +7,7 @@ import com.mambo.data.Poem
 import com.mambo.local.PoemsDao
 import com.mambo.local.SortOrder
 import com.mambo.local.TopicsDao
-import com.mambo.poetree.utils.Result
+import com.mambo.core.utils.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

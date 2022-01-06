@@ -1,13 +1,12 @@
-package com.mambo.poetree.ui.edit
+package com.mambo.compose
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.github.onecode369.wysiwyg.WYSIWYG
-import com.mambo.poetree.R
-import com.mambo.poetree.databinding.FragmentWriteBinding
+import com.mambo.compose.databinding.FragmentWriteBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -15,7 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class WriteFragment : Fragment(R.layout.fragment_write) {
 
     private val binding by viewBinding(FragmentWriteBinding::bind)
-    private val viewModel by viewModels<EditViewModel>({ requireParentFragment() })
+    private val viewModel by viewModels<ComposeViewModel>({ requireParentFragment() })
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -23,9 +22,7 @@ class WriteFragment : Fragment(R.layout.fragment_write) {
         binding.apply {
 
             edtTitle.setText(viewModel.poemTitle)
-            edtTitle.addTextChangedListener { title ->
-                viewModel.poemTitle = title.toString()
-            }
+            edtTitle.doAfterTextChanged { title -> viewModel.poemTitle = title.toString() }
 
             setUpWYSIWYGWebView()
 
@@ -42,9 +39,10 @@ class WriteFragment : Fragment(R.layout.fragment_write) {
 
             wysiwygEditor.setEditorHeight(200)
             wysiwygEditor.setEditorFontSize(16)
+            wysiwygEditor.setEditorFontColor(R.color.color_on_background)
             wysiwygEditor.setPadding(16, 16, 16, 16)
 
-            wysiwygEditor.setPlaceholder("Pen down art here...")
+            wysiwygEditor.setPlaceholder("Pen down thoughts here...")
 
             actionUndo.setOnClickListener { wysiwygEditor.undo() }
 

@@ -1,4 +1,4 @@
-package com.mambo.poetree.ui.edit
+package com.mambo.compose
 
 import android.app.Dialog
 import android.os.Bundle
@@ -10,7 +10,7 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.mambo.poetree.databinding.FragmentPoemPreviewBinding
+import com.mambo.compose.databinding.FragmentPoemPreviewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.ocpsoft.prettytime.PrettyTime
 import java.util.*
@@ -25,7 +25,7 @@ class PoemPreviewFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentPoemPreviewBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by viewModels<EditViewModel>({ requireParentFragment() })
+    private val viewModel by viewModels<ComposeViewModel>({ requireParentFragment() })
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
