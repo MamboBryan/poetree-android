@@ -22,25 +22,25 @@ class ReadFragment : Fragment(R.layout.fragment_read) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.apply {
-            fabRead.setOnClickListener { findNavController().popBackStack() }
-
-            bottomAppBarRead.setOnMenuItemClickListener { item ->
-                when (item.itemId) {
-                    R.id.menu_action_like -> {
-                        Snackbar.make(requireView(), "Haiku Liked", Snackbar.LENGTH_SHORT).show()
-                    }
-                    R.id.menu_action_unlike -> {
-                        Snackbar.make(requireView(), "Haiku Liked", Snackbar.LENGTH_SHORT).show()
-                    }
-                    R.id.menu_action_comments -> {
-                        openCommentsBottomSheet()
-                    }
-                }
-
-                false
-            }
-        }
+//        binding.apply {
+//            fabRead.setOnClickListener { findNavController().popBackStack() }
+//
+//            bottomAppBarRead.setOnMenuItemClickListener { item ->
+//                when (item.itemId) {
+//                    R.id.menu_action_like -> {
+//                        Snackbar.make(requireView(), "Haiku Liked", Snackbar.LENGTH_SHORT).show()
+//                    }
+//                    R.id.menu_action_unlike -> {
+//                        Snackbar.make(requireView(), "Haiku Liked", Snackbar.LENGTH_SHORT).show()
+//                    }
+//                    R.id.menu_action_comments -> {
+//                        openCommentsBottomSheet()
+//                    }
+//                }
+//
+//                false
+//            }
+//        }
 
         setupReaderView()
         viewModel.launch()

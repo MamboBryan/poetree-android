@@ -74,8 +74,7 @@
         app:fabCradleRoundedCornerRadius="0dp"
         app:fabCradleVerticalOffset="0dp"
         app:hideOnScroll="true"
-        app:layout_scrollFlags="scroll|enterAlways"
-        app:menu="@menu/menu_poem" />
+        app:layout_scrollFlags="scroll|enterAlways" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_read"
