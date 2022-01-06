@@ -2,11 +2,12 @@ package com.mambo.compose
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.github.onecode369.wysiwyg.WYSIWYG
 import com.mambo.compose.databinding.FragmentWriteBinding
+import com.mambo.libraries.editor.WYSIWYG
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -34,12 +35,15 @@ class WriteFragment : Fragment(R.layout.fragment_write) {
         binding.apply {
 
             val wysiwygEditor = editor
+            val textColor = ContextCompat.getColor(requireContext(), R.color.color_on_background)
+            val backgroundColor = ContextCompat.getColor(requireContext(), R.color.color_background)
 
             wysiwygEditor.html = (viewModel.poemContent)
 
             wysiwygEditor.setEditorHeight(200)
             wysiwygEditor.setEditorFontSize(16)
-            wysiwygEditor.setEditorFontColor(R.color.color_on_background)
+            wysiwygEditor.setEditorFontColor(textColor)
+            wysiwygEditor.setEditorBackgroundColor(backgroundColor)
             wysiwygEditor.setPadding(16, 16, 16, 16)
 
             wysiwygEditor.setPlaceholder("Pen down thoughts here...")
@@ -68,7 +72,8 @@ class WriteFragment : Fragment(R.layout.fragment_write) {
 
             actionHeading.setOnClickListener { wysiwygEditor.setHeading(4) }
 
-            editor.setOnTextChangeListener(object : WYSIWYG.OnTextChangeListener {
+            editor.setOnTextChangeListener(object :
+                WYSIWYG.OnTextChangeListener {
                 override fun onTextChange(text: String?) {
                     viewModel.poemContent = text ?: ""
                 }

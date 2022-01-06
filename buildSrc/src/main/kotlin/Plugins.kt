@@ -7,5 +7,6 @@ object Plugins {
     const val parcelize = "kotlin-parcelize"
     const val android = "kotlin-android"
     const val kapt = "kotlin-kapt"
+    const val extensions = "kotlin-android-extensions"
 
 }

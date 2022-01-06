@@ -16,4 +16,8 @@ object BuildModules {
         const val ui = ":modules:ui"
     }
 
+    object Libraries {
+        const val editor = ":libraries:editor"
+    }
+
 }

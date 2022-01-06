@@ -2,6 +2,7 @@ package com.mambo.compose
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.mambo.compose.databinding.FragmentPreviewBinding
@@ -50,6 +51,8 @@ class PreviewFragment : Fragment(R.layout.fragment_preview) {
 
             val wysiwygEditor = editorPoem
 
+            val textColor = ContextCompat.getColor(requireContext(), R.color.color_on_background)
+            val backgroundColor = ContextCompat.getColor(requireContext(), R.color.color_background)
 
             val html =
                 """
@@ -59,6 +62,9 @@ class PreviewFragment : Fragment(R.layout.fragment_preview) {
                 """.trimIndent()
 
             wysiwygEditor.html = html
+
+            wysiwygEditor.setEditorFontColor(textColor)
+            wysiwygEditor.setEditorBackgroundColor(backgroundColor)
             wysiwygEditor.setCode()
         }
 

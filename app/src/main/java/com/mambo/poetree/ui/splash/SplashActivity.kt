@@ -18,7 +18,7 @@ class SplashActivity : AppCompatActivity() {
 
         viewModel.isDarkModeEnabled.observe(this) { isDarkModeEnabled ->
 //            changeTheme(isDarkModeEnabled)
-            changeTheme(false)
+            changeTheme(true)
         }
 
     }

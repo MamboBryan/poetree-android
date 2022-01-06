@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.github.onecode369.wysiwyg.WYSIWYG
+    <com.mambo.libraries.editor.WYSIWYG
         android:id="@+id/editor_poem"
         android:layout_width="0dp"
         android:layout_height="0dp"

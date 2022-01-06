@@ -20,7 +20,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.github.onecode369.wysiwyg.WYSIWYG
+    <com.mambo.libraries.editor.WYSIWYG
         android:id="@+id/editor"
         android:layout_width="0dp"
         android:layout_height="0dp"

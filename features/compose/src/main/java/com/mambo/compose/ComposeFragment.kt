@@ -1,7 +1,10 @@
 package com.mambo.compose
 
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -101,6 +104,7 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
                 }
             }
         }
+
     }
 
     private fun showEditView() {
