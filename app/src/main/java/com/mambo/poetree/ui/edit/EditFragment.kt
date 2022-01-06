@@ -13,7 +13,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.mambo.data.Poem
 import com.mambo.poetree.R
 import com.mambo.poetree.databinding.FragmentEditBinding
-import com.mambo.poetree.ui.compose.ViewPagerAdapter
+import com.mambo.core.adapters.ViewPagerAdapter
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect

@@ -2,26 +2,30 @@ package com.mambo.library
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.mambo.ui.databinding.LayoutFragmentGenericBinding
+import com.google.android.material.tabs.TabLayoutMediator
+import com.mambo.core.adapters.ViewPagerAdapter
+import com.mambo.library.databinding.FragmentLibraryBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class LibraryFragment : Fragment(R.layout.layout_fragment_generic) {
+class LibraryFragment : Fragment(R.layout.fragment_library) {
 
     private val viewModel: LibraryViewModel by viewModels()
-    private val binding by viewBinding(LayoutFragmentGenericBinding::bind)
-    private val adapter by lazy { LibraryAdapter() }
+    private val binding by viewBinding(FragmentLibraryBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initViews()
+        binding.apply {
+            toolbarLibrary.title = "Library"
+        }
+
+        setUpViewPager()
 
         lifecycleScope.launchWhenStarted {
             viewModel.events.collect { event ->
@@ -32,29 +36,28 @@ class LibraryFragment : Fragment(R.layout.layout_fragment_generic) {
             }
         }
 
-        viewModel.poems.observe(viewLifecycleOwner) {
-
-            val poems = listOf("Mambo", "Tambo", "Rambo", "Sambo", "Wambo")
-
-            binding.apply {
-                layoutStateGeneric.stateError.isVisible = it == null
-                layoutStateGeneric.stateLoading.isVisible = it == null
-                layoutStateGeneric.stateEmpty.isVisible = it.isEmpty()
-                layoutStateGeneric.stateContent.isVisible = it.isNotEmpty()
-
-                adapter.submitList(poems)
-            }
-
-        }
-
     }
 
-    private fun initViews() {
-        binding.apply {
-            toolbarGeneric.title = "Library"
+    private fun setUpViewPager() {
 
-            layoutStateGeneric.recyclerView.adapter = adapter
+        val fragments = arrayListOf(
+            PublishedFragment(),
+            UnpublishedFragment(),
+        )
+        val titles = arrayListOf("Published", "Unpublished")
+
+        val adapter = ViewPagerAdapter(fragments, childFragmentManager, lifecycle)
+
+        binding.apply {
+            viewPagerLibrary.isUserInputEnabled = true
+            viewPagerLibrary.adapter = adapter
+
+            TabLayoutMediator(tabsLibrary, viewPagerLibrary) { tab, position ->
+                tab.text = titles[position]
+            }.attach()
         }
+
+
     }
 
 }

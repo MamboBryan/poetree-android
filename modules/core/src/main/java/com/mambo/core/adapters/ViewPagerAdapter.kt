@@ -1,4 +1,4 @@
-package com.mambo.poetree.ui.compose
+package com.mambo.core.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

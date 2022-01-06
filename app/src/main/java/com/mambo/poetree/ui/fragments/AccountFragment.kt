@@ -12,7 +12,7 @@ import com.mambo.poetree.databinding.FragmentAccountBinding
 import com.mambo.poetree.ui.account.AccountOverviewFragment
 import com.mambo.poetree.ui.account.PublishedPoemsFragment
 import com.mambo.poetree.ui.account.UnpublishedPoemsFragment
-import com.mambo.poetree.ui.compose.ViewPagerAdapter
+import com.mambo.core.adapters.ViewPagerAdapter
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 
 class AccountFragment : Fragment(R.layout.fragment_account) {

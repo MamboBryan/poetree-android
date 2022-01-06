@@ -11,8 +11,8 @@ import com.mambo.library.databinding.ItemPoemLibraryUnpublishedBinding
 import org.ocpsoft.prettytime.PrettyTime
 
 
-class LibraryAdapter :
-    ListAdapter<String, LibraryAdapter.PoemBookmarkViewHolder>(LIBRARY_COMPARATOR) {
+class UnpublishedLibraryAdapter :
+    ListAdapter<String, UnpublishedLibraryAdapter.PoemBookmarkViewHolder>(LIBRARY_COMPARATOR) {
 
     val names = listOf(
         "LazyLion",
@@ -42,7 +42,7 @@ class LibraryAdapter :
         "an hour ago",
         "2 days ago",
         "7 days ago",
-        "3 month ago",
+        "3 months ago",
         "8 years ago"
     )
 

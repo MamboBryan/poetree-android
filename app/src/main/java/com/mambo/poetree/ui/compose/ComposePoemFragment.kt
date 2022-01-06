@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.mambo.core.adapters.ViewPagerAdapter
 import com.mambo.poetree.R
 import com.mambo.poetree.databinding.FragmentChoiceParentBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding

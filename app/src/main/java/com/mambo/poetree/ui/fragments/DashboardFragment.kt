@@ -13,7 +13,7 @@ import com.mambo.data.Haiku
 import com.mambo.poetree.R
 import com.mambo.poetree.databinding.FragmentDashboardBinding
 import com.mambo.poetree.ui.adapter.HaikuAdapter
-import com.mambo.poetree.ui.compose.ViewPagerAdapter
+import com.mambo.core.adapters.ViewPagerAdapter
 import com.mambo.poetree.ui.dashboard.DashboardAllFragment
 import com.mambo.poetree.ui.dashboard.DashboardPoetsFragment
 import com.mambo.poetree.ui.dashboard.DashboardViewModel
