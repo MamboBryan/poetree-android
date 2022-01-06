@@ -75,6 +75,7 @@ dependencies {
     implementation(project(BuildModules.Features.bookmarks))
     implementation(project(BuildModules.Features.library))
     implementation(project(BuildModules.Features.compose))
+    implementation(project(BuildModules.Features.comments))
     implementation(project(BuildModules.Features.poem))
 
     implementation(Dependencies.Libraries.core)

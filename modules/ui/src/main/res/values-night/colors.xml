@@ -17,4 +17,7 @@
 
     <color name="nav_item_active">#ffffff</color>
     <color name="nav_item_inactive">#50ffffff</color>
+
+    <color name="color_divider">#212842</color>
+
 </resources>

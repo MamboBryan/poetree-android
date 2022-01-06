@@ -4,11 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import com.mambo.poetree.R
 import com.mambo.poetree.databinding.FragmentReadBinding
-import com.mambo.poetree.ui.fragments.CommentsFragment
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -47,8 +44,8 @@ class ReadFragment : Fragment(R.layout.fragment_read) {
     }
 
     private fun openCommentsBottomSheet() {
-        val bottomSheet = CommentsFragment()
-        bottomSheet.show(childFragmentManager, CommentsFragment.TAG)
+//        val bottomSheet = CommentsFragment()
+//        bottomSheet.show(childFragmentManager, CommentsFragment.TAG)
     }
 
     private fun setupReaderView() {

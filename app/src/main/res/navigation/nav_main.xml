@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_main"
-    app:startDestination="@id/flow_poem">
+    app:startDestination="@id/flow_comments">
 
     <include app:graph="@navigation/flow_feeds" />
     <include app:graph="@navigation/flow_explore" />
@@ -10,4 +10,5 @@
     <include app:graph="@navigation/flow_library" />
     <include app:graph="@navigation/flow_compose" />
     <include app:graph="@navigation/flow_poem" />
+    <include app:graph="@navigation/flow_comments" />
 </navigation>
