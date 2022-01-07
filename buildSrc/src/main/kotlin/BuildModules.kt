@@ -9,6 +9,7 @@ object BuildModules {
         const val comments = ":features:comments"
         const val poem = ":features:poem"
         const val onboarding = ":features:onboarding"
+        const val profile = ":features:profile"
     }
 
     object Commons {

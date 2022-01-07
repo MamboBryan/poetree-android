@@ -61,6 +61,7 @@ dependencies {
     implementation(project(BuildModules.Features.explore))
     implementation(project(BuildModules.Features.library))
     implementation(project(BuildModules.Features.compose))
+    implementation(project(BuildModules.Features.profile))
     implementation(project(BuildModules.Features.comments))
     implementation(project(BuildModules.Features.bookmarks))
     implementation(project(BuildModules.Features.onboarding))
