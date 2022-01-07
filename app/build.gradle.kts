@@ -64,6 +64,7 @@ dependencies {
     implementation(project(BuildModules.Features.comments))
     implementation(project(BuildModules.Features.bookmarks))
     implementation(project(BuildModules.Features.onboarding))
+    implementation(project(BuildModules.Features.updatePassword))
 
     implementation(Dependencies.Libraries.core)
     implementation(Dependencies.Libraries.kotlin)

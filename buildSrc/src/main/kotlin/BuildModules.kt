@@ -11,6 +11,7 @@ object BuildModules {
         const val onboarding = ":features:onboarding"
         const val profile = ":features:profile"
         const val account = ":features:account"
+        const val updatePassword = ":features:update-password"
     }
 
     object Commons {

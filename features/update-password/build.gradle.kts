@@ -1,42 +1,81 @@
 plugins {
-    id 'com.android.library'
-    id 'kotlin-android'
+    id(Plugins.library)
+    id(Plugins.android)
+    id(Plugins.kapt)
+    id(Plugins.parcelize)
+    id(Plugins.hilt)
+    id(Plugins.navigation)
 }
-
 android {
-    compileSdkVersion 32
+    compileSdkVersion(Configs.compileSdkVersion)
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 32
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion(Configs.minSdkVersion)
+        targetSdkVersion(Configs.targetSdkVersion)
+        versionCode = Configs.versionCode
+        versionName = Configs.versionName
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        getByName("release") {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+
+    buildFeatures{
+        viewBinding = true
     }
-    kotlinOptions {
-        jvmTarget = '1.8'
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
     }
 }
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.0'
-    implementation 'com.google.android.material:material:1.4.0'
-    testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation(project(BuildModules.Commons.ui))
+    implementation(project(BuildModules.Commons.core))
+    implementation(project(BuildModules.Commons.data))
+    implementation(project(BuildModules.Libraries.editor))
+
+    implementation(Dependencies.Libraries.core)
+    implementation(Dependencies.Libraries.kotlin)
+    implementation(Dependencies.Libraries.appCompat)
+    implementation(Dependencies.Libraries.materialDesign)
+    implementation(Dependencies.Libraries.constraintLayout)
+    implementation(Dependencies.Libraries.legacySupport)
+
+    implementation(Dependencies.Libraries.viewModel)
+    implementation(Dependencies.Libraries.liveData)
+    implementation(Dependencies.Libraries.lifecycle)
+    implementation(Dependencies.Libraries.lifecycleExtensions)
+    implementation(Dependencies.Libraries.savedState)
+    implementation(Dependencies.Libraries.fragment)
+    implementation(Dependencies.Libraries.navigationFragment)
+    implementation(Dependencies.Libraries.navigationUi)
+    implementation(Dependencies.Libraries.coroutines)
+    implementation(Dependencies.Libraries.hilt)
+
+    implementation(Dependencies.Libraries.circularImage)
+    implementation(Dependencies.Libraries.delegate)
+
+    kapt(Dependencies.Libraries.hiltCompiler)
+
+}
+
+kapt {
+    correctErrorTypes = true
 }
