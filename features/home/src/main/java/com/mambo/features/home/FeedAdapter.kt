@@ -1,16 +1,12 @@
 package com.mambo.features.home
 
 import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import coil.transform.CircleCropTransformation
-import coil.transform.RoundedCornersTransformation
-import com.mambo.features.home.databinding.ItemPoemFeedBinding
+import com.mambo.ui.databinding.ItemPoemDetailedBinding
 import org.ocpsoft.prettytime.PrettyTime
 import kotlin.random.Random
 
@@ -59,7 +55,7 @@ class FeedAdapter : ListAdapter<String, FeedAdapter.FeedViewHolder>(FEED_COMPARA
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedViewHolder {
         val binding =
-            ItemPoemFeedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemPoemDetailedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return FeedViewHolder(binding)
     }
 
@@ -87,7 +83,7 @@ class FeedAdapter : ListAdapter<String, FeedAdapter.FeedViewHolder>(FEED_COMPARA
             }
     }
 
-    inner class FeedViewHolder(private val binding: ItemPoemFeedBinding) :
+    inner class FeedViewHolder(private val binding: ItemPoemDetailedBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         private val prettyTime = PrettyTime()

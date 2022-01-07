@@ -51,6 +51,7 @@ dependencies {
     implementation(Dependencies.Libraries.materialDesign)
     implementation(Dependencies.Libraries.constraintLayout)
     implementation(Dependencies.Libraries.legacySupport)
+    implementation(Dependencies.Libraries.circularImage)
 
 }
 
