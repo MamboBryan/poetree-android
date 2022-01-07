@@ -27,5 +27,6 @@ object Versions {
     const val circularImageView = "4.2.0"
     const val liquidSwipe = "1.0.0"
     const val playServicesAuth = "19.0.0"
+    const val multiSearch = "0.2.0"
 
 }

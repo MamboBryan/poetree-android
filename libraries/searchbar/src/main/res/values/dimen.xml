@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="material_padding">16dp</dimen>
+    <dimen name="material_padding_xl">32dp</dimen>
+    <dimen name="material_padding_md">12dp</dimen>
+    <dimen name="material_padding_sm">8dp</dimen>
+</resources>

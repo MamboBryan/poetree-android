@@ -56,6 +56,7 @@ dependencies {
 
     implementation(project(BuildModules.Features.home))
     implementation(project(BuildModules.Features.poem))
+    implementation(project(BuildModules.Features.search))
     implementation(project(BuildModules.Features.explore))
     implementation(project(BuildModules.Features.account))
     implementation(project(BuildModules.Features.library))

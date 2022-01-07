@@ -12,6 +12,7 @@ object BuildModules {
         const val profile = ":features:profile"
         const val account = ":features:account"
         const val updatePassword = ":features:update-password"
+        const val search = ":features:search"
     }
 
     object Commons {
@@ -24,6 +25,7 @@ object BuildModules {
 
     object Libraries {
         const val editor = ":libraries:editor"
+        const val searchbar = ":libraries:searchbar"
     }
 
 }

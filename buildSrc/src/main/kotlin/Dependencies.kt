@@ -51,6 +51,7 @@ object Dependencies {
         val switch by lazy{"com.github.zcweng:switch-button:${Versions.switch}"}
         val circularImage by lazy{"com.mikhaellopez:circularimageview:${Versions.circularImageView}"}
         val liquidSwipe by lazy{"com.cuberto:liquid-swipe:${Versions.liquidSwipe}"}
+        val multiSearch by lazy{"com.github.anitrend:material-multi-search:${Versions.multiSearch}"}
 
     }
 

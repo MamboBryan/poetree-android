@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:animateLayoutChanges="true">
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/searchTermEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:imeOptions="actionSearch"
+        android:focusableInTouchMode="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:paddingTop="@dimen/material_padding"
+        android:paddingBottom="@dimen/material_padding"
+        android:background="@null"
+        tools:hint="Search"
+        />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/searchTermRemoveIcon"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:padding="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        tools:src="@drawable/ic_round_clear"/>
+
+    <Space
+        android:layout_width="@dimen/material_padding"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
