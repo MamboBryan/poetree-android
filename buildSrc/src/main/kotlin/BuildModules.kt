@@ -13,6 +13,7 @@ object BuildModules {
         const val account = ":features:account"
         const val updatePassword = ":features:update-password"
         const val search = ":features:search"
+        const val artist = ":features:artist"
     }
 
     object Commons {

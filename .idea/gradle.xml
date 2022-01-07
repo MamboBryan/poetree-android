@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/buildSrc" />
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/account" />
+            <option value="$PROJECT_DIR$/features/artist" />
             <option value="$PROJECT_DIR$/features/bookmarks" />
             <option value="$PROJECT_DIR$/features/comments" />
             <option value="$PROJECT_DIR$/features/compose" />
