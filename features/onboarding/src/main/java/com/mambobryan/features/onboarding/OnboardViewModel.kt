@@ -1,4 +1,4 @@
-package com.mambo.poetree.ui.onboard
+package com.mambobryan.features.onboarding
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

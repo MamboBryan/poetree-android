@@ -1,11 +1,10 @@
-package com.mambo.poetree.ui.onboard
+package com.mambobryan.features.onboarding
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.mambo.poetree.R
-import com.mambo.poetree.databinding.FragmentWriterBinding
+import com.mambobryan.features.onboarding.databinding.FragmentWriterBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 
 class WriterFragment : Fragment(R.layout.fragment_writer) {

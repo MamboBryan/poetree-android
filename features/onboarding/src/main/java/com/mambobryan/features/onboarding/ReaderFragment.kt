@@ -1,25 +1,22 @@
-package com.mambo.poetree.ui.onboard
+package com.mambobryan.features.onboarding
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.mambo.poetree.R
-import com.mambo.poetree.databinding.FragmentCommunityBinding
+import com.mambobryan.features.onboarding.databinding.FragmentReaderBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
-class CommunityFragment : Fragment(R.layout.fragment_community) {
+class ReaderFragment : Fragment(R.layout.fragment_reader) {
 
-    private val binding by viewBinding(FragmentCommunityBinding::bind)
+    private val binding by viewBinding(FragmentReaderBinding::bind)
     private val viewModel by viewModels<OnboardViewModel>({ requireParentFragment() })
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
-            btnCommunityFinish.setOnClickListener {
+            tvReaderSkip.setOnClickListener {
                 viewModel.onFinishOnBoardingClicked()
             }
         }

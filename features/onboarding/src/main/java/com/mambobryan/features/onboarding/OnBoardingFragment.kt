@@ -1,4 +1,4 @@
-package com.mambo.poetree.ui.onboard
+package com.mambobryan.features.onboarding
 
 import android.os.Bundle
 import android.view.View
@@ -7,9 +7,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
-import com.mambo.poetree.R
-import com.mambo.poetree.databinding.FragmentOnboardingBinding
+import com.mambobryan.features.onboarding.databinding.FragmentOnboardingBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect

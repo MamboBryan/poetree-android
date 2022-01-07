@@ -49,20 +49,6 @@ android {
     }
 }
 
-val githubUser = gradleLocalProperties(rootDir).getProperty("gpr.user")
-val githubKey = gradleLocalProperties(rootDir).getProperty("gpr.key")
-
-repositories {
-    maven {
-        url = uri("https://maven.pkg.github.com/Cuberto/liquid-swipe-android")
-        credentials {
-            username = githubUser ?: System.getenv("GPR_USER")
-            password = githubKey ?: System.getenv("GPR_API_KEY")
-        }
-    }
-}
-
-
 dependencies {
 
     implementation(project(BuildModules.Commons.ui))
@@ -71,12 +57,13 @@ dependencies {
     implementation(project(BuildModules.Commons.local))
 
     implementation(project(BuildModules.Features.home))
+    implementation(project(BuildModules.Features.poem))
     implementation(project(BuildModules.Features.explore))
-    implementation(project(BuildModules.Features.bookmarks))
     implementation(project(BuildModules.Features.library))
     implementation(project(BuildModules.Features.compose))
     implementation(project(BuildModules.Features.comments))
-    implementation(project(BuildModules.Features.poem))
+    implementation(project(BuildModules.Features.bookmarks))
+    implementation(project(BuildModules.Features.onboarding))
 
     implementation(Dependencies.Libraries.core)
     implementation(Dependencies.Libraries.kotlin)
@@ -107,7 +94,6 @@ dependencies {
     implementation(Dependencies.Libraries.delegate)
     implementation(Dependencies.Libraries.switch)
     implementation(Dependencies.Libraries.circularImage)
-    implementation(Dependencies.Libraries.liquidSwipe)
 
     testImplementation(Dependencies.Libraries.junit)
 

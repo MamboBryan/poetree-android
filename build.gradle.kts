@@ -21,7 +21,8 @@ allprojects {
         google()
         jcenter()
         mavenCentral()
-        maven(url = "https://jitpack.io")
+        maven { setUrl("https://jitpack.io") }
+        maven { setUrl("https://maven.pkg.github.com/Cuberto/liquid-swipe-android") }
     }
 }
 
