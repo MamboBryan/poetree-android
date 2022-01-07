@@ -1,5 +1,3 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-
 plugins {
     id(Plugins.application)
     id(Plugins.android)
@@ -59,6 +57,7 @@ dependencies {
     implementation(project(BuildModules.Features.home))
     implementation(project(BuildModules.Features.poem))
     implementation(project(BuildModules.Features.explore))
+    implementation(project(BuildModules.Features.account))
     implementation(project(BuildModules.Features.library))
     implementation(project(BuildModules.Features.compose))
     implementation(project(BuildModules.Features.profile))
