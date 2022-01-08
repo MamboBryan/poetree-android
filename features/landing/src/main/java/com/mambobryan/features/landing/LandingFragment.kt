@@ -1,16 +1,14 @@
-package com.mambo.poetree.ui.fragments
+package com.mambobryan.features.landing
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import com.mambo.poetree.R
-import com.mambo.poetree.databinding.FragmentAuthenticationBinding
+import com.mambobryan.features.landing.databinding.FragmentLandingBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 
-class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
+class LandingFragment : Fragment(R.layout.fragment_landing) {
 
-    private val binding by viewBinding(FragmentAuthenticationBinding::bind)
+    private val binding by viewBinding(FragmentLandingBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -25,7 +23,7 @@ class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
         binding.apply {
 
             tvPoem.text = openingPoem
-            tvPoemAuthor.text = "- kaluki -"
+            tvPoemAuthor.text = "~  ThePoetreePoet  ~"
 
 //            ivAuthBg.scaleType = ImageView.ScaleType.CENTER_CROP
 //            ivAuthBg.load(R.drawable.trees) {

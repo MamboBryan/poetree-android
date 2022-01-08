@@ -14,6 +14,7 @@ object BuildModules {
         const val updatePassword = ":features:update-password"
         const val search = ":features:search"
         const val artist = ":features:artist"
+        const val landing = ":features:landing"
     }
 
     object Commons {

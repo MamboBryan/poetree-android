@@ -8,9 +8,12 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3489583333333333" />
         <entry key="app/src/main/res/layout/fragment_account.xml" value="0.3489583333333333" />
         <entry key="app/src/main/res/layout/fragment_account_overview.xml" value="0.3489583333333333" />
+        <entry key="app/src/main/res/layout/fragment_authentication.xml" value="0.3489583333333333" />
         <entry key="app/src/main/res/layout/fragment_base.xml" value="0.3489583333333333" />
         <entry key="app/src/main/res/layout/fragment_choice_parent.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_compose.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_landing.xml" value="0.3489583333333333" />
+        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.3489583333333333" />
         <entry key="app/src/main/res/layout/fragment_poem.xml" value="0.3489583333333333" />
         <entry key="app/src/main/res/layout/fragment_read.xml" value="0.5727525486561631" />
         <entry key="app/src/main/res/layout/fragment_setting.xml" value="0.3489583333333333" />
