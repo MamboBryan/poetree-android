@@ -25,11 +25,9 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
     private fun setUpViewPager() {
 
         val fragments = arrayListOf(SignInFragment(), SignUpFragment())
-        val titles = arrayOf("Sign In", "Sign Up")
         val adapter = ViewPagerAdapter(fragments, childFragmentManager, lifecycle)
 
         binding.apply {
-            vpAuth.isUserInputEnabled = true
             vpAuth.adapter = adapter
         }
 
