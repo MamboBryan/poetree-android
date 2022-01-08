@@ -54,6 +54,7 @@ dependencies {
     implementation(project(BuildModules.Commons.data))
     implementation(project(BuildModules.Commons.local))
 
+    implementation(project(BuildModules.Features.auth))
     implementation(project(BuildModules.Features.home))
     implementation(project(BuildModules.Features.poem))
     implementation(project(BuildModules.Features.search))

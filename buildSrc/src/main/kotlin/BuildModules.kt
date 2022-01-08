@@ -1,6 +1,7 @@
 object BuildModules {
 
     object Features {
+        const val auth = ":features:auth"
         const val home = ":features:home"
         const val explore = ":features:explore"
         const val bookmarks = ":features:bookmarks"

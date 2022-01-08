@@ -5,6 +5,7 @@
       <map>
         <entry key="../../../../../../layout/custom_preview.xml" value="0.37864583333333335" />
         <entry key="app/src/main/res/drawable/ic_baseline_format_quote_24.xml" value="0.3651041666666667" />
+        <entry key="app/src/main/res/drawable/ic_logo.xml" value="0.3651041666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3489583333333333" />
         <entry key="app/src/main/res/layout/fragment_account.xml" value="0.3489583333333333" />
         <entry key="app/src/main/res/layout/fragment_account_overview.xml" value="0.3489583333333333" />
@@ -28,6 +29,9 @@
         <entry key="features/account/src/main/res/layout/fragment_account.xml" value="0.3489583333333333" />
         <entry key="features/artist/src/main/res/layout/fragment_artist.xml" value="0.25" />
         <entry key="features/artist/src/main/res/layout/item_poem_artist.xml" value="0.3489583333333333" />
+        <entry key="features/auth/src/main/res/layout/fragment_auth.xml" value="0.3416666666666667" />
+        <entry key="features/auth/src/main/res/layout/fragment_sign_in.xml" value="0.3489583333333333" />
+        <entry key="features/auth/src/main/res/layout/fragment_sign_up.xml" value="0.33229166666666665" />
         <entry key="features/bookmarks/src/main/res/layout/fragment_bookmarks.xml" value="0.3489583333333333" />
         <entry key="features/bookmarks/src/main/res/layout/item_bookmark_poem.xml" value="0.3489583333333333" />
         <entry key="features/bookmarks/src/main/res/layout/item_poem_bookmark.xml" value="0.2073170731707317" />
