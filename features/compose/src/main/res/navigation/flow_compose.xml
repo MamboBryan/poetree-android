@@ -7,5 +7,7 @@
     <fragment
         android:id="@+id/composeFragment"
         android:name="com.mambo.compose.ComposeFragment"
-        android:label="ComposeFragment" />
+        android:label="ComposeFragment">
+        <deepLink app:uri="@string/compose" />
+    </fragment>
 </navigation>

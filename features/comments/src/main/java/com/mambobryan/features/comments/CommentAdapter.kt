@@ -1,6 +1,5 @@
 package com.mambobryan.features.comments
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -95,7 +94,7 @@ class CommentAdapter :
                 tvCommentUser.text = names[adapterPosition]
                 tvCommentDays.text = times[adapterPosition]
                 tvCommentContent.text = titles[adapterPosition]
-                imageView2.load(images[adapterPosition])
+                ivUser.load(images[adapterPosition])
 
             }
         }

@@ -53,6 +53,8 @@ class FeedAdapter : ListAdapter<String, FeedAdapter.FeedViewHolder>(FEED_COMPARA
         "https://images.unsplash.com/photo-1597953601374-1ff2d5640c85?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8cGFuZGF8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60"
     )
 
+    private lateinit var listener: OnFeedPoemClicked
+    
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedViewHolder {
         val binding =
             ItemPoemDetailedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -62,6 +64,10 @@ class FeedAdapter : ListAdapter<String, FeedAdapter.FeedViewHolder>(FEED_COMPARA
     override fun onBindViewHolder(holder: FeedViewHolder, position: Int) {
         val currentItem = getItem(position)
         holder.bind(currentItem)
+    }
+    
+    fun setClickListener(listener: OnFeedPoemClicked){
+        this.listener = listener
     }
 
     companion object {
@@ -90,8 +96,10 @@ class FeedAdapter : ListAdapter<String, FeedAdapter.FeedViewHolder>(FEED_COMPARA
 
         init {
 
-            binding.root.setOnClickListener {
-
+            binding.layoutPoem.setOnClickListener {
+                if(adapterPosition != RecyclerView.NO_POSITION){
+                    listener.onPoemClicked(getItem(adapterPosition))
+                }
             }
 
         }
@@ -103,7 +111,7 @@ class FeedAdapter : ListAdapter<String, FeedAdapter.FeedViewHolder>(FEED_COMPARA
                 val comments = Random.nextInt(100, 10000)
 
                 val message =
-                    " \u2022 $duration \u2022 $comments Comments"
+                    "  \u2022  $duration"
 
                 tvPoemUser.text = names[adapterPosition]
                 tvPoemTitle.text = titles[adapterPosition]

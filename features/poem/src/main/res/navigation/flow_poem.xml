@@ -7,5 +7,7 @@
     <fragment
         android:id="@+id/poemFragment"
         android:name="com.mambobryan.poetree.poem.PoemFragment"
-        android:label="PoemFragment" />
+        android:label="PoemFragment">
+        <deepLink app:uri="@string/poem" />
+    </fragment>
 </navigation>

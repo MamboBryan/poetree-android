@@ -6,11 +6,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.core.view.isVisible
-import androidx.navigation.NavOptions
-import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import com.mambo.features.home.databinding.FragmentFeedBinding
 import com.mambobryan.navigation.Destinations
+import com.mambobryan.navigation.extensions.navigate
 import com.mambobryan.navigation.getDeeplink
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,13 +30,8 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             viewModel.events.collect { event ->
                 when (event) {
                     FeedViewModel.FeedEvent.NavigateToProfile -> navigateToProfile()
-                    FeedViewModel.FeedEvent.NavigateToCompose -> {
-                        Snackbar
-                            .make(requireView(), "Create Poem Clicked!", Snackbar.LENGTH_SHORT)
-                            .show()
-                    }
-                    is FeedViewModel.FeedEvent.NavigateToPoem -> {
-                    }
+                    FeedViewModel.FeedEvent.NavigateToCompose -> navigateToCompose()
+                    is FeedViewModel.FeedEvent.NavigateToPoem -> navigateToPoem()
                 }
             }
         }
@@ -65,22 +58,29 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             btnCreatePoem.setOnClickListener { viewModel.onCreatePoemClicked() }
 
             layoutState.recyclerView.adapter = adapter
-//            layoutState.recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
-
         }
+
+        adapter.setClickListener(object: FeedAdapter.OnFeedPoemClicked{
+            override fun onPoemClicked(poem: String) {
+                viewModel.onPoemClicked(poem)
+            }
+        })
     }
 
     private fun navigateToProfile() {
-
-        val deeplink = getDeeplink(Destinations.PROFLE)
-
-        val navOptions = NavOptions
-            .Builder()
-            .setLaunchSingleTop(true)
-            .build()
-
-        findNavController().navigate(deeplink, navOptions)
-
+        val deeplink = getDeeplink(Destinations.PROFILE)
+        navigate(deeplink)
     }
+
+    private fun navigateToCompose() {
+        val deeplink = getDeeplink(Destinations.COMPOSE)
+        navigate(deeplink)
+    }
+
+    private fun navigateToPoem(){
+        val deeplink = getDeeplink(Destinations.POEM)
+        navigate(deeplink)
+    }
+
 
 }

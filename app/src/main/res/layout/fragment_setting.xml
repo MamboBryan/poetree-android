@@ -48,7 +48,7 @@
                     android:padding="16dp">
 
                     <ImageView
-                        android:id="@+id/imageView2"
+                        android:id="@+id/iv_poem_bg"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"

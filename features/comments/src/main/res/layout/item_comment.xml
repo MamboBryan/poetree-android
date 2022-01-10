@@ -9,7 +9,7 @@
     android:paddingBottom="8dp">
 
     <com.mikhaellopez.circularimageview.CircularImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/iv_user"
         android:layout_width="30dp"
         android:layout_height="30dp"
         app:civ_border="false"
@@ -25,8 +25,8 @@
         android:text="TextView"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="?attr/colorOnBackground"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:layout_constraintTop_toTopOf="@+id/imageView2" />
+        app:layout_constraintStart_toEndOf="@+id/iv_user"
+        app:layout_constraintTop_toTopOf="@+id/iv_user" />
 
     <TextView
         android:id="@+id/tv_comment_days"

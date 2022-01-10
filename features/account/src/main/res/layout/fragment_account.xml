@@ -28,7 +28,7 @@
             tools:context=".AccountFragment">
 
             <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/iv_poem_bg"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_marginTop="16dp"
@@ -44,8 +44,8 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:src="@drawable/ic_baseline_camera_alt_24"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-                app:layout_constraintEnd_toEndOf="@+id/imageView2" />
+                app:layout_constraintBottom_toBottomOf="@+id/iv_poem_bg"
+                app:layout_constraintEnd_toEndOf="@+id/iv_poem_bg" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout"
@@ -56,7 +56,7 @@
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView2">
+                app:layout_constraintTop_toBottomOf="@+id/iv_poem_bg">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"

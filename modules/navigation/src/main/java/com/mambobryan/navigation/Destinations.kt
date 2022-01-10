@@ -20,6 +20,8 @@ fun Context.get(id: Int): String {
 
 object Destinations {
 
-    val PROFLE = R.string.profile
+    val PROFILE = R.string.profile
+    val COMPOSE = R.string.compose
+    val POEM = R.string.poem
 
 }

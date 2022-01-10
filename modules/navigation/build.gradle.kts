@@ -47,7 +47,9 @@ dependencies {
     implementation(Dependencies.Libraries.gson)
 
     implementation(Dependencies.Libraries.fragment)
+    implementation(Dependencies.Libraries.navigationUi)
     implementation(Dependencies.Libraries.navigationCommon)
+    implementation(Dependencies.Libraries.navigationFragment)
 }
 
 kapt {
