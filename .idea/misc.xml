@@ -27,6 +27,8 @@
         <entry key="app/src/main/res/layout/item_topic.xml" value="0.140625" />
         <entry key="app/src/main/res/layout/item_topic_minimal.xml" value="0.33" />
         <entry key="app/src/main/res/menu/menu_bottom_nav.xml" value="0.3489583333333333" />
+        <entry key="app/src/main/res/menu/menu_fragment_poems.xml" value="0.1203125" />
+        <entry key="app/src/main/res/menu/menu_library.xml" value="0.1203125" />
         <entry key="app/src/main/res/menu/menu_poem.xml" value="0.1" />
         <entry key="features/account/src/main/res/layout/fragment_account.xml" value="0.3489583333333333" />
         <entry key="features/artist/src/main/res/layout/fragment_artist.xml" value="0.25" />

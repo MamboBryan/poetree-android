@@ -4,8 +4,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="dummy_txt_short"> Some Random Text    </string>
     <string name="dummy_txt_long"> I\'ve got my mom\'s old phone, but I can\'t afford a pricey wireless plan so I got a free phone number from TextNow and I use the app to talk to my friends for free  </string>
-    <string name="search">Search</string>
-    <string name="settings">Settings</string>
 
     <!--    on boarding strings-->
     <string name="on_board_reader">Read poems from the most diverse and raw creatives in the world, while you freely express yourself in the comments</string>

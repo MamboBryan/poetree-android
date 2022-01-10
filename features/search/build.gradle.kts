@@ -49,6 +49,7 @@ dependencies {
     implementation(project(BuildModules.Commons.ui))
     implementation(project(BuildModules.Commons.core))
     implementation(project(BuildModules.Commons.data))
+    implementation(project(BuildModules.Commons.navigation))
     implementation(project(BuildModules.Libraries.searchbar))
 
     implementation(Dependencies.Libraries.core)

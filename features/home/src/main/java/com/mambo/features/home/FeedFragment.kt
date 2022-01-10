@@ -8,8 +8,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.core.view.isVisible
 import com.mambo.features.home.databinding.FragmentFeedBinding
 import com.mambobryan.navigation.Destinations
+import com.mambobryan.navigation.extensions.getDeeplink
 import com.mambobryan.navigation.extensions.navigate
-import com.mambobryan.navigation.getDeeplink
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect

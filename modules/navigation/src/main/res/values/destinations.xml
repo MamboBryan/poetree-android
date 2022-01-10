@@ -4,5 +4,6 @@
     <string name="profile">app://com.mambobryan.poetree/profile</string>
     <string name="compose">app://com.mambobryan.poetree/compose</string>
     <string name="poem">app://com.mambobryan.poetree/poem</string>
+    <string name="search">app://com.mambobryan.poetree/search</string>
 
 </resources>

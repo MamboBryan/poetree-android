@@ -9,9 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mambo.explore.databinding.ItemTopicBinding
 
 
-class TopicsAdapter(
-    private val listener: OnTopicClickListener
-) : ListAdapter<String, TopicsAdapter.TopicViewHolder>(TOPIC_COMPARATOR) {
+class TopicsAdapter : ListAdapter<String, TopicsAdapter.TopicViewHolder>(TOPIC_COMPARATOR) {
 
     val colors = listOf(
         "#BAFFAD",
@@ -24,6 +22,12 @@ class TopicsAdapter(
         "#E0E0E0",
         "#FFCFC2",
     )
+
+    private lateinit var clickListener: OnTopicClickListener
+
+    fun setListener(listener: OnTopicClickListener){
+        clickListener = listener
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopicViewHolder {
         val binding =
@@ -65,8 +69,7 @@ class TopicsAdapter(
                 val position = adapterPosition
 
                 if (position != RecyclerView.NO_POSITION) {
-                    val poem = getItem(position)
-                    listener.onTopicClicked(poem)
+                    clickListener.onTopicClicked(getItem(position))
                 }
 
             }
