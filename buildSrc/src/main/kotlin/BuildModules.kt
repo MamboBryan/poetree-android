@@ -24,6 +24,7 @@ object BuildModules {
         const val remote = ":modules:remote"
         const val data = ":modules:data"
         const val ui = ":modules:ui"
+        const val navigation = ":modules:navigation"
     }
 
     object Libraries {

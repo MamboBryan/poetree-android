@@ -21,11 +21,11 @@ class FeedViewModel @Inject constructor(
     private val _poems = poemsRepository.poems()
     val poems = _poems.asLiveData()
 
-    fun onUserImageClicked() = updateUi(FeedEvent.NavigateToAccountDetails)
+    fun onUserImageClicked() = updateUi(FeedEvent.NavigateToProfile)
 
     fun onPoemClicked(poem: String) = updateUi(FeedEvent.NavigateToPoem(poem))
 
-    fun onCreatePoemClicked() = updateUi(FeedEvent.NavigateToCreatePoem)
+    fun onCreatePoemClicked() = updateUi(FeedEvent.NavigateToCompose)
 
     private fun updateUi(event: FeedEvent) = viewModelScope.launch {
         _eventChannel.send(event)
@@ -33,8 +33,8 @@ class FeedViewModel @Inject constructor(
 
     sealed class FeedEvent {
         data class NavigateToPoem(val poem: String) : FeedEvent()
-        object NavigateToAccountDetails : FeedEvent()
-        object NavigateToCreatePoem : FeedEvent()
+        object NavigateToProfile : FeedEvent()
+        object NavigateToCompose : FeedEvent()
     }
 
 }

@@ -1,17 +1,17 @@
 package com.mambo.features.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.GridLayout
-import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.core.view.isVisible
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.mambo.features.home.databinding.FragmentFeedBinding
+import com.mambobryan.navigation.Destinations
+import com.mambobryan.navigation.getDeeplink
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -31,9 +31,8 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         lifecycleScope.launchWhenStarted {
             viewModel.events.collect { event ->
                 when (event) {
-                    FeedViewModel.FeedEvent.NavigateToAccountDetails -> {
-                    }
-                    FeedViewModel.FeedEvent.NavigateToCreatePoem -> {
+                    FeedViewModel.FeedEvent.NavigateToProfile -> navigateToProfile()
+                    FeedViewModel.FeedEvent.NavigateToCompose -> {
                         Snackbar
                             .make(requireView(), "Create Poem Clicked!", Snackbar.LENGTH_SHORT)
                             .show()
@@ -69,6 +68,19 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
 //            layoutState.recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
 
         }
+    }
+
+    private fun navigateToProfile() {
+
+        val deeplink = getDeeplink(Destinations.PROFLE)
+
+        val navOptions = NavOptions
+            .Builder()
+            .setLaunchSingleTop(true)
+            .build()
+
+        findNavController().navigate(deeplink, navOptions)
+
     }
 
 }

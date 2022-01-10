@@ -9,5 +9,10 @@
         android:id="@+id/profileFragment"
         android:name="com.mambobryan.features.profile.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+
+        <deepLink app:uri="@string/profile" />
+
+    </fragment>
+
 </navigation>

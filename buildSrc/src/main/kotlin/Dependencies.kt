@@ -28,6 +28,7 @@ object Dependencies {
         val datastore by lazy {"androidx.datastore:datastore-preferences:${Versions.datastore}"}
         val hilt by lazy{"com.google.dagger:hilt-android:${Versions.hilt}"}
         val hiltCompiler by lazy {"com.google.dagger:hilt-compiler:${Versions.hilt}"}
+        val navigationCommon by lazy {"androidx.navigation:navigation-common-ktx:${Versions.navigation}"}
         val navigationFragment by lazy {"androidx.navigation:navigation-fragment-ktx:${Versions.navigation}"}
         val navigationUi by lazy {"androidx.navigation:navigation-ui-ktx:${Versions.navigation}"}
         val viewModel by lazy { "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}" }

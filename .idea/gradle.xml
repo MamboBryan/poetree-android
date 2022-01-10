@@ -36,6 +36,7 @@
             <option value="$PROJECT_DIR$/modules/core" />
             <option value="$PROJECT_DIR$/modules/data" />
             <option value="$PROJECT_DIR$/modules/local" />
+            <option value="$PROJECT_DIR$/modules/navigation" />
             <option value="$PROJECT_DIR$/modules/remote" />
             <option value="$PROJECT_DIR$/modules/ui" />
           </set>
