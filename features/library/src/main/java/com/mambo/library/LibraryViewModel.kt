@@ -21,11 +21,17 @@ class LibraryViewModel @Inject constructor(
     private val _poems = poemsRepository.poems()
     val poems = _poems.asLiveData()
 
+    fun onComposeButtonClicked() = updateUi(LibraryEvent.NavigateToCompose)
+
+    fun onPoemClicked() = updateUi(LibraryEvent.NavigateToPoem)
+
     private fun updateUi(event: LibraryEvent) = viewModelScope.launch {
         _eventChannel.send(event)
     }
 
     sealed class LibraryEvent {
+        object NavigateToCompose : LibraryEvent()
+        object NavigateToPoem : LibraryEvent()
 
     }
 

@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.mambo.core.OnPoemClickListener
 import com.mambo.library.databinding.FragmentGenericLibraryBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -12,15 +13,17 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class UnpublishedFragment : Fragment(R.layout.fragment_generic_library) {
 
-    val viewModel: LibraryViewModel by viewModels({ requireParentFragment() })
-    val binding by viewBinding(FragmentGenericLibraryBinding::bind)
+    private val viewModel: LibraryViewModel by viewModels({ requireParentFragment() })
+    private val binding by viewBinding(FragmentGenericLibraryBinding::bind)
 
-    val adapter by lazy { UnpublishedLibraryAdapter() }
+    private val adapter by lazy { UnpublishedLibraryAdapter() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
+
+
 
         viewModel.poems.observe(viewLifecycleOwner) {
 
@@ -42,6 +45,11 @@ class UnpublishedFragment : Fragment(R.layout.fragment_generic_library) {
     private fun initViews() {
         binding.apply {
             layoutStateLibrary.recyclerView.adapter = adapter
+            adapter.setListener(object : OnPoemClickListener {
+                override fun onPoemClicked(poem: String) {
+                    viewModel.onPoemClicked()
+                }
+            })
         }
     }
 

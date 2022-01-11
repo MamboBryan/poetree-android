@@ -8,6 +8,9 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mambo.core.adapters.ViewPagerAdapter
 import com.mambo.library.databinding.FragmentLibraryBinding
+import com.mambobryan.navigation.Destinations
+import com.mambobryan.navigation.extensions.getDeeplink
+import com.mambobryan.navigation.extensions.navigate
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -23,6 +26,7 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
 
         binding.apply {
             toolbarLibrary.title = "Library"
+            fabCreatePoem.setOnClickListener { viewModel.onComposeButtonClicked() }
         }
 
         setUpViewPager()
@@ -30,6 +34,8 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
         lifecycleScope.launchWhenStarted {
             viewModel.events.collect { event ->
                 when (event) {
+                    LibraryViewModel.LibraryEvent.NavigateToCompose -> navigateToCompose()
+                    LibraryViewModel.LibraryEvent.NavigateToPoem -> navigateToPoem()
                     else -> {
                     }
                 }
@@ -58,6 +64,14 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
         }
 
 
+    }
+
+    private fun navigateToCompose(){
+        navigate(getDeeplink(Destinations.COMPOSE))
+    }
+
+    private fun navigateToPoem(){
+        navigate(getDeeplink(Destinations.POEM))
     }
 
 }

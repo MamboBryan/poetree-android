@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.mambo.core.OnPoemClickListener
 import com.mambo.library.databinding.ItemPoemLibraryPublishedBinding
 import org.ocpsoft.prettytime.PrettyTime
 
@@ -52,6 +53,12 @@ class PublishedLibraryAdapter :
         "3 years ago"
     )
 
+    private lateinit var clickListener: OnPoemClickListener
+
+    fun setListener(listener: OnPoemClickListener) {
+        clickListener = listener
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PublishedViewHolder {
         val binding =
             ItemPoemLibraryPublishedBinding.inflate(
@@ -94,7 +101,8 @@ class PublishedLibraryAdapter :
         init {
 
             binding.root.setOnClickListener {
-
+                if(adapterPosition != RecyclerView.NO_POSITION)
+                clickListener.onPoemClicked(getItem(adapterPosition))
             }
 
         }

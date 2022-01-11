@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.mambo.core.OnPoemClickListener
 import com.mambo.library.databinding.ItemPoemLibraryUnpublishedBinding
 import org.ocpsoft.prettytime.PrettyTime
 
@@ -45,6 +46,12 @@ class UnpublishedLibraryAdapter :
         "3 months ago",
         "8 years ago"
     )
+
+    private lateinit var clickListener: OnPoemClickListener
+
+    fun setListener(listener: OnPoemClickListener) {
+        clickListener = listener
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PoemBookmarkViewHolder {
         val binding =
@@ -88,7 +95,10 @@ class UnpublishedLibraryAdapter :
         init {
 
             binding.root.setOnClickListener {
-
+                binding.root.setOnClickListener {
+                    if (adapterPosition != RecyclerView.NO_POSITION)
+                        clickListener.onPoemClicked(getItem(adapterPosition))
+                }
             }
 
         }
