@@ -9,5 +9,8 @@
         android:id="@+id/commentsFragment"
         android:name="com.mambobryan.features.comments.CommentsFragment"
         android:label="fragment_comments"
-        tools:layout="@layout/fragment_comments" />
+        tools:layout="@layout/fragment_comments">
+        <deepLink
+            app:uri="@string/comments"/>
+    </fragment>
 </navigation>

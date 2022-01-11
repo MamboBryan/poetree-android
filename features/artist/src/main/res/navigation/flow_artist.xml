@@ -9,5 +9,8 @@
         android:id="@+id/artistFragment"
         android:name="com.mambobryan.features.artist.ArtistFragment"
         android:label="fragment_artist"
-        tools:layout="@layout/fragment_artist" />
+        tools:layout="@layout/fragment_artist">
+        <deepLink
+            app:uri="@string/artist"/>
+    </fragment>
 </navigation>

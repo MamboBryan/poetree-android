@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="poem">app://com.mambobryan.poetree/poem</string>
+    <string name="artist">app://com.mambobryan.poetree/artist</string>
+    <string name="search">app://com.mambobryan.poetree/search</string>
     <string name="profile">app://com.mambobryan.poetree/profile</string>
     <string name="compose">app://com.mambobryan.poetree/compose</string>
-    <string name="poem">app://com.mambobryan.poetree/poem</string>
-    <string name="search">app://com.mambobryan.poetree/search</string>
+    <string name="comments">app://com.mambobryan.poetree/comments</string>
+    <string name="edit_account">app://com.mambobryan.poetree/account/edit</string>
+    <string name="update_password">app://com.mambobryan.poetree/account/update_password</string>
 
 </resources>
