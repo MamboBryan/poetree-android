@@ -7,6 +7,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.mambo.bookmarks.databinding.FragmentBookmarksBinding
+import com.mambo.core.OnPoemClickListener
+import com.mambobryan.navigation.Destinations
+import com.mambobryan.navigation.extensions.getDeeplink
+import com.mambobryan.navigation.extensions.navigate
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -14,9 +18,9 @@ import kotlinx.coroutines.flow.collect
 @AndroidEntryPoint
 class BookmarksFragment : Fragment(R.layout.fragment_bookmarks) {
 
-    val viewModel: BookmarksViewModel by viewModels()
-    val binding by viewBinding(FragmentBookmarksBinding::bind)
-    val adapter by lazy { BookmarkAdapter() }
+    private val viewModel: BookmarksViewModel by viewModels()
+    private val binding by viewBinding(FragmentBookmarksBinding::bind)
+    private val adapter by lazy { BookmarkAdapter() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -26,7 +30,10 @@ class BookmarksFragment : Fragment(R.layout.fragment_bookmarks) {
         lifecycleScope.launchWhenStarted {
             viewModel.events.collect { event ->
                 when (event) {
-                    else -> {
+                    BookmarksViewModel.BookmarkEvent.NavigateToPoem -> navigateToPoem()
+                    BookmarksViewModel.BookmarkEvent.OpenFilterDialog -> {
+                    }
+                    BookmarksViewModel.BookmarkEvent.ToggleSearchEditText -> {
                     }
                 }
             }
@@ -52,9 +59,29 @@ class BookmarksFragment : Fragment(R.layout.fragment_bookmarks) {
     private fun initViews() {
         binding.apply {
             toolbarBookmarks.title = "Bookmarks"
+            toolbarBookmarks.inflateMenu(R.menu.menu_bookmarks)
+            toolbarBookmarks.setOnMenuItemClickListener { item ->
+                return@setOnMenuItemClickListener when (item.itemId) {
+                    R.id.action_item_search -> {
+                        true
+                    }
+                    else -> {
+                        true
+                    }
+                }
+            }
 
             layoutStateBookmarks.recyclerView.adapter = adapter
+            adapter.setListener(object : OnPoemClickListener {
+                override fun onPoemClicked(poem: String) {
+                    viewModel.onPoemClicked()
+                }
+            })
         }
     }
 
+    private fun navigateToPoem() {
+        val deeplink = getDeeplink(Destinations.POEM)
+        navigate(deeplink)
+    }
 }

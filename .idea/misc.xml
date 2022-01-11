@@ -91,6 +91,7 @@
         <entry key="modules/ui/src/main/res/layout/layout_complete_recycler_refresh.xml" value="0.2966485507246377" />
         <entry key="modules/ui/src/main/res/layout/layout_complete_recycler_vertical.xml" value="0.2966485507246377" />
         <entry key="modules/ui/src/main/res/layout/layout_fragment_generic.xml" value="0.1" />
+        <entry key="modules/ui/src/main/res/layout/layout_network_status.xml" value="0.3484375" />
       </map>
     </option>
   </component>

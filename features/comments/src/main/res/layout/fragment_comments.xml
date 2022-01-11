@@ -34,14 +34,16 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Title"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="The Minority View Of Self Image"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
                         android:textColor="?attr/colorOnSurface" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Comments (56)"
+                        android:text="Comments (5)"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                 </LinearLayout>

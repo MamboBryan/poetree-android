@@ -30,11 +30,11 @@ class CommentAdapter :
     )
 
     val titles = listOf(
-        "Sleeping Ecstasy",
-        "Courageous Grit",
-        "The World In Monochrome",
-        "The Call to Others",
-        "Skipping Relationships"
+        "I thought this sentence was about being in peace and fining joy",
+        "No you may have been reading your own stuff lad",
+        "What are you guys even talking about",
+        "They are making invalid arguments about the authors work and they are getting ti wrong",
+        "Who made you moderator?"
     )
 
     val colors = listOf(

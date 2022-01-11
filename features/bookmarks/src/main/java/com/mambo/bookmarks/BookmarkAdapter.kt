@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mambo.bookmarks.databinding.ItemPoemBookmarkBinding
+import com.mambo.core.OnPoemClickListener
 import org.ocpsoft.prettytime.PrettyTime
 
 
@@ -44,6 +45,12 @@ class BookmarkAdapter :
         "5 years ago",
         "2 hours ago"
     )
+
+    private lateinit var clickListener: OnPoemClickListener
+
+    fun setListener(listener: OnPoemClickListener) {
+        clickListener = listener
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PoemBookmarkViewHolder {
         val binding =
@@ -83,7 +90,8 @@ class BookmarkAdapter :
         init {
 
             binding.root.setOnClickListener {
-
+                if (adapterPosition != RecyclerView.NO_POSITION)
+                    clickListener.onPoemClicked(getItem(adapterPosition))
             }
 
         }
