@@ -24,6 +24,7 @@
             <option value="$PROJECT_DIR$/features/home" />
             <option value="$PROJECT_DIR$/features/landing" />
             <option value="$PROJECT_DIR$/features/library" />
+            <option value="$PROJECT_DIR$/features/loading" />
             <option value="$PROJECT_DIR$/features/onboarding" />
             <option value="$PROJECT_DIR$/features/poem" />
             <option value="$PROJECT_DIR$/features/profile" />

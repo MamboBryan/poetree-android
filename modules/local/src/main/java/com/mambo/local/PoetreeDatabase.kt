@@ -1,6 +1,5 @@
 package com.mambo.local
 
-import android.util.Log
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -8,8 +7,9 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mambo.data.Poem
 import com.mambo.data.Topic
 import com.mambo.data.User
+import com.mambo.data.utils.getLocalPoem
 import com.mambo.local.di.ApplicationScope
-import com.mambo.local.utils.TopicUtils
+import com.mambo.data.utils.TopicUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -38,8 +38,6 @@ abstract class PoetreeDatabase : RoomDatabase() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
 
-            Log.i("APP_DATABASE", "onCreate: app database created")
-
             val poemDao = database.get().poemsDao()
             val topicsDao = database.get().topicsDao()
 
@@ -48,7 +46,7 @@ abstract class PoetreeDatabase : RoomDatabase() {
                 val topicUtils = TopicUtils()
 
                 poemDao.insert(
-                    Poem(
+                    getLocalPoem(
                         title = "The Emergence",
                         content =
                         """

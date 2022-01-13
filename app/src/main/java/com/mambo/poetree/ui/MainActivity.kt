@@ -4,24 +4,25 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.mambo.poetree.R
 import com.mambo.poetree.databinding.ActivityMainBinding
-import com.mambo.poetree.ui.viewmodel.MainViewModel
+import com.mambo.core.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
-
     private val viewModel by viewModels<MainViewModel>()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +44,10 @@ class MainActivity : AppCompatActivity() {
 
         initNavigation()
 
+        lifecycleScope.launchWhenStarted {
+            viewModel.darkMode.collect {  updateDarkMode(it) }
+        }
+
     }
 
     private fun initNavigation() {
@@ -51,6 +56,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
+
+    }
+
+    private fun updateDarkMode(mode: Int) {
+
+        AppCompatDelegate.setDefaultNightMode(mode)
+        delegate.applyDayNight()
 
     }
 

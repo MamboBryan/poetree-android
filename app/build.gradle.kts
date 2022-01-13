@@ -69,6 +69,7 @@ dependencies {
     implementation(project(BuildModules.Features.onboarding))
     implementation(project(BuildModules.Features.updatePassword))
     implementation(project(BuildModules.Features.landing))
+    implementation(project(BuildModules.Features.loading))
 
     implementation(Dependencies.Libraries.core)
     implementation(Dependencies.Libraries.kotlin)
@@ -90,6 +91,7 @@ dependencies {
     implementation(Dependencies.Libraries.coroutines)
     implementation(Dependencies.Libraries.room)
     implementation(Dependencies.Libraries.roomRuntime)
+    implementation(Dependencies.Libraries.paging)
     implementation(Dependencies.Libraries.gson)
     implementation(Dependencies.Libraries.coil)
     implementation(Dependencies.Libraries.wysiwyg)

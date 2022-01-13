@@ -48,6 +48,11 @@ dependencies {
     implementation(Dependencies.Libraries.room)
     implementation(Dependencies.Libraries.roomRuntime)
     implementation(Dependencies.Libraries.gson)
+    implementation(Dependencies.Libraries.appCompat)
+    implementation(Dependencies.Libraries.legacySupport)
+    implementation(Dependencies.Libraries.materialDesign)
+    implementation(Dependencies.Libraries.constraintLayout)
+
 
 }
 

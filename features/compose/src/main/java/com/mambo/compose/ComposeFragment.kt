@@ -1,10 +1,7 @@
 package com.mambo.compose
 
-import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -36,6 +33,8 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
 
             NavigationUI.setupWithNavController(toolbarCompose, findNavController())
             toolbarCompose.title = if (poem == null) "Compose" else "Edit"
+
+            toolbarCompose.inflateMenu(R.menu.menu_compose)
             toolbarCompose.setOnMenuItemClickListener { item ->
 
                 when (item.itemId) {
@@ -73,7 +72,7 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
         setUpViewPager()
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.editPoemEvent.collect { event ->
+            viewModel.events.collect { event ->
                 when (event) {
                     is ComposeViewModel.ComposeEvent.NavigateBackWithResult -> {
                         binding.root.clearFocus()

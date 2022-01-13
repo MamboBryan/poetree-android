@@ -3,6 +3,7 @@ package com.mambo.features.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.mambo.core.repository.PoemRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -12,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FeedViewModel @Inject constructor(
-    poemsRepository: PoemRepository
+    poemsRepository: PoemRepository,
 ) : ViewModel() {
 
     private val _eventChannel = Channel<FeedEvent>()
@@ -20,6 +21,8 @@ class FeedViewModel @Inject constructor(
 
     private val _poems = poemsRepository.poems()
     val poems = _poems.asLiveData()
+
+    val feeds = poemsRepository.getLocalPoems("").cachedIn(viewModelScope)
 
     fun onUserImageClicked() = updateUi(FeedEvent.NavigateToProfile)
 

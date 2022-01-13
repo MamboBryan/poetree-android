@@ -68,6 +68,7 @@ dependencies {
     implementation(Dependencies.Libraries.navigationUi)
     implementation(Dependencies.Libraries.coroutines)
     implementation(Dependencies.Libraries.hilt)
+    implementation(Dependencies.Libraries.paging)
 
     implementation(Dependencies.Libraries.delegate)
     implementation(Dependencies.Libraries.circularImage)

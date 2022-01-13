@@ -1,4 +1,4 @@
-package com.mambo.poetree.utils
+package com.mambo.core.utils
 
 import android.content.Context
 import android.content.Context.CONNECTIVITY_SERVICE

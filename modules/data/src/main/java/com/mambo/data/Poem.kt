@@ -12,12 +12,22 @@ import java.util.*
 data class Poem(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val title: String,
-    val content: String,
-    val emotionName: String = "",
-    val topicName: String = "",
+    val createdAt: Date?,
+    val updatedAt: Date?,
+    val title: String?,
+    val content: String?,
     @ColumnInfo(defaultValue = "")
     val topic: Topic? = null,
-    val date: Date = Date(),
-    val user: User
+    val userId: String?,
+    val user: User?,
+    val likesCount: Int =0,
+    val readsCount: Int =0,
+    val commentsCount: Int = 0,
+    val bookmarksCount: Int = 0,
+    val isLiked:Boolean = false,
+    val isRead: Boolean = false,
+    val isCommented: Boolean = false,
+    val isBookmarked: Boolean = false,
+    val isOffline: Boolean?,
+    val isPublic: Boolean?
 ) : Parcelable

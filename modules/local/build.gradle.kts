@@ -52,6 +52,7 @@ dependencies {
     implementation(Dependencies.Libraries.roomRuntime)
     implementation(Dependencies.Libraries.gson)
     implementation(Dependencies.Libraries.hilt)
+    implementation(Dependencies.Libraries.paging)
 
     kapt(Dependencies.Libraries.roomCompiler)
     kapt(Dependencies.Libraries.hiltCompiler)

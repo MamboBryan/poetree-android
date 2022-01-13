@@ -1,5 +1,6 @@
 package com.mambo.local
 
+import androidx.paging.PagingSource
 import androidx.room.*
 import com.mambo.data.Poem
 import kotlinx.coroutines.flow.Flow
@@ -18,6 +19,9 @@ interface PoemsDao {
 
     @Delete
     suspend fun delete(poems: Poem)
+
+    @Query("SELECT * FROM poems WHERE isPublic= :isPublic")
+    fun getLocalPoems(isPublic: Boolean = true): PagingSource<Int, Poem>
 
     @Query("SELECT * FROM poems")
     fun getAll(): Flow<List<Poem>>

@@ -12,6 +12,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
+            android:background="?attr/colorSurface"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize" />
     </com.google.android.material.appbar.AppBarLayout>
@@ -19,7 +20,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/colorSurface"
+        android:background="?android:colorBackground"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -68,10 +69,11 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView" />
 
                 <ImageView
-                    android:id="@+id/imageView3"
+                    android:id="@+id/iv_app_theme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_baseline_light_mode_24"
                     app:layout_constraintBottom_toBottomOf="@+id/iv_poem_bg"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -82,7 +84,7 @@
                 android:id="@+id/cardView"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
-                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardBackgroundColor="?android:colorBackground"
                 app:cardElevation="0dp"
                 app:layout_constraintEnd_toStartOf="@+id/cardView2"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -112,7 +114,7 @@
                 android:id="@+id/cardView2"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
-                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardBackgroundColor="?android:colorBackground"
                 app:cardElevation="0dp"
                 app:layout_constraintEnd_toStartOf="@+id/cardView3"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -142,7 +144,7 @@
                 android:id="@+id/cardView3"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
-                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardBackgroundColor="?android:colorBackground"
                 app:cardElevation="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -172,7 +174,7 @@
                 android:id="@+id/textView5"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="?android:colorBackground"
+                android:background="?attr/colorSurface"
                 android:padding="16dp"
                 android:text="ACCOUNT"
                 android:textStyle="bold"
@@ -181,72 +183,76 @@
                 app:layout_constraintTop_toBottomOf="@+id/cardView2" />
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/tv_profile_edit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/ic_baseline_arrow_forward_ios_10"
                 android:padding="16dp"
                 android:text="Edit/Update"
+                android:background="?attr/selectableItemBackground"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
             <TextView
-                android:id="@+id/textView7"
+                android:id="@+id/tv_profile_password"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/ic_baseline_arrow_forward_ios_10"
                 android:padding="16dp"
                 android:text="Update Password"
+                android:background="?attr/selectableItemBackground"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView6" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_profile_edit" />
 
             <TextView
-                android:id="@+id/textView9"
+                android:id="@+id/tv_profile_privacy"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/ic_baseline_arrow_forward_ios_10"
                 android:drawablePadding="24dp"
                 android:padding="16dp"
                 android:text="Privacy Policy"
+                android:background="?attr/selectableItemBackground"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
             <TextView
-                android:id="@+id/textView10"
+                android:id="@+id/tv_profile_terms"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/ic_baseline_arrow_forward_ios_10"
                 android:drawablePadding="24dp"
                 android:padding="16dp"
                 android:text="Terms of Use"
+                android:background="?attr/selectableItemBackground"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView9" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_profile_privacy" />
 
             <TextView
                 android:id="@+id/textView8"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="?android:colorBackground"
+                android:background="?attr/colorSurface"
                 android:padding="16dp"
                 android:text="HELP"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView7" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_profile_password" />
 
             <TextView
                 android:id="@+id/textView12"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="?android:colorBackground"
+                android:background="?attr/colorSurface"
                 android:padding="16dp"
                 android:text="STATUS"
                 android:textStyle="bold"
@@ -258,13 +264,13 @@
                 android:id="@+id/textView3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="?android:colorBackground"
+                android:background="?attr/colorSurface"
                 android:padding="16dp"
                 android:text="ACTIONS"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView10" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_profile_terms" />
 
             <TextView
                 android:id="@+id/textView4"
@@ -272,6 +278,7 @@
                 android:layout_height="wrap_content"
                 android:padding="16dp"
                 android:text="Log Out"
+                android:background="?attr/selectableItemBackground"
                 android:textColor="?attr/colorError"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

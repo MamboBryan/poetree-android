@@ -2,7 +2,7 @@ package com.mambo.poetree.ui.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.mambo.poetree.repositories.PreferencesRepository
+import com.mambo.core.repository.PreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

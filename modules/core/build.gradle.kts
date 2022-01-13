@@ -46,19 +46,25 @@ android {
 
 dependencies {
 
+    implementation(project(BuildModules.Commons.ui))
     implementation(project(BuildModules.Commons.data))
-    implementation(project(BuildModules.Commons.local))
-    implementation(project(BuildModules.Commons.remote))
+
+    api(project(BuildModules.Commons.local))
+    api(project(BuildModules.Commons.remote))
 
     implementation(Dependencies.Libraries.core)
     implementation(Dependencies.Libraries.kotlin)
     implementation(Dependencies.Libraries.appCompat)
+    implementation(Dependencies.Libraries.legacySupport)
     implementation(Dependencies.Libraries.materialDesign)
     implementation(Dependencies.Libraries.constraintLayout)
-    implementation(Dependencies.Libraries.legacySupport)
 
     implementation(Dependencies.Libraries.coroutines)
+    implementation(Dependencies.Libraries.datastore)
+    implementation(Dependencies.Libraries.paging)
     implementation(Dependencies.Libraries.hilt)
+
+    implementation(Dependencies.Libraries.prettyTime)
 
     kapt(Dependencies.Libraries.hiltCompiler)
 }

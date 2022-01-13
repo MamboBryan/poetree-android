@@ -1,4 +1,4 @@
-package com.mambo.poetree.utils
+package com.mambo.core.utils
 
 import android.util.Log
 import java.io.IOException

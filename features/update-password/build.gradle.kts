@@ -49,7 +49,7 @@ dependencies {
     implementation(project(BuildModules.Commons.ui))
     implementation(project(BuildModules.Commons.core))
     implementation(project(BuildModules.Commons.data))
-    implementation(project(BuildModules.Libraries.editor))
+    implementation(project(BuildModules.Commons.navigation))
 
     implementation(Dependencies.Libraries.core)
     implementation(Dependencies.Libraries.kotlin)

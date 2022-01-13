@@ -16,6 +16,7 @@ object BuildModules {
         const val search = ":features:search"
         const val artist = ":features:artist"
         const val landing = ":features:landing"
+        const val loading = ":features:loading"
     }
 
     object Commons {

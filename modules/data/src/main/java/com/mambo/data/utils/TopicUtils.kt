@@ -1,6 +1,8 @@
-package com.mambo.local.utils
+package com.mambo.data.utils
 
 import com.mambo.data.Topic
+
+fun getTopic(name: String) = Topic(name = name, color = "#C09BD8")
 
 class TopicUtils {
 
@@ -8,15 +10,15 @@ class TopicUtils {
 
     companion object {
         const val LOVE = "love"
-        const val NATURE = "nature"
-        const val DEATH = "death"
-        const val SPIRITUALITY = "spiritual"
         const val SELF = "self"
-        const val RELATIONSHIPS = "relationships"
-        const val MOTIVATION = "motivation"
-        const val BEAUTY = "beauty"
-        const val DESIRE = "desire"
         const val OTHER = "other"
+        const val DEATH = "death"
+        const val DESIRE = "desire"
+        const val BEAUTY = "beauty"
+        const val NATURE = "nature"
+        const val MOTIVATION = "motivation"
+        const val SPIRITUALITY = "spiritual"
+        const val RELATIONSHIPS = "relationships"
     }
 
     init {
@@ -39,16 +41,16 @@ class TopicUtils {
     fun getTopics(): MutableList<Topic> {
 
         return arrayListOf(
-            Topic(name = LOVE),
-            Topic(name = MOTIVATION),
-            Topic(name = SELF),
-            Topic(name = DESIRE),
-            Topic(name = RELATIONSHIPS),
-            Topic(name = BEAUTY),
-            Topic(name = DEATH),
-            Topic(name = NATURE),
-            Topic(name = SPIRITUALITY),
-            Topic(name = OTHER),
+            getTopic(name = LOVE),
+            getTopic(name = MOTIVATION),
+            getTopic(name = SELF),
+            getTopic(name = DESIRE),
+            getTopic(name = RELATIONSHIPS),
+            getTopic(name = BEAUTY),
+            getTopic(name = DEATH),
+            getTopic(name = NATURE),
+            getTopic(name = SPIRITUALITY),
+            getTopic(name = OTHER),
         )
     }
 

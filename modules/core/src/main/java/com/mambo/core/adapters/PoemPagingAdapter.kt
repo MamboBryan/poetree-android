@@ -1,0 +1,75 @@
+package com.mambo.core.adapters
+
+import android.graphics.Color
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.mambo.core.OnPoemClickListener
+import com.mambo.data.Poem
+import com.mambo.data.utils.POEM_COMPARATOR
+import com.mambo.ui.databinding.ItemPoemBinding
+import org.ocpsoft.prettytime.PrettyTime
+
+class PoemPagingAdapter :
+    PagingDataAdapter<Poem, PoemPagingAdapter.PoemViewHolder>(POEM_COMPARATOR) {
+
+    private lateinit var onPoemClickListener: OnPoemClickListener
+
+    fun setListener(listener: OnPoemClickListener) {
+        onPoemClickListener = listener
+    }
+
+    inner class PoemViewHolder(private val binding: ItemPoemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        private val prettyTime = PrettyTime()
+
+        init {
+            binding.apply {
+
+                layoutPoem.setOnClickListener {
+//                if(absoluteAdapterPosition != RecyclerView.NO_POSITION)
+//                    onPoemClickListener.onPoemClicked(getItem(absoluteAdapterPosition))
+                }
+
+            }
+        }
+
+        fun bind(poem: Poem) {
+            binding.apply {
+
+                Log.i("FEEDS", "poem bind called :: ${poem.title}")
+
+                val duration = prettyTime.formatDuration(poem.createdAt)
+                val message = " \u2022 $duration "
+
+                tvPoemUsername.text = poem.user?.username
+                tvPoemTitle.text = poem.title
+                tvPoemDate.text = message
+
+                tvLikes.text = "${poem.likesCount}"
+                tvComments.text = "${poem.commentsCount}"
+                tvBookmarks.text = "${poem.bookmarksCount}"
+                tvReads.text = "${poem.readsCount}"
+
+                layoutPoem.setBackgroundColor(Color.parseColor(poem.topic?.color))
+
+            }
+        }
+
+    }
+
+    override fun onBindViewHolder(holder: PoemViewHolder, position: Int) {
+        val currentItem = getItem(position)
+        if (currentItem != null)
+            holder.bind(currentItem)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PoemViewHolder {
+        val binding =
+            ItemPoemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return PoemViewHolder(binding)
+    }
+}

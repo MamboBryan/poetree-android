@@ -36,8 +36,8 @@ class ComposeViewModel @Inject constructor(
             state.set("poem_content", value)
         }
 
-    private val _editPoemEventChannel = Channel<ComposeEvent>()
-    val editPoemEvent = _editPoemEventChannel.receiveAsFlow()
+    private val _eventChannel = Channel<ComposeEvent>()
+    val events = _eventChannel.receiveAsFlow()
 
     private fun getUser() = User(
         "1",
@@ -64,7 +64,7 @@ class ComposeViewModel @Inject constructor(
 
         } else {
 
-            val newPoem = Poem(title = poemTitle, content = poemContent, user = getUser())
+            val newPoem = getNewPoem()
             saveNewPoem(newPoem)
         }
     }
@@ -92,11 +92,22 @@ class ComposeViewModel @Inject constructor(
 
         } else {
 
-            val newPoem = Poem(title = poemTitle, content = poemContent, user = getUser())
+            val newPoem = getNewPoem()
             save(newPoem)
 
         }
     }
+
+    private fun getNewPoem() = Poem(
+        createdAt = Date(),
+        updatedAt = Date(),
+        user = getUser(),
+        userId = getUser().id,
+        title = poemTitle,
+        content = poemContent,
+        isOffline = true,
+        isPublic = false
+    )
 
     fun onPreviewClicked() {
         updateUi(ComposeEvent.NavigateToPreview)
@@ -138,7 +149,7 @@ class ComposeViewModel @Inject constructor(
     }
 
     private fun updateUi(event: ComposeEvent) = viewModelScope.launch {
-        _editPoemEventChannel.send(event)
+        _eventChannel.send(event)
     }
 
     sealed class ComposeEvent {

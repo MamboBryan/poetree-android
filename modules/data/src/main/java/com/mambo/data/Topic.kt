@@ -10,5 +10,6 @@ import kotlinx.parcelize.Parcelize
 data class Topic(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val name: String
+    val name: String,
+    val color: String
 ) : Parcelable

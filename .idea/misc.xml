@@ -6,6 +6,7 @@
         <entry key="../../../../../../layout/custom_preview.xml" value="0.37864583333333335" />
         <entry key="app/src/main/res/drawable/ic_baseline_format_quote_24.xml" value="0.3651041666666667" />
         <entry key="app/src/main/res/drawable/ic_logo.xml" value="0.3651041666666667" />
+        <entry key="app/src/main/res/drawable/ic_splash_light.xml" value="0.3651041666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3489583333333333" />
         <entry key="app/src/main/res/layout/fragment_account.xml" value="0.3489583333333333" />
         <entry key="app/src/main/res/layout/fragment_account_overview.xml" value="0.3489583333333333" />
@@ -59,13 +60,14 @@
         <entry key="features/library/src/main/res/layout/item_poem_library_published.xml" value="0.3489583333333333" />
         <entry key="features/library/src/main/res/layout/item_poem_library_unpublished.xml" value="0.18" />
         <entry key="features/library/src/main/res/menu/menu_library.xml" value="0.3489583333333333" />
+        <entry key="features/loading/src/main/res/layout/fragment_loading.xml" value="0.3351851851851852" />
         <entry key="features/onboarding/src/main/res/layout/fragment_community.xml" value="0.3489583333333333" />
         <entry key="features/onboarding/src/main/res/layout/fragment_onboarding.xml" value="0.1" />
         <entry key="features/onboarding/src/main/res/layout/fragment_reader.xml" value="0.3489583333333333" />
         <entry key="features/onboarding/src/main/res/layout/fragment_writer.xml" value="0.3489583333333333" />
         <entry key="features/poem/src/main/res/layout/fragment_poem.xml" value="0.33" />
         <entry key="features/poem/src/main/res/menu/menu_poem.xml" value="0.3489583333333333" />
-        <entry key="features/profile/src/main/res/layout/fragment_profile.xml" value="0.16710875331564987" />
+        <entry key="features/profile/src/main/res/layout/fragment_profile.xml" value="0.33" />
         <entry key="features/search/src/main/res/drawable/selected_item_indicator.xml" value="0.3645833333333333" />
         <entry key="features/search/src/main/res/layout/fragment_search.xml" value="0.18059299191374664" />
         <entry key="features/search/src/main/res/layout/item_poem_search.xml" value="0.3489583333333333" />
@@ -85,13 +87,16 @@
         <entry key="modules/ui/src/main/res/drawable/ic_splash_light.xml" value="0.3651041666666667" />
         <entry key="modules/ui/src/main/res/drawable/nav_item_color_state.xml" value="0.3645833333333333" />
         <entry key="modules/ui/src/main/res/font/google_sans.xml" value="0.37916666666666665" />
+        <entry key="modules/ui/src/main/res/layout/item_poem.xml" value="0.3484375" />
         <entry key="modules/ui/src/main/res/layout/item_poem_detailed.xml" value="0.3489583333333333" />
         <entry key="modules/ui/src/main/res/layout/layout_comment.xml" value="0.3484375" />
         <entry key="modules/ui/src/main/res/layout/layout_complete_recycler_horizontal.xml" value="0.2694746376811594" />
         <entry key="modules/ui/src/main/res/layout/layout_complete_recycler_refresh.xml" value="0.2966485507246377" />
         <entry key="modules/ui/src/main/res/layout/layout_complete_recycler_vertical.xml" value="0.2966485507246377" />
         <entry key="modules/ui/src/main/res/layout/layout_fragment_generic.xml" value="0.1" />
+        <entry key="modules/ui/src/main/res/layout/layout_load_state.xml" value="0.3489583333333333" />
         <entry key="modules/ui/src/main/res/layout/layout_network_status.xml" value="0.3484375" />
+        <entry key="modules/ui/src/main/res/layout/layout_page_loading.xml" value="0.33" />
       </map>
     </option>
   </component>
