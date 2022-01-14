@@ -8,6 +8,10 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.mambobryan.features.onboarding.databinding.FragmentOnboardingBinding
+import com.mambobryan.navigation.Destinations
+import com.mambobryan.navigation.extensions.getDeeplink
+import com.mambobryan.navigation.extensions.getNavOptionsPopUpToCurrent
+import com.mambobryan.navigation.extensions.navigate
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -30,21 +34,21 @@ class OnBoardingFragment : Fragment(R.layout.fragment_onboarding) {
         val fragments = arrayListOf(ReaderFragment(), WriterFragment(), CommunityFragment())
         val adapter = ViewPager(childFragmentManager, fragments)
 
-        binding.apply {
-            pager.adapter = adapter
-        }
+        binding.apply { pager.adapter = adapter }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.onBoardEvent.collect { event ->
                 when (event) {
-                    OnboardViewModel.OnboardEvent.NavigateToAuthentication -> finishOnBoarding()
+                    OnboardViewModel.OnboardEvent.NavigateToAuthentication -> navigateToAuth()
                 }
             }
         }
     }
 
-    private fun finishOnBoarding() {
-
+    private fun navigateToAuth() {
+        val deeplink = getDeeplink(Destinations.LANDING)
+        val optons = getNavOptionsPopUpToCurrent()
+        navigate(deeplink, optons)
     }
 
     // creation of constructor of viewPager class

@@ -3,7 +3,12 @@ package com.mambobryan.features.landing
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.mambobryan.features.landing.databinding.FragmentLandingBinding
+import com.mambobryan.navigation.Destinations
+import com.mambobryan.navigation.extensions.getDeeplink
+import com.mambobryan.navigation.extensions.getNavOptionsPopUpTo
+import com.mambobryan.navigation.extensions.navigate
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 
 class LandingFragment : Fragment(R.layout.fragment_landing) {
@@ -25,22 +30,14 @@ class LandingFragment : Fragment(R.layout.fragment_landing) {
             tvPoem.text = openingPoem
             tvPoemAuthor.text = "~  ThePoetreePoet  ~"
 
-//            ivAuthBg.scaleType = ImageView.ScaleType.CENTER_CROP
-//            ivAuthBg.load(R.drawable.trees) {
-//                crossfade(true)
-//                placeholder(R.drawable.trees)
-//            }
-
-            btnAuthLogin.setOnClickListener { navigateToLogin() }
-            btnAuthRegister.setOnClickListener { navigateToRegister() }
+            btnAuthLogin.setOnClickListener { navigateToAuthentication() }
         }
     }
 
-    private fun navigateToLogin() {
-
+    private fun navigateToAuthentication() {
+        val deeplink = getDeeplink(Destinations.AUTH)
+        val optons = getNavOptionsPopUpTo(findNavController().backStack.last.destination.id)
+        navigate(deeplink, optons)
     }
 
-    private fun navigateToRegister() {
-
-    }
 }

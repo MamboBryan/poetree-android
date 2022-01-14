@@ -9,5 +9,7 @@
         android:id="@+id/authFragment"
         android:name="com.mambobryan.features.auth.AuthFragment"
         android:label="fragment_auth"
-        tools:layout="@layout/fragment_auth" />
+        tools:layout="@layout/fragment_auth">
+        <deepLink app:uri="@string/auth" />
+    </fragment>
 </navigation>

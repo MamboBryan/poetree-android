@@ -1,4 +1,4 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 import org.jetbrains.kotlin.konan.properties.Properties
 import java.io.FileInputStream
 
@@ -69,6 +69,7 @@ dependencies {
     implementation(project(BuildModules.Commons.ui))
     implementation(project(BuildModules.Commons.core))
     implementation(project(BuildModules.Commons.data))
+    implementation(project(BuildModules.Commons.navigation))
 
     implementation(Dependencies.Libraries.core)
     implementation(Dependencies.Libraries.kotlin)

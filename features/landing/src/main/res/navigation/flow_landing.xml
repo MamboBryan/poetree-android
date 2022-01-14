@@ -7,5 +7,7 @@
     <fragment
         android:id="@+id/landingFragment"
         android:name="com.mambobryan.features.landing.LandingFragment"
-        android:label="LandingFragment" />
+        android:label="LandingFragment">
+        <deepLink app:uri="@string/landing" />
+    </fragment>
 </navigation>

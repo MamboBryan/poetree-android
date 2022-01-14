@@ -53,6 +53,7 @@ dependencies {
     implementation(project(BuildModules.Commons.core))
     implementation(project(BuildModules.Commons.data))
     implementation(project(BuildModules.Commons.local))
+    implementation(project(BuildModules.Commons.navigation))
 
     implementation(project(BuildModules.Features.auth))
     implementation(project(BuildModules.Features.home))
@@ -70,6 +71,7 @@ dependencies {
     implementation(project(BuildModules.Features.updatePassword))
     implementation(project(BuildModules.Features.landing))
     implementation(project(BuildModules.Features.loading))
+    implementation(project(BuildModules.Features.setup))
 
     implementation(Dependencies.Libraries.core)
     implementation(Dependencies.Libraries.kotlin)

@@ -20,4 +20,6 @@
     <include app:graph="@navigation/flow_auth" />
     <include app:graph="@navigation/flow_profile" />
     <include app:graph="@navigation/flow_loading" />
+    <include app:graph="@navigation/flow_setup" />
+
 </navigation>

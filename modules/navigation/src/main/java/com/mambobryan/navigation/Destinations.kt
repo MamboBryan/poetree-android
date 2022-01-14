@@ -10,5 +10,10 @@ object Destinations {
     val ARTIST = R.string.artist
     val ACCOUNT_EDIT = R.string.edit_account
     val UPDATE_PASSWORD = R.string.update_password
+    val ON_BOARDING = R.string.on_boarding
+    val FEED = R.string.feed
+    val SETUP = R.string.setup
+    val AUTH = R.string.auth
+    val LANDING = R.string.landing
 
 }

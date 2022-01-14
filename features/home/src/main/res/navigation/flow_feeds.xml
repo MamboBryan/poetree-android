@@ -9,5 +9,7 @@
         android:id="@+id/feedFragment"
         android:name="com.mambo.features.home.FeedFragment"
         android:label="fragment_feed"
-        tools:layout="@layout/fragment_feed" />
+        tools:layout="@layout/fragment_feed">
+        <deepLink app:uri="@string/feed" />
+    </fragment>
 </navigation>
