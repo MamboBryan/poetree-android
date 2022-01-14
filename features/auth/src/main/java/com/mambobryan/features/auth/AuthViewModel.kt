@@ -14,9 +14,18 @@ class AuthViewModel @Inject constructor(
     private val _eventChannel = Channel<AuthEvent>()
     val events = _eventChannel.receiveAsFlow()
 
+    fun onSignInClicked(email:String, password:String){
+        updateUi(AuthEvent.NavigateToHome)
+    }
+    fun onCreateClicked() = updateUi(AuthEvent.NavigateToSignUp)
+
+    fun onSignUpClicked(email:String, password:String){
+        updateUi(AuthEvent.NavigateToSetup)
+    }
+    fun onSignUpLoginClicked() = updateUi(AuthEvent.NavigateToSignIn)
+
     private fun updateUi(event: AuthEvent) = viewModelScope.launch {
         _eventChannel.send(event)
     }
-
 
 }

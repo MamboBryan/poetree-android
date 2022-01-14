@@ -55,23 +55,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun initNavigation() {
 
-        var isFirstTimeOpening: Boolean = viewModel.isOnBoarded
-        var isLoggedIn: Boolean
         var isSetUp: Boolean
 
         runBlocking {
-//            isFirstTimeOpening = viewModel.isFirstTimeOpening.first()
-            isLoggedIn = false
             isSetUp = true
         }
-
 
         if (!viewModel.isOnBoarded) {
             navigateToOnboarding()
             return
         }
 
-        if (!isLoggedIn) {
+        if (!viewModel.isLoggedIn) {
             navigateToAuth()
             return
         }
