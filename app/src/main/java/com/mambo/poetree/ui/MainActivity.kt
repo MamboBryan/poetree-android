@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (!viewModel.isOnBoarded) {
-            navigateToOnboarding()
+            navigateToOnBoarding()
             return
         }
 
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        if (!isSetUp) {
+        if (!viewModel.isUserSetup) {
             navigateToSetup()
             return
         }
@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun navigateToOnboarding() {
+    private fun navigateToOnBoarding() {
         navController.navigate(getDeeplink(Destinations.ON_BOARDING), getLoadingNavOptions())
     }
 

@@ -25,6 +25,7 @@ class MainViewModel @Inject constructor(
         runBlocking {
             isOnBoarded = preferencesRepository.isOnBoarded.first()
             isLoggedIn = preferencesRepository.isLoggedIn.first()
+            isUserSetup = preferencesRepository.isUserSetup.first()
         }
     }
 
@@ -38,6 +39,7 @@ class MainViewModel @Inject constructor(
 
     var isOnBoarded: Boolean
     var isLoggedIn: Boolean
+    var isUserSetup: Boolean
     var backIsPressed = false
 
 //    val feeds = poemRepository.getLocalPoems("").cachedIn(viewModelScope)

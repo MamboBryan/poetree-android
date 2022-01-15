@@ -1,59 +1,160 @@
 package com.mambobryan.features.setup
 
+import android.app.Activity
+import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.DatePicker
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import coil.load
+import com.google.android.material.snackbar.Snackbar
+import com.mambo.core.utils.fromDateToString
+import com.mambobryan.features.setup.databinding.FragmentSetupBinding
+import com.mambobryan.navigation.Destinations
+import com.mambobryan.navigation.extensions.getDeeplink
+import com.mambobryan.navigation.extensions.getNavOptionsPopUpToCurrent
+import com.mambobryan.navigation.extensions.navigate
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
+import kotlinx.coroutines.flow.collect
+import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class SetupFragment : Fragment(R.layout.fragment_setup) {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [SetupFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class SetupFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private val binding by viewBinding(FragmentSetupBinding::bind)
+    private val viewModel: SetupViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    private val startResultImage =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            when (result.resultCode) {
+                Activity.RESULT_OK -> {
+
+                    val data = result.data?.data!!
+                    viewModel.onImageSelected(data)
+
+                }
+                else -> {
+                    showErrorMessage("No Image Selected") { openGalleryForImage() }
+                }
+            }
+        }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initViews()
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.events.collect { event ->
+                when (event) {
+                    SetupViewModel.SetupEvent.NavigateToHome -> navigateToFeeds()
+                    SetupViewModel.SetupEvent.OpenDatePicker -> openDateDialog()
+                    SetupViewModel.SetupEvent.OpenImagePicker -> openGalleryForImage()
+                    SetupViewModel.SetupEvent.ShowBioError -> {
+                        binding.edtUserBio.error = "Bio cannot be empty"
+                    }
+                    SetupViewModel.SetupEvent.ShowDOBError -> {
+                        binding.inputUserDob.error = "Select Date of Birth"
+                    }
+                    SetupViewModel.SetupEvent.ShowGenderError -> {
+                        binding.inputUserGender.error = "Select Gender to continue"
+                    }
+                    SetupViewModel.SetupEvent.ShowUsernameError -> {
+                        binding.inputUserName.error = "Username cannot be empty"
+                    }
+                }
+            }
+        }
+
+        viewModel.imageUri.observe(viewLifecycleOwner) { uri ->
+            if (uri != null)
+                binding.ivUserImage.load(uri)
+        }
+
+        viewModel.dob.observe(viewLifecycleOwner) { date ->
+            if (date != null)
+                binding.edtUserDob.setText(fromDateToString(date))
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_setup, container, false)
+    private fun initViews() = binding.apply {
+        fabUploadImage.setOnClickListener { viewModel.onImageUploadClicked() }
+        btnSaveDetails.setOnClickListener { viewModel.onSaveClicked() }
+        edtUserDob.setOnClickListener { viewModel.onDateClicked() }
+
+        edtUserName.doAfterTextChanged { username ->
+            viewModel.updateUsername(username.toString())
+            inputUserName.error = null
+        }
+        edtUserBio.doAfterTextChanged { bio ->
+            viewModel.updateBio(bio.toString())
+            edtUserDob.error = null
+        }
+
+        val adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, viewModel.genders)
+        edtUserGender.setAdapter(adapter)
+        edtUserGender.setOnItemClickListener { _, _, index, _ ->
+            viewModel.onGenderSelected(index)
+            inputUserGender.error = null
+        }
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SetupFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SetupFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    private fun openGalleryForImage() {
+
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startResultImage.launch(intent)
+
     }
+
+    private fun openDateDialog() {
+        val today = Calendar.getInstance()
+
+        val year = today.get(Calendar.YEAR)
+        val month = today.get(Calendar.MONTH)
+        val day = today.get(Calendar.DAY_OF_MONTH)
+
+        val maximumDate = Calendar.getInstance()
+        maximumDate.set(Calendar.YEAR, year - 15)
+
+        val dialog = DatePickerDialog(
+            requireContext(),
+            { _: DatePicker, year: Int, month: Int, day: Int ->
+
+                val selectedDate = Calendar.getInstance()
+
+                selectedDate.set(Calendar.YEAR, year)
+                selectedDate.set(Calendar.MONTH, month)
+                selectedDate.set(Calendar.DAY_OF_MONTH, day)
+
+                binding.inputUserDob.error = null
+
+                viewModel.onDateSelected(selectedDate)
+
+            }, year, month, day
+        )
+        dialog.datePicker.maxDate = maximumDate.timeInMillis
+        dialog.show()
+    }
+
+    private fun showErrorMessage(message: String, retryMethod: () -> Unit) {
+        Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT)
+            .setAction("retry") { retryMethod.invoke() }
+            .show()
+    }
+
+    private fun navigateToFeeds() {
+        val deeplink = getDeeplink(Destinations.FEED)
+        navigate(deeplink, getNavOptionsPopUpToCurrent())
+    }
+
 }

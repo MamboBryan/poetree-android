@@ -27,6 +27,7 @@ class PreferencesRepository @Inject constructor(@ApplicationContext context: Con
         val SORT_BOOKMARKS = stringPreferencesKey("sort_bookmarks")
         val IS_ON_BOARDED = booleanPreferencesKey("is_app_opened")
         val IS_LOGGED_IN = booleanPreferencesKey("is_logged_in")
+        val IS_SETUP = booleanPreferencesKey("is_set_up")
     }
 
     val darkModeFlow: Flow<Int> =
@@ -39,7 +40,11 @@ class PreferencesRepository @Inject constructor(@ApplicationContext context: Con
     }
 
     val isLoggedIn = dataStore.data.map { preferences ->
-        preferences[PreferencesKeys.IS_LOGGED_IN] ?: false
+        preferences[PreferencesKeys.IS_LOGGED_IN] ?: true
+    }
+
+    val isUserSetup = dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.IS_SETUP] ?: false
     }
 
     suspend fun updateDarkMode(mode: Int) {
@@ -52,6 +57,10 @@ class PreferencesRepository @Inject constructor(@ApplicationContext context: Con
 
     suspend fun updateLoggedIn(isLoggedIn: Boolean) {
         dataStore.edit { prefs -> prefs[PreferencesKeys.IS_LOGGED_IN] = true }
+    }
+
+    suspend fun updateSetupStatus(isSetup: Boolean){
+        dataStore.edit { prefs -> prefs[PreferencesKeys.IS_SETUP] = true }
     }
 
 }

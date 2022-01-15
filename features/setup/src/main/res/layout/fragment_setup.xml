@@ -29,27 +29,27 @@
             tools:context=".AccountFragment">
 
             <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/iv_poem_bg"
+                android:id="@+id/iv_user_image"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_marginTop="16dp"
-                android:src="@drawable/profile"
+                android:src="@drawable/ic_logo"
                 app:civ_border="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floatingActionButton"
+                android:id="@+id/fab_upload_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:src="@drawable/ic_baseline_camera_alt_24"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_poem_bg"
-                app:layout_constraintEnd_toEndOf="@+id/iv_poem_bg" />
+                app:layout_constraintBottom_toBottomOf="@+id/iv_user_image"
+                app:layout_constraintEnd_toEndOf="@+id/iv_user_image" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayout"
+                android:id="@+id/input_user_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -57,48 +57,62 @@
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_poem_bg">
+                app:layout_constraintTop_toBottomOf="@+id/iv_user_image">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_user_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Username" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayout2"
+                android:id="@+id/input_user_dob"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                app:layout_constraintEnd_toStartOf="@+id/textInputLayout4"
+                app:endIconDrawable="@drawable/ic_baseline_today_24"
+                app:endIconMode="custom"
+                app:layout_constraintEnd_toStartOf="@+id/input_user_gender"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="@+id/textInputLayout"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
+                app:layout_constraintStart_toStartOf="@+id/input_user_name"
+                app:layout_constraintTop_toBottomOf="@+id/input_user_name">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_user_dob"
                     android:layout_width="match_parent"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:layout_height="wrap_content"
                     android:hint="Date Of Birth" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayout4"
+                android:id="@+id/input_user_gender"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                app:layout_constraintEnd_toEndOf="@+id/textInputLayout"
+                app:endIconMode="dropdown_menu"
+                app:layout_constraintEnd_toEndOf="@+id/input_user_name"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/textInputLayout2"
-                app:layout_constraintTop_toTopOf="@+id/textInputLayout2">
+                app:layout_constraintStart_toEndOf="@+id/input_user_dob"
+                app:layout_constraintTop_toTopOf="@+id/input_user_dob">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/edt_user_gender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Gender" />
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint="Gender"
+                    android:paddingStart="16dp"
+                    android:paddingTop="16dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <EditText
-                android:id="@+id/editTextTextMultiLine"
+                android:id="@+id/edt_user_bio"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_marginTop="16dp"
@@ -108,22 +122,22 @@
                 android:hint="Bio goes here ..."
                 android:inputType="textMultiLine"
                 android:padding="16dp"
-                app:layout_constraintEnd_toEndOf="@+id/textInputLayout4"
+                app:layout_constraintEnd_toEndOf="@+id/input_user_gender"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="@+id/textInputLayout2"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayout2" />
+                app:layout_constraintStart_toStartOf="@+id/input_user_dob"
+                app:layout_constraintTop_toBottomOf="@+id/input_user_dob" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/btn_save_details"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:text="save"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/editTextTextMultiLine"
-                app:layout_constraintStart_toStartOf="@+id/editTextTextMultiLine"
-                app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />
+                app:layout_constraintEnd_toEndOf="@+id/edt_user_bio"
+                app:layout_constraintStart_toStartOf="@+id/edt_user_bio"
+                app:layout_constraintTop_toBottomOf="@+id/edt_user_bio" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
