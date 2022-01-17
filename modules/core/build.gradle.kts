@@ -48,9 +48,8 @@ dependencies {
 
     implementation(project(BuildModules.Commons.ui))
     implementation(project(BuildModules.Commons.data))
-
-    api(project(BuildModules.Commons.local))
-    api(project(BuildModules.Commons.remote))
+    implementation(project(BuildModules.Commons.local))
+    implementation(project(BuildModules.Commons.remote))
 
     implementation(Dependencies.Libraries.core)
     implementation(Dependencies.Libraries.kotlin)

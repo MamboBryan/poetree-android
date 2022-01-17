@@ -3,6 +3,8 @@ package com.mambo.features.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.mambo.core.repository.PoemRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,6 +25,10 @@ class FeedViewModel @Inject constructor(
     val poems = _poems.asLiveData()
 
     val feeds = poemsRepository.getLocalPoems("").cachedIn(viewModelScope)
+    val locals = Pager(
+        config = PagingConfig(pageSize = 10, prefetchDistance = 2),
+        pagingSourceFactory = { poemsRepository.getPoems() }
+    ).flow
 
     fun onUserImageClicked() = updateUi(FeedEvent.NavigateToProfile)
 

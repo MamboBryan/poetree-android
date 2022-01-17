@@ -3,6 +3,7 @@ plugins {
     id(Plugins.android)
     id(Plugins.kapt)
     id(Plugins.parcelize)
+    id(Plugins.hilt)
 }
 
 android {
@@ -45,11 +46,19 @@ dependencies {
 
     implementation(Dependencies.Libraries.core)
     implementation(Dependencies.Libraries.kotlin)
-    implementation(Dependencies.Libraries.appCompat)
-    implementation(Dependencies.Libraries.materialDesign)
-    implementation(Dependencies.Libraries.constraintLayout)
-    implementation(Dependencies.Libraries.legacySupport)
 
+    implementation(Dependencies.Libraries.coroutines)
+    implementation(Dependencies.Libraries.hilt)
+
+    implementation(platform(Dependencies.Libraries.okHttpBOM))
+    implementation(Dependencies.Libraries.okHttpLogging)
+    implementation(Dependencies.Libraries.okHttp)
+    implementation(Dependencies.Libraries.retrofit)
+    implementation(Dependencies.Libraries.retrofitConverter)
+    implementation(Dependencies.Libraries.gson)
+    implementation(Dependencies.Libraries.timber)
+
+    kapt(Dependencies.Libraries.hiltCompiler)
 }
 
 kapt {

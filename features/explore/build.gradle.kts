@@ -68,8 +68,10 @@ dependencies {
     implementation(Dependencies.Libraries.navigationFragment)
     implementation(Dependencies.Libraries.navigationUi)
     implementation(Dependencies.Libraries.coroutines)
+    implementation(Dependencies.Libraries.paging)
     implementation(Dependencies.Libraries.hilt)
 
+    implementation(Dependencies.Libraries.timber)
     implementation(Dependencies.Libraries.delegate)
     implementation(Dependencies.Libraries.circularImage)
     implementation(Dependencies.Libraries.prettyTime)

@@ -3,15 +3,16 @@ package com.mambo.features.home
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
+import com.mambo.core.OnPoemClickListener
+import com.mambo.core.adapters.GenericStateAdapter
 import com.mambo.core.adapters.PoemPagingAdapter
-import com.mambo.core.adapters.PoemStateAdapter
 import com.mambo.core.viewmodel.MainViewModel
+import androidx.core.view.isVisible
 import com.mambo.features.home.databinding.FragmentFeedBinding
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
@@ -36,9 +37,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
 
         initViews()
 
-        lifecycleScope.launch {
-            Log.i("FEEDS", "launching")
-
+        lifecycleScope.launchWhenCreated {
             viewModel.events.collect { event ->
                 when (event) {
                     FeedViewModel.FeedEvent.NavigateToProfile -> navigateToProfile()
@@ -46,12 +45,17 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                     is FeedViewModel.FeedEvent.NavigateToPoem -> navigateToPoem()
                 }
             }
-            viewModel.feeds.collectLatest {
+        }
+
+        lifecycleScope.launch {
+            mainViewModel.feeds.collectLatest {
                 Log.i("FEEDS", "data collected")
                 adapter.submitData(it)
             }
+        }
+
+        lifecycleScope.launch {
             adapter.loadStateFlow.collectLatest { loadState ->
-                Log.i("FEEDS", "load states collected")
                 binding.layoutState.apply {
 
                     stateContent.isVisible = false
@@ -62,13 +66,11 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                     when (loadState.source.refresh) {
                         is LoadState.Loading -> {
                             stateLoading.isVisible = true
-                            Log.i("FEEDS", "gettingFeeds: LOADING")
                         }
 
                         is LoadState.Error -> {
                             stateError.isVisible = true
                             stateContent.isRefreshing = false
-                            Log.i("FEEDS", "gettingFeeds: ERROR")
                         }
 
                         is LoadState.NotLoading -> {
@@ -84,39 +86,45 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                             }
 
                             stateContent.isRefreshing = false
-                            Log.i("FEEDS", "gettingFeeds: NOT LOADING")
 
                         }
                     }
                 }
             }
-
         }
+
     }
 
     private fun initViews() {
         binding.apply {
+
             imageUser.setOnClickListener { viewModel.onUserImageClicked() }
             btnCreatePoem.setOnClickListener { viewModel.onCreatePoemClicked() }
-            layoutState.buttonRetry.setOnClickListener { adapter.retry() }
 
-            layoutState.recyclerView.adapter = adapter
-            layoutState.recyclerView.setHasFixedSize(true)
-            layoutState.stateContent.setOnRefreshListener {
-                layoutState.recyclerView.scrollToPosition(0)
-                adapter.refresh()
+            layoutState.apply {
+                buttonRetry.setOnClickListener { adapter.retry() }
+                recyclerView.adapter = adapter
+                recyclerView.setHasFixedSize(true)
+                stateContent.setOnRefreshListener {
+                    recyclerView.scrollToPosition(0)
+                    adapter.refresh()
+                }
             }
 
         }
 
+        adapter.setListener(object : OnPoemClickListener {
+            override fun onPoemClicked(poem: String) {
+                viewModel.onPoemClicked(poem)
+            }
+
+        })
+
         adapter.withLoadStateHeaderAndFooter(
-            header = PoemStateAdapter(adapter::retry),
-            footer = PoemStateAdapter(adapter::retry)
+            header = GenericStateAdapter(adapter::retry),
+            footer = GenericStateAdapter(adapter::retry)
         )
 
-//        adapter.addLoadStateListener { loadState ->
-//
-//        }
     }
 
     private fun navigateToProfile() {

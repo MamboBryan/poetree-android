@@ -2,11 +2,15 @@ package com.mambo.explore
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
+import com.mambo.core.OnTopicClickListener
+import com.mambo.core.adapters.GenericStateAdapter
+import com.mambo.core.adapters.TopicPagingAdapter
 import com.mambo.explore.databinding.FragmentExploreBinding
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
@@ -14,6 +18,8 @@ import com.mambobryan.navigation.extensions.navigate
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ExploreFragment : Fragment(R.layout.fragment_explore) {
@@ -21,14 +27,14 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
     private val binding by viewBinding(FragmentExploreBinding::bind)
     private val viewModel: ExploreViewModel by viewModels()
 
-    private val adapter = TopicsAdapter()
+    private val adapter = TopicPagingAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
 
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launch {
             viewModel.events.collect { event ->
                 when (event) {
                     ExploreViewModel.ExploreEvent.NavigateToProfile -> navigateToProfile()
@@ -38,32 +44,51 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
             }
         }
 
-
-        viewModel.topics.observe(viewLifecycleOwner) { it ->
-
-            val topics =
-                listOf(
-                    "nature",
-                    "love",
-                    "beauty",
-                    "self",
-                    "desire",
-                    "motivation",
-                    "relationships",
-                    "death",
-                    "spiritual",
-                )
-
-            binding.layoutState.apply {
-                stateLoading.isVisible = it == null
-                stateError.isVisible = it == null
-                stateEmpty.isVisible = it.isEmpty()
-                stateContent.isVisible = it.isNotEmpty()
+        lifecycleScope.launch {
+            viewModel.topics.collectLatest {
+                adapter.submitData(it)
             }
-
-            adapter.submitList(topics)
-
         }
+
+        lifecycleScope.launch {
+            adapter.loadStateFlow.collectLatest { loadState ->
+                binding.layoutState.apply {
+
+                    stateContent.isVisible = false
+                    stateEmpty.isVisible = false
+                    stateError.isVisible = false
+                    stateLoading.isVisible = false
+
+                    when (loadState.source.refresh) {
+                        is LoadState.Loading -> {
+                            stateLoading.isVisible = true
+                        }
+
+                        is LoadState.Error -> {
+                            stateError.isVisible = true
+//                            stateContent.isRefreshing = false
+                        }
+
+                        is LoadState.NotLoading -> {
+
+                            if (loadState.append.endOfPaginationReached) {
+                                if (adapter.itemCount < 1)
+                                    stateEmpty.isVisible = true
+                                else {
+                                    stateContent.isVisible = true
+                                }
+                            } else {
+                                stateContent.isVisible = true
+                            }
+
+//                            stateContent.isRefreshing = false
+
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     private fun initViews() {
@@ -72,17 +97,29 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
             ivUserImage.setOnClickListener { viewModel.onProfileImageClicked() }
             layoutSearch.setOnClickListener { viewModel.onSearchFieldClicked() }
 
-            layoutState.tvEmpty.text = "Topics are empty"
-            layoutState.tvError.text = "Couldn't load topics!"
+            layoutState.apply {
+                tvEmpty.text = "Topics are empty"
+                tvError.text = "Couldn't load topics!"
 
-            layoutState.recyclerView.adapter = adapter
-            layoutState.recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
-            adapter.setListener(object : TopicsAdapter.OnTopicClickListener{
-                override fun onTopicClicked(topic: String) {
-                    viewModel.onTopicClicked()
-                }
-            })
+                recyclerView.adapter = adapter
+                recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+                buttonRetry.setOnClickListener { adapter.retry() }
+//                stateContent.setOnRefreshListener {
+//                    recyclerView.scrollToPosition(0)
+//                    adapter.refresh()
+//                }
+
+            }
         }
+        adapter.setListener(object : OnTopicClickListener {
+            override fun onTopicClicked() {
+                viewModel.onTopicClicked()
+            }
+        })
+        adapter.withLoadStateHeaderAndFooter(
+            header = GenericStateAdapter(adapter::retry),
+            footer = GenericStateAdapter(adapter::retry)
+        )
     }
 
     private fun navigateToProfile(){

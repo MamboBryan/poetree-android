@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mambo.core.OnPoemClickListener
-import com.mambo.data.Poem
+import com.mambo.data.models.Poem
 import com.mambo.data.utils.POEM_COMPARATOR
 import com.mambo.ui.databinding.ItemPoemBinding
 import org.ocpsoft.prettytime.PrettyTime
@@ -29,9 +29,9 @@ class PoemPagingAdapter :
         init {
             binding.apply {
 
-                layoutPoem.setOnClickListener {
-//                if(absoluteAdapterPosition != RecyclerView.NO_POSITION)
-//                    onPoemClickListener.onPoemClicked(getItem(absoluteAdapterPosition))
+                layoutPoemClick.setOnClickListener {
+                if(absoluteAdapterPosition != RecyclerView.NO_POSITION)
+                    onPoemClickListener.onPoemClicked("")
                 }
 
             }
@@ -54,7 +54,8 @@ class PoemPagingAdapter :
                 tvBookmarks.text = "${poem.bookmarksCount}"
                 tvReads.text = "${poem.readsCount}"
 
-                layoutPoem.setBackgroundColor(Color.parseColor(poem.topic?.color))
+                val color = poem.topic?.color ?: "#ffffff"
+                layoutPoem.setBackgroundColor(Color.parseColor(color))
 
             }
         }

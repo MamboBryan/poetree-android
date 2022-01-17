@@ -12,7 +12,7 @@ import androidx.navigation.ui.NavigationUI
 import com.google.android.material.snackbar.Snackbar
 import com.mambo.compose.databinding.FragmentComposeBinding
 import com.mambo.core.adapters.ViewPagerAdapter
-import com.mambo.data.Poem
+import com.mambo.data.models.Poem
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect

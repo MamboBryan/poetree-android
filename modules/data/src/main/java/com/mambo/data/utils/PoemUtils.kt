@@ -1,8 +1,8 @@
 package com.mambo.data.utils
 
 import androidx.recyclerview.widget.DiffUtil
-import com.mambo.data.Poem
-import com.mambo.data.User
+import com.mambo.data.models.Poem
+import com.mambo.data.models.User
 import java.util.*
 
 val POEM_COMPARATOR =

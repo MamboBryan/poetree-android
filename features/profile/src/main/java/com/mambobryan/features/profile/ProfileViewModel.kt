@@ -3,7 +3,7 @@ package com.mambobryan.features.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.mambo.core.repository.PreferencesRepository
+import com.mambo.data.preferences.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -12,17 +12,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val preferencesRepository: PreferencesRepository
+    private val preferences: UserPreferences
 ) : ViewModel() {
 
     private val _eventChannel = Channel<ProfileEvent>()
     val events = _eventChannel.receiveAsFlow()
 
-    val mode = preferencesRepository.darkModeFlow.asLiveData()
+    val mode = preferences.darkModeFlow.asLiveData()
 
     fun onAppThemeClicked() = updateUi(ProfileEvent.ShowAppThemeDialog)
     fun onAppThemeSelected(mode: Int) = viewModelScope.launch {
-        preferencesRepository.updateDarkMode(mode)
+        preferences.updateDarkMode(mode)
     }
     fun onUpdateAccountClicked() = updateUi(ProfileEvent.NavigateToUpdateAccount)
     fun onUpdatePasswordClicked() = updateUi(ProfileEvent.NavigateToUpdatePassword)

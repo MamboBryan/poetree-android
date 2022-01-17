@@ -1,8 +1,8 @@
 package com.mambo.explore
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.mambo.core.repository.TopicsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -12,14 +12,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExploreViewModel @Inject constructor(
-    topicsRepository: TopicsRepository
+    repository: TopicsRepository,
 ) : ViewModel() {
 
     private val _eventChannel = Channel<ExploreEvent>()
     val events = _eventChannel.receiveAsFlow()
 
-    private val _topics = topicsRepository.topics()
-    val topics = _topics.asLiveData()
+    val topics = repository.getTopics().cachedIn(viewModelScope)
 
     fun onProfileImageClicked() = updateUi(ExploreEvent.NavigateToProfile)
 

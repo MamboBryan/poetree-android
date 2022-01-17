@@ -1,4 +1,4 @@
-package com.mambo.data
+package com.mambo.data.models
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo

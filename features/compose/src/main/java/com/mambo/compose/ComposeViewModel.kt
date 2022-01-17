@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.mambo.core.repository.PoemRepository
 import com.mambo.core.utils.Result.RESULT_CREATE_OK
 import com.mambo.core.utils.Result.RESULT_EDIT_OK
-import com.mambo.data.Poem
-import com.mambo.data.User
+import com.mambo.data.models.Poem
+import com.mambo.data.models.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow

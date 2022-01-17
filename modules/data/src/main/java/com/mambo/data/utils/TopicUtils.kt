@@ -1,6 +1,18 @@
 package com.mambo.data.utils
 
-import com.mambo.data.Topic
+import androidx.recyclerview.widget.DiffUtil
+import com.mambo.data.models.Topic
+
+val TOPIC_COMPARATOR =
+    object : DiffUtil.ItemCallback<Topic>() {
+        override fun areItemsTheSame(oldItem: Topic, newItem: Topic): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Topic, newItem: Topic): Boolean {
+            return oldItem == newItem
+        }
+    }
 
 fun getTopic(name: String) = Topic(name = name, color = "#C09BD8")
 

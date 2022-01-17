@@ -3,7 +3,7 @@ package com.mambo.core.repository
 import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import com.mambo.data.Poem
+import com.mambo.data.models.Poem
 import com.mambo.local.PoemsDao
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -16,9 +16,10 @@ class PoemRepository @Inject constructor() {
     fun poems(): Flow<List<Poem>> = poemsDao.getAll()
 
     fun getLocalPoems(query: String) = Pager(PagingConfig(10)){
-        Log.i("FEEDS", "getting poems")
         poemsDao.getLocalPoems()
     }.flow
+
+    fun getPoems() = poemsDao.getLocalPoems()
 
     suspend fun save(poem: Poem) = poemsDao.insert(poem)
 

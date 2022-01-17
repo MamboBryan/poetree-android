@@ -53,6 +53,7 @@ dependencies {
     implementation(project(BuildModules.Commons.core))
     implementation(project(BuildModules.Commons.data))
     implementation(project(BuildModules.Commons.local))
+    implementation(project(BuildModules.Commons.remote))
     implementation(project(BuildModules.Commons.navigation))
 
     implementation(project(BuildModules.Features.auth))

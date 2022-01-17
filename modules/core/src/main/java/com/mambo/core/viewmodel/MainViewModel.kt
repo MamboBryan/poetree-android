@@ -3,9 +3,10 @@ package com.mambo.core.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.mambo.core.repository.PoemRepository
-import com.mambo.core.repository.PreferencesRepository
 import com.mambo.core.utils.ConnectionLiveData
+import com.mambo.data.preferences.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.first
@@ -18,14 +19,14 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     application: Application,
     poemRepository: PoemRepository,
-    preferencesRepository: PreferencesRepository
+    preferences: UserPreferences
 ) : AndroidViewModel(application) {
 
     init {
         runBlocking {
-            isOnBoarded = preferencesRepository.isOnBoarded.first()
-            isLoggedIn = preferencesRepository.isLoggedIn.first()
-            isUserSetup = preferencesRepository.isUserSetup.first()
+            isOnBoarded = preferences.isOnBoarded.first()
+            isLoggedIn = preferences.isLoggedIn.first()
+            isUserSetup = preferences.isUserSetup.first()
         }
     }
 
@@ -35,14 +36,14 @@ class MainViewModel @Inject constructor(
     private val _eventChannel = Channel<MainEvent>()
     val events = _eventChannel.receiveAsFlow()
 
-    val darkMode = preferencesRepository.darkModeFlow
+    val darkMode = preferences.darkModeFlow
 
     var isOnBoarded: Boolean
     var isLoggedIn: Boolean
     var isUserSetup: Boolean
     var backIsPressed = false
 
-//    val feeds = poemRepository.getLocalPoems("").cachedIn(viewModelScope)
+    val feeds = poemRepository.getLocalPoems("").cachedIn(viewModelScope)
 //    val localPoems = poemRepository.getLocalPoems("").cachedIn(viewModelScope)
 
     private fun updateUi(event: MainEvent) = viewModelScope.launch {

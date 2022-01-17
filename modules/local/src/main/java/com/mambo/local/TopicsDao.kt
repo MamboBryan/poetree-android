@@ -1,10 +1,11 @@
 package com.mambo.local
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.mambo.data.Topic
+import com.mambo.data.models.Topic
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -18,6 +19,9 @@ interface TopicsDao {
 
     @Query("SELECT * FROM topics")
     fun getAll(): Flow<List<Topic>>
+
+    @Query("SELECT * FROM topics")
+    fun getTopics(): PagingSource<Int, Topic>
 
     @Query("SELECT * FROM topics WHERE name LIKE '%' || :query || '%'")
     fun getTopics(query: String): Flow<List<Topic>>

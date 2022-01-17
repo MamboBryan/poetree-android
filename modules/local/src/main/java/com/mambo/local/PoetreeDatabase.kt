@@ -4,9 +4,9 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.mambo.data.Poem
-import com.mambo.data.Topic
-import com.mambo.data.User
+import com.mambo.data.models.Poem
+import com.mambo.data.models.Topic
+import com.mambo.data.models.User
 import com.mambo.data.utils.getLocalPoem
 import com.mambo.local.di.ApplicationScope
 import com.mambo.data.utils.TopicUtils

@@ -29,5 +29,8 @@ object Versions {
     const val playServicesAuth = "19.0.0"
     const val multiSearch = "0.2.0"
     const val paging = "3.1.0"
+    const val retrofit = "2.9.0"
+    const val okHttp = "4.9.0"
+    const val recyclerview = "1.2.1"
 
 }

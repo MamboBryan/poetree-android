@@ -2,8 +2,8 @@ package com.mambo.local
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
-import com.mambo.data.Topic
-import com.mambo.data.User
+import com.mambo.data.models.Topic
+import com.mambo.data.models.User
 import java.util.*
 
 class Converters {

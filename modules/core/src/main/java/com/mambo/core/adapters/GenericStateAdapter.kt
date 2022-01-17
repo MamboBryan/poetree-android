@@ -8,9 +8,9 @@ import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mambo.ui.databinding.LayoutLoadStateBinding
 
-class PoemStateAdapter(
+class GenericStateAdapter(
     private val retry: () -> Unit
-) : LoadStateAdapter<PoemStateAdapter.LoadStateViewHolder>() {
+) : LoadStateAdapter<GenericStateAdapter.LoadStateViewHolder>() {
 
     class LoadStateViewHolder(
         val binding: LayoutLoadStateBinding, retry: () -> Unit
