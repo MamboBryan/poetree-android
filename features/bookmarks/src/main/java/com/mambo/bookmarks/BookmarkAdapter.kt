@@ -90,8 +90,8 @@ class BookmarkAdapter :
         init {
 
             binding.root.setOnClickListener {
-                if (adapterPosition != RecyclerView.NO_POSITION)
-                    clickListener.onPoemClicked(getItem(adapterPosition))
+//                if (absoluteAdapterPosition != RecyclerView.NO_POSITION)
+//                    clickListener.onPoemClicked(getItem(absoluteAdapterPosition))
             }
 
         }
@@ -99,14 +99,14 @@ class BookmarkAdapter :
         fun bind(haiku: String) {
             binding.apply {
 
-                val duration = times[adapterPosition]
+                val duration = times[absoluteAdapterPosition]
                 val message = " \u2022 $duration "
 
-                tvPoemUser.text = names[adapterPosition]
-                tvPoemTitle.text = titles[adapterPosition]
+                tvPoemUser.text = names[absoluteAdapterPosition]
+                tvPoemTitle.text = titles[absoluteAdapterPosition]
                 tvPoemDuration.text = message
 
-                layoutPoem.setBackgroundColor(Color.parseColor(colors[adapterPosition]))
+                layoutPoem.setBackgroundColor(Color.parseColor(colors[absoluteAdapterPosition]))
 
             }
         }

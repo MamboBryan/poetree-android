@@ -63,6 +63,12 @@ dependencies {
     implementation(Dependencies.Libraries.paging)
     implementation(Dependencies.Libraries.hilt)
 
+    implementation(Dependencies.Libraries.retrofitConverter)
+    implementation(Dependencies.Libraries.retrofit)
+    implementation(platform(Dependencies.Libraries.okHttpBOM))
+    implementation(Dependencies.Libraries.okHttpLogging)
+    implementation(Dependencies.Libraries.okHttp)
+
     implementation(Dependencies.Libraries.prettyTime)
 
     kapt(Dependencies.Libraries.hiltCompiler)

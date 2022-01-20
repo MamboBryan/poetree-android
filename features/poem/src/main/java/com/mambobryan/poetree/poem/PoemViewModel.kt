@@ -42,6 +42,10 @@ class PoemViewModel @Inject constructor(
     private val topic = "Motivation"
     private val days = "2 days ago"
 
+    fun updatePoem(poem: Poem){
+        _poem.value = poem
+    }
+
     fun getHtml(): String {
         val html = StringBuilder()
 

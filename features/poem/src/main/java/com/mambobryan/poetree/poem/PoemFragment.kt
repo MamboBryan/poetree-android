@@ -5,10 +5,12 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import com.mambo.core.viewmodel.MainViewModel
 import com.mambo.libraries.editor.WYSIWYG
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
@@ -23,21 +25,15 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
 
     private val binding by viewBinding(FragmentPoemBinding::bind)
     private val viewModel: PoemViewModel by viewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        val poem = viewModel.poem!!
+        val poem = mainViewModel.poem.value!!
+        viewModel.updatePoem(poem)
 
-        binding.apply {
-
-            NavigationUI.setupWithNavController(toolbar, findNavController())
-            toolbar.title = ""
-
-            layoutArtist.setOnClickListener{viewModel.onArtistImageClicked()}
-            ivPoemComment.setOnClickListener { viewModel.onCommentsClicked() }
-
-        }
+        initViews()
 
         initEditor()
 
@@ -46,10 +42,11 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
                 when (event) {
                     PoemViewModel.PoemEvent.NavigateToArtistDetails -> navigateToArtistDetails()
                     PoemViewModel.PoemEvent.NavigateToComments -> navigateToComments()
-                    is PoemViewModel.PoemEvent.NavigateToEditPoem ->{}
-                    is PoemViewModel.PoemEvent.ShowPoemConfirmationMessage -> {}
+                    is PoemViewModel.PoemEvent.NavigateToEditPoem -> {
+                    }
+                    is PoemViewModel.PoemEvent.ShowPoemConfirmationMessage -> {
+                    }
                     is PoemViewModel.PoemEvent.ShowUndoDeletePoemMessage -> {
-
                     }
                 }
             }
@@ -57,7 +54,27 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
 
     }
 
-    private fun initEditor()= binding.apply {
+    private fun initViews() = binding.apply {
+
+        NavigationUI.setupWithNavController(toolbar, findNavController())
+        toolbar.title = ""
+
+        val isUser = false
+
+        if (isUser)
+            toolbar.inflateMenu(R.menu.menu_poem)
+
+        layoutArtist.setOnClickListener { viewModel.onArtistImageClicked() }
+        ivPoemComment.setOnClickListener { viewModel.onCommentsClicked() }
+
+        layoutArtist.isVisible = viewModel.poem?.userId == ""
+        layoutPoemActions.isVisible = viewModel.poem?.isOffline == false
+
+
+    }
+
+
+    private fun initEditor() = binding.apply {
         val wysiwygEditor = editor
         val textColor = ContextCompat.getColor(requireContext(), R.color.color_on_background)
         val backgroundColor = ContextCompat.getColor(requireContext(), R.color.color_background)

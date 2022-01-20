@@ -7,6 +7,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.mambo.core.repository.PoemRepository
+import com.mambo.data.models.Poem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -32,7 +33,7 @@ class FeedViewModel @Inject constructor(
 
     fun onUserImageClicked() = updateUi(FeedEvent.NavigateToProfile)
 
-    fun onPoemClicked(poem: String) = updateUi(FeedEvent.NavigateToPoem(poem))
+    fun onPoemClicked(poem: Poem) = updateUi(FeedEvent.NavigateToPoem(poem))
 
     fun onCreatePoemClicked() = updateUi(FeedEvent.NavigateToCompose)
 
@@ -41,7 +42,7 @@ class FeedViewModel @Inject constructor(
     }
 
     sealed class FeedEvent {
-        data class NavigateToPoem(val poem: String) : FeedEvent()
+        data class NavigateToPoem(val poem: Poem) : FeedEvent()
         object NavigateToProfile : FeedEvent()
         object NavigateToCompose : FeedEvent()
     }

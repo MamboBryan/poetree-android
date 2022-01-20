@@ -50,13 +50,13 @@ dependencies {
     implementation(Dependencies.Libraries.coroutines)
     implementation(Dependencies.Libraries.hilt)
 
+    implementation(Dependencies.Libraries.retrofitConverter)
+    implementation(Dependencies.Libraries.retrofit)
     implementation(platform(Dependencies.Libraries.okHttpBOM))
     implementation(Dependencies.Libraries.okHttpLogging)
     implementation(Dependencies.Libraries.okHttp)
-    implementation(Dependencies.Libraries.retrofit)
-    implementation(Dependencies.Libraries.retrofitConverter)
-    implementation(Dependencies.Libraries.gson)
     implementation(Dependencies.Libraries.timber)
+    implementation(Dependencies.Libraries.gson)
 
     kapt(Dependencies.Libraries.hiltCompiler)
 }

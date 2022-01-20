@@ -6,6 +6,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.mambo.core.OnPoemClickListener
+import com.mambo.data.models.Poem
 import com.mambo.library.databinding.FragmentGenericLibraryBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,7 +47,7 @@ class UnpublishedFragment : Fragment(R.layout.fragment_generic_library) {
         binding.apply {
             layoutStateLibrary.recyclerView.adapter = adapter
             adapter.setListener(object : OnPoemClickListener {
-                override fun onPoemClicked(poem: String) {
+                override fun onPoemClicked(poem: Poem) {
                     viewModel.onPoemClicked()
                 }
             })

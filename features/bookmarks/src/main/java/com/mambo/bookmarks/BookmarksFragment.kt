@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.mambo.bookmarks.databinding.FragmentBookmarksBinding
 import com.mambo.core.OnPoemClickListener
+import com.mambo.data.models.Poem
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
 import com.mambobryan.navigation.extensions.navigate
@@ -73,7 +74,7 @@ class BookmarksFragment : Fragment(R.layout.fragment_bookmarks) {
 
             layoutStateBookmarks.recyclerView.adapter = adapter
             adapter.setListener(object : OnPoemClickListener {
-                override fun onPoemClicked(poem: String) {
+                override fun onPoemClicked(poem: Poem) {
                     viewModel.onPoemClicked()
                 }
             })

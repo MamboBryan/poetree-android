@@ -13,6 +13,7 @@ import com.mambo.core.adapters.GenericStateAdapter
 import com.mambo.core.adapters.PoemPagingAdapter
 import com.mambo.core.viewmodel.MainViewModel
 import androidx.core.view.isVisible
+import com.mambo.data.models.Poem
 import com.mambo.features.home.databinding.FragmentFeedBinding
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
@@ -42,7 +43,10 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                 when (event) {
                     FeedViewModel.FeedEvent.NavigateToProfile -> navigateToProfile()
                     FeedViewModel.FeedEvent.NavigateToCompose -> navigateToCompose()
-                    is FeedViewModel.FeedEvent.NavigateToPoem -> navigateToPoem()
+                    is FeedViewModel.FeedEvent.NavigateToPoem -> {
+                        mainViewModel.updatePoem(event.poem)
+                        navigateToPoem()
+                    }
                 }
             }
         }
@@ -114,7 +118,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         }
 
         adapter.setListener(object : OnPoemClickListener {
-            override fun onPoemClicked(poem: String) {
+            override fun onPoemClicked(poem: Poem) {
                 viewModel.onPoemClicked(poem)
             }
 

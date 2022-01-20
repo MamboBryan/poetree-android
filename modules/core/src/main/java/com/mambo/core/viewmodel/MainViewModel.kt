@@ -2,10 +2,13 @@ package com.mambo.core.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.mambo.core.repository.PoemRepository
 import com.mambo.core.utils.ConnectionLiveData
+import com.mambo.data.models.Poem
 import com.mambo.data.preferences.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -43,8 +46,15 @@ class MainViewModel @Inject constructor(
     var isUserSetup: Boolean
     var backIsPressed = false
 
+    private val _poem = MutableLiveData<Poem?>(null)
+    val poem: LiveData<Poem?> get() = _poem
+
     val feeds = poemRepository.getLocalPoems("").cachedIn(viewModelScope)
 //    val localPoems = poemRepository.getLocalPoems("").cachedIn(viewModelScope)
+
+    fun updatePoem(poem: Poem?){
+        _poem.value = poem
+    }
 
     private fun updateUi(event: MainEvent) = viewModelScope.launch {
         _eventChannel.send(event)

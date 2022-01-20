@@ -101,8 +101,8 @@ class PublishedLibraryAdapter :
         init {
 
             binding.root.setOnClickListener {
-                if(adapterPosition != RecyclerView.NO_POSITION)
-                clickListener.onPoemClicked(getItem(adapterPosition))
+//                if(absoluteAdapterPosition != RecyclerView.NO_POSITION)
+//                clickListener.onPoemClicked(getItem(absoluteAdapterPosition))
             }
 
         }
@@ -110,10 +110,10 @@ class PublishedLibraryAdapter :
         fun bind(haiku: String) {
             binding.apply {
 
-                tvPublishedTitle.text = titles[adapterPosition]
-                tvPublishedDuration.text = times[adapterPosition]
+                tvPublishedTitle.text = titles[absoluteAdapterPosition]
+                tvPublishedDuration.text = times[absoluteAdapterPosition]
 
-                layoutPoem.setBackgroundColor(Color.parseColor(colors[adapterPosition]))
+                layoutPoem.setBackgroundColor(Color.parseColor(colors[absoluteAdapterPosition]))
 //                layoutPublish.setBackgroundColor(Color.parseColor("#FFC285"))
 
             }

@@ -96,8 +96,8 @@ class UnpublishedLibraryAdapter :
 
             binding.root.setOnClickListener {
                 binding.root.setOnClickListener {
-                    if (adapterPosition != RecyclerView.NO_POSITION)
-                        clickListener.onPoemClicked(getItem(adapterPosition))
+//                    if (absoluteAdapterPosition != RecyclerView.NO_POSITION)
+//                        clickListener.onPoemClicked(getItem(absoluteAdapterPosition))
                 }
             }
 
@@ -106,13 +106,13 @@ class UnpublishedLibraryAdapter :
         fun bind(haiku: String) {
             binding.apply {
 
-                tvTitle.text = titles[adapterPosition]
-                tvDuration.text = times[adapterPosition]
+                tvTitle.text = titles[absoluteAdapterPosition]
+                tvDuration.text = times[absoluteAdapterPosition]
 
                 val color =
-                    if (adapterPosition % 2 == 0)
+                    if (absoluteAdapterPosition % 2 == 0)
                         ContextCompat.getColor(layoutPoem.context, R.color.white)
-                    else Color.parseColor(colors[adapterPosition])
+                    else Color.parseColor(colors[absoluteAdapterPosition])
 
                 layoutPoem.setBackgroundColor(color)
 //                layoutPublish.setBackgroundColor(Color.parseColor("#FFC285"))

@@ -30,8 +30,11 @@ class PoemPagingAdapter :
             binding.apply {
 
                 layoutPoemClick.setOnClickListener {
-                if(absoluteAdapterPosition != RecyclerView.NO_POSITION)
-                    onPoemClickListener.onPoemClicked("")
+                    if (absoluteAdapterPosition != RecyclerView.NO_POSITION) {
+                        val poem = getItem(absoluteAdapterPosition)
+                        if (poem != null)
+                            onPoemClickListener.onPoemClicked(poem)
+                    }
                 }
 
             }
