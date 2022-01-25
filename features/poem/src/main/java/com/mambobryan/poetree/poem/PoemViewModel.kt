@@ -1,20 +1,20 @@
 package com.mambobryan.poetree.poem
 
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.mambo.core.repository.PoemRepository
 import com.mambo.data.models.Poem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.ocpsoft.prettytime.PrettyTime
 import javax.inject.Inject
 
 @HiltViewModel
 class PoemViewModel @Inject constructor(
     private val poemRepository: PoemRepository,
-    private val state: SavedStateHandle
+    state: SavedStateHandle
 ) : ViewModel() {
 
     private val _eventChannel = Channel<PoemEvent>()
@@ -23,27 +23,28 @@ class PoemViewModel @Inject constructor(
     private val _poem = state.getLiveData<Poem>("poem", null)
     val poem = _poem.value
 
-    private val title = "The Emergence"
-    private val content =
-        """
-                            Hidden in the waves <br>
-                            Blossoming forth <br>
-                            <br>
-                            The way the pen behaves <br>
-                            Like a cooking pot filled with broth <br>
-                            <br>
-                            The gem concealed in caves <br>
-                            Emerging slowly like a sloth <br>
-                            <br>
-                            This is one of my faves <br>
-                            Uncover the veil and remove the cloth <br>
-                     
-                        """
-    private val topic = "Motivation"
-    private val days = "2 days ago"
+    private val _comment = MutableLiveData("")
+    val comment: LiveData<String> get() = _comment
 
-    fun updatePoem(poem: Poem){
+    private var title = ""
+    private var content = ""
+    private var topic = ""
+    private var duration = ""
+    var isOnline = false
+    var isUser = false
+
+    fun updatePoem(poem: Poem) {
         _poem.value = poem
+
+        val prettyTime = PrettyTime()
+
+        title = poem.title!!
+        content = poem.content!!
+
+        topic = poem.topic?.name ?: "No Topic"
+        duration = prettyTime.formatDuration(poem.createdAt)
+        isOnline = poem.isOffline?.not() ?: false
+
     }
 
     fun getHtml(): String {
@@ -51,36 +52,98 @@ class PoemViewModel @Inject constructor(
 
         html.append("<h2><i><b> $title </b></i></h2>")
         html.append("\n")
-        html.append("<i><b>${topic}</b> • ${days}</i>")
+        html.append("<i><b>${topic}</b> • ${duration}</i>")
         html.append("<br><br>")
         html.append("<i>${content}</i>")
         html.append("<br><br>")
-        html.append("<i>")
-        html.append("${200} likes")
-        html.append(" • ")
-        html.append("${200} comments")
-        html.append(" • ")
-        html.append("${200} bookmarks")
-        html.append(" • ")
-        html.append("${200} reads")
-        html.append("</i>")
+
+        if (isOnline) {
+            html.append("<i>")
+            html.append("${poem?.likesCount} likes")
+            html.append(" • ")
+            html.append("${poem?.commentsCount} comments")
+            html.append(" • ")
+            html.append("${poem?.bookmarksCount} bookmarks")
+            html.append(" • ")
+            html.append("${poem?.readsCount} reads")
+            html.append("</i>")
+        }
 
         return html.toString()
+    }
+
+    fun onCommentUpdated(text: String) {
+        _comment.value = text
+    }
+
+    fun onCommentSendClicked() = viewModelScope.launch {
+        showLoading()
+        try {
+            delay(2500)
+            hideLoading()
+        } catch (e: Exception) {
+            hideLoading()
+            updateUi(PoemEvent.ShowSnackBarError("Failed Sending Comment"))
+        }
     }
 
     fun onCommentsClicked() = updateUi(PoemEvent.NavigateToComments)
 
     fun onArtistImageClicked() = updateUi(PoemEvent.NavigateToArtistDetails)
 
+    fun onEditClicked() = updateUi(PoemEvent.NavigateToEditPoem(_poem.value!!))
+
+    fun onDeleteClicked() = updateUi(PoemEvent.ShowPoemDeleteDialog)
+
+    fun onDeleteConfirmed() = viewModelScope.launch {
+        showLoading()
+        try {
+            delay(4000)
+            hideLoading()
+            updateUi(PoemEvent.ShowSuccessSneaker("Poem Deleted Successfully!"))
+            updateUi(PoemEvent.NavigateToBackstack)
+        } catch (e: Exception) {
+            hideLoading()
+        }
+    }
+
+    fun onPublishClicked() = viewModelScope.launch {
+        showLoading()
+        try {
+            delay(4000)
+            hideLoading()
+        } catch (e: Exception) {
+            hideLoading()
+        }
+    }
+
+    fun onUnPublishClicked() = viewModelScope.launch {
+        showLoading()
+        try {
+            delay(4000)
+            hideLoading()
+        } catch (e: Exception) {
+            hideLoading()
+        }
+    }
+
+    private fun showLoading() = updateUi(PoemEvent.ShowLoadingDialog)
+
+    private fun hideLoading() = updateUi(PoemEvent.HideLoadingDialog)
+
     private fun updateUi(event: PoemEvent) = viewModelScope.launch {
         _eventChannel.send(event)
     }
 
     sealed class PoemEvent {
+        object ShowLoadingDialog : PoemEvent()
+        object HideLoadingDialog : PoemEvent()
+        object NavigateToBackstack : PoemEvent()
         object NavigateToArtistDetails : PoemEvent()
         object NavigateToComments : PoemEvent()
+        object ShowPoemDeleteDialog : PoemEvent()
+        data class ShowSnackBarError(val message: String) : PoemEvent()
+        data class ShowSuccessSneaker(val message: String) : PoemEvent()
         data class NavigateToEditPoem(val poem: Poem) : PoemEvent()
-        data class ShowUndoDeletePoemMessage(val poem: Poem) : PoemEvent()
-        data class ShowPoemConfirmationMessage(val msg: String) : PoemEvent()
     }
 }

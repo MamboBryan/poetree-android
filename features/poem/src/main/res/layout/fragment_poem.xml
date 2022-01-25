@@ -33,6 +33,7 @@
 
                     <com.mikhaellopez.circularimageview.CircularImageView
                         android:layout_width="35dp"
+                        android:id="@+id/iv_poem_artist"
                         android:layout_height="35dp"
                         android:layout_gravity="center_vertical"
                         android:gravity="center_vertical"
@@ -40,6 +41,7 @@
                         app:civ_border="false" />
 
                     <TextView
+                        android:id="@+id/tv_poem_artist_name"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
@@ -128,6 +130,7 @@
     </FrameLayout>
 
     <include
+        android:id="@+id/layout_poem_comment"
         layout="@layout/layout_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

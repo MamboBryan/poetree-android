@@ -23,6 +23,7 @@ object Dependencies {
         val recyclerview by lazy { "androidx.recyclerview:recyclerview:${Versions.recyclerview}" }
         val legacySupport by lazy { "androidx.legacy:legacy-support-v4:${Versions.legacy}" }
         val playServicesAuth by lazy { "com.google.android.gms:play-services-auth:${Versions.playServicesAuth}" }
+        val support by lazy { "com.android.support:design:${Versions.support}" }
 
         val junit by lazy { "junit:junit:${Versions.jUnit}" }
 
@@ -55,7 +56,7 @@ object Dependencies {
         val circularImage by lazy { "com.mikhaellopez:circularimageview:${Versions.circularImageView}" }
         val liquidSwipe by lazy { "com.cuberto:liquid-swipe:${Versions.liquidSwipe}" }
         val sneaker by lazy {"com.irozon.sneaker:sneaker:${Versions.sneaker}"}
-        val alert by lazy {"'com.irozon.alertview:alertview:${Versions.sneaker}"}
+        val alert by lazy {"com.irozon.alertview:alertview:${Versions.alert}"}
 
         val timber by lazy { "com.jakewharton.timber:timber:${Versions.timber}" }
         val retrofit by lazy { "com.squareup.retrofit2:retrofit:${Versions.retrofit}" }
