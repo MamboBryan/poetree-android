@@ -26,40 +26,41 @@ object Dependencies {
 
         val junit by lazy { "junit:junit:${Versions.jUnit}" }
 
-        val datastore by lazy {"androidx.datastore:datastore-preferences:${Versions.datastore}"}
-        val hilt by lazy{"com.google.dagger:hilt-android:${Versions.hilt}"}
-        val hiltCompiler by lazy {"com.google.dagger:hilt-compiler:${Versions.hilt}"}
-        val navigationCommon by lazy {"androidx.navigation:navigation-common-ktx:${Versions.navigation}"}
-        val navigationFragment by lazy {"androidx.navigation:navigation-fragment-ktx:${Versions.navigation}"}
-        val navigationUi by lazy {"androidx.navigation:navigation-ui-ktx:${Versions.navigation}"}
+        val datastore by lazy { "androidx.datastore:datastore-preferences:${Versions.datastore}" }
+        val hilt by lazy { "com.google.dagger:hilt-android:${Versions.hilt}" }
+        val hiltCompiler by lazy { "com.google.dagger:hilt-compiler:${Versions.hilt}" }
+        val navigationCommon by lazy { "androidx.navigation:navigation-common-ktx:${Versions.navigation}" }
+        val navigationFragment by lazy { "androidx.navigation:navigation-fragment-ktx:${Versions.navigation}" }
+        val navigationUi by lazy { "androidx.navigation:navigation-ui-ktx:${Versions.navigation}" }
         val viewModel by lazy { "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}" }
         val liveData by lazy { "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}" }
         val savedState by lazy { "androidx.lifecycle:lifecycle-viewmodel-savedstate:${Versions.lifecycle}" }
         val lifecycle by lazy { "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.lifecycle}" }
-        val lifecycleExtensions by lazy {"androidx.lifecycle:lifecycle-extensions:${Versions.lifecycleExtensions}"}
-        val coroutines by lazy {"org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"}
-        val room by lazy {"androidx.room:room-ktx:${Versions.room}"}
-        val roomRuntime by lazy {"androidx.room:room-runtime:${Versions.room}" }
-        val roomCompiler by lazy {"androidx.room:room-compiler:${Versions.room}" }
-        val paging by lazy {"androidx.paging:paging-runtime:${Versions.paging}"}
+        val lifecycleExtensions by lazy { "androidx.lifecycle:lifecycle-extensions:${Versions.lifecycleExtensions}" }
+        val coroutines by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}" }
+        val room by lazy { "androidx.room:room-ktx:${Versions.room}" }
+        val roomRuntime by lazy { "androidx.room:room-runtime:${Versions.room}" }
+        val roomCompiler by lazy { "androidx.room:room-compiler:${Versions.room}" }
+        val paging by lazy { "androidx.paging:paging-runtime:${Versions.paging}" }
+        val recyclerviewSelection by lazy { "androidx.recyclerview:recyclerview-selection:${Versions.recyclerviewSelection}" }
 
         val gson by lazy { "com.google.code.gson:gson:${Versions.gson}" }
-        val coil by lazy {"io.coil-kt:coil:${Versions.coil}"}
-        val wysiwyg by lazy {"com.github.onecode369:WYSIWYG:${Versions.wysiwyg}"}
-        val nativeEditor by lazy{"com.github.irshulx:laser-native-editor:${Versions.nativeEditor}"}
-        val richEditor by lazy{"jp.wasabeef:richeditor-android:${Versions.richEditor}"}
-        val prettyTime by lazy {"org.ocpsoft.prettytime:prettytime:${Versions.prettyTime}"}
-        val delegate by lazy{"com.github.Zhuinden:fragmentviewbindingdelegate-kt:${Versions.delegate}"}
-        val switch by lazy{"com.github.zcweng:switch-button:${Versions.switch}"}
-        val circularImage by lazy{"com.mikhaellopez:circularimageview:${Versions.circularImageView}"}
-        val liquidSwipe by lazy{"com.cuberto:liquid-swipe:${Versions.liquidSwipe}"}
+        val coil by lazy { "io.coil-kt:coil:${Versions.coil}" }
+        val wysiwyg by lazy { "com.github.onecode369:WYSIWYG:${Versions.wysiwyg}" }
+        val nativeEditor by lazy { "com.github.irshulx:laser-native-editor:${Versions.nativeEditor}" }
+        val richEditor by lazy { "jp.wasabeef:richeditor-android:${Versions.richEditor}" }
+        val prettyTime by lazy { "org.ocpsoft.prettytime:prettytime:${Versions.prettyTime}" }
+        val delegate by lazy { "com.github.Zhuinden:fragmentviewbindingdelegate-kt:${Versions.delegate}" }
+        val switch by lazy { "com.github.zcweng:switch-button:${Versions.switch}" }
+        val circularImage by lazy { "com.mikhaellopez:circularimageview:${Versions.circularImageView}" }
+        val liquidSwipe by lazy { "com.cuberto:liquid-swipe:${Versions.liquidSwipe}" }
 
         val timber by lazy { "com.jakewharton.timber:timber:${Versions.timber}" }
-        val retrofit by lazy {"com.squareup.retrofit2:retrofit:${Versions.retrofit}"}
-        val retrofitConverter by lazy {"com.squareup.retrofit2:converter-gson:${Versions.retrofit}"}
-        val okHttpBOM by lazy {"com.squareup.okhttp3:okhttp-bom:${Versions.okHttp}"}
-        val okHttp by lazy {"com.squareup.okhttp3:okhttp"}
-        val okHttpLogging by lazy {"com.squareup.okhttp3:logging-interceptor"}
+        val retrofit by lazy { "com.squareup.retrofit2:retrofit:${Versions.retrofit}" }
+        val retrofitConverter by lazy { "com.squareup.retrofit2:converter-gson:${Versions.retrofit}" }
+        val okHttpBOM by lazy { "com.squareup.okhttp3:okhttp-bom:${Versions.okHttp}" }
+        val okHttp by lazy { "com.squareup.okhttp3:okhttp" }
+        val okHttpLogging by lazy { "com.squareup.okhttp3:logging-interceptor" }
 
     }
 

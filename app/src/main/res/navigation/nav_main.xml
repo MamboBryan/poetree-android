@@ -21,5 +21,6 @@
     <include app:graph="@navigation/flow_profile" />
     <include app:graph="@navigation/flow_loading" />
     <include app:graph="@navigation/flow_setup" />
+    <include app:graph="@navigation/flow_publish" />
 
 </navigation>

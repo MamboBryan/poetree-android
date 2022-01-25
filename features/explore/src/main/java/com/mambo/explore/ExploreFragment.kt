@@ -2,15 +2,16 @@ package com.mambo.explore
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mambo.core.OnTopicClickListener
 import com.mambo.core.adapters.GenericStateAdapter
 import com.mambo.core.adapters.TopicPagingAdapter
+import com.mambo.data.models.Topic
 import com.mambo.explore.databinding.FragmentExploreBinding
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
@@ -112,7 +113,7 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
             }
         }
         adapter.setListener(object : OnTopicClickListener {
-            override fun onTopicClicked() {
+            override fun onTopicClicked(topic: Topic) {
                 viewModel.onTopicClicked()
             }
         })

@@ -73,6 +73,7 @@ dependencies {
     implementation(project(BuildModules.Features.landing))
     implementation(project(BuildModules.Features.loading))
     implementation(project(BuildModules.Features.setup))
+    implementation(project(BuildModules.Features.publish))
 
     implementation(Dependencies.Libraries.core)
     implementation(Dependencies.Libraries.kotlin)

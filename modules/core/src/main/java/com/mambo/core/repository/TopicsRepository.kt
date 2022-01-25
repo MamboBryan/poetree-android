@@ -14,4 +14,6 @@ class TopicsRepository @Inject constructor() {
 
     fun getTopics() = Pager(PagingConfig(10)) { topicsDao.getTopics() }.flow
 
+    fun getTopics(query:String) = Pager(PagingConfig(10)) { topicsDao.getTopics(query) }.flow
+
 }

@@ -1,5 +1,7 @@
 package com.mambo.core
 
+import com.mambo.data.models.Topic
+
 interface OnTopicClickListener {
-    fun onTopicClicked()
+    fun onTopicClicked(topic: Topic)
 }

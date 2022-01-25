@@ -3,6 +3,10 @@ package com.mambo.data.utils
 import androidx.recyclerview.widget.DiffUtil
 import com.mambo.data.models.Topic
 
+fun Topic?.isNull() = this == null
+
+fun Topic?.isNotNull() = this != null
+
 val TOPIC_COMPARATOR =
     object : DiffUtil.ItemCallback<Topic>() {
         override fun areItemsTheSame(oldItem: Topic, newItem: Topic): Boolean {
