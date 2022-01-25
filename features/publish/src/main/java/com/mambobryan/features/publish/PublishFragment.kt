@@ -15,12 +15,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import com.mambo.core.OnTopicClickListener
 import com.mambo.core.adapters.GenericStateAdapter
 import com.mambo.core.extensions.onQueryTextChanged
 import com.mambo.core.viewmodel.MainViewModel
 import com.mambo.data.models.Topic
+import com.mambo.data.utils.isNotNull
 import com.mambobryan.features.publish.databinding.FragmentPublishBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,7 +43,9 @@ class PublishFragment : Fragment(R.layout.fragment_publish) {
         val searchItem = menu.findItem(R.id.action_publish_search)
         val searchView = searchItem.actionView as SearchView
 
-        searchView.onQueryTextChanged { viewModel.updateQuery(it) }
+        searchView.onQueryTextChanged { viewModel.onQueryUpdated(it) }
+
+        super.onCreateOptionsMenu(menu, inflater)
 
     }
 
@@ -54,7 +56,6 @@ class PublishFragment : Fragment(R.layout.fragment_publish) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setHasOptionsMenu(true)
         setupViews()
         setupRecyclerview()
 
@@ -95,6 +96,13 @@ class PublishFragment : Fragment(R.layout.fragment_publish) {
                 }
             }
         }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.topic.collectLatest {
+                binding.btnPublish.isEnabled = it.isNotNull()
+            }
+        }
+
     }
 
     private fun setupRecyclerview() = binding.apply {
@@ -113,7 +121,7 @@ class PublishFragment : Fragment(R.layout.fragment_publish) {
 
         adapter.setListener(object : OnTopicClickListener {
             override fun onTopicClicked(topic: Topic) {
-                Snackbar.make(requireView(), topic.name, Snackbar.LENGTH_SHORT).show()
+                viewModel.onTopicSelected(topic)
             }
         })
     }

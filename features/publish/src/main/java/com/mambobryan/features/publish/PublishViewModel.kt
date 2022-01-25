@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.mambo.core.repository.PoemRepository
 import com.mambo.core.repository.TopicsRepository
+import com.mambo.data.models.Topic
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -17,11 +18,18 @@ class PublishViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val query = MutableStateFlow("")
-    private val topicsFlow = query.flatMapLatest { query->  topicsRepo.getTopics(query)}
-    val topics = topicsFlow.cachedIn(viewModelScope)
+    private val _topic = MutableStateFlow<Topic?>(null)
 
-    fun updateQuery(text: String) {
+    private val topicsFlow = query.flatMapLatest { query -> topicsRepo.getTopics(query) }
+    val topics = topicsFlow.cachedIn(viewModelScope)
+    val topic get() = _topic
+
+    fun onQueryUpdated(text: String) {
         query.value = text
+    }
+
+    fun onTopicSelected(topic: Topic) {
+        _topic.value = topic
     }
 
 }
