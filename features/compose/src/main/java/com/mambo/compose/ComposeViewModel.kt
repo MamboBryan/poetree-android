@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mambo.core.repository.PoemRepository
 import com.mambo.core.utils.Result.RESULT_CREATE_OK
-import com.mambo.core.utils.Result.RESULT_EDIT_OK
+import com.mambo.core.utils.Result.RESULT_UPDATE_OK
 import com.mambo.data.models.Poem
 import com.mambo.data.models.User
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +22,7 @@ class ComposeViewModel @Inject constructor(
     private val state: SavedStateHandle
 ) : ViewModel() {
 
-    val poem = state.get<Poem>("poem")
+    private val poem = state.get<Poem>("poem")
 
     var poemTitle = state.get<String>("poem_title") ?: poem?.title ?: ""
         set(value) {
@@ -45,7 +45,7 @@ class ComposeViewModel @Inject constructor(
         "https://images.unsplash.com/photo-1558945657-484aa38065ec?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=633&q=80"
     )
 
-    fun onSave() {
+    fun onPublish() {
 
         if (poemTitle.isBlank()) {
             showInvalidInputMessage("Title cannot be empty")
@@ -66,6 +66,7 @@ class ComposeViewModel @Inject constructor(
 
             val newPoem = getNewPoem()
             saveNewPoem(newPoem)
+
         }
     }
 
@@ -109,6 +110,10 @@ class ComposeViewModel @Inject constructor(
         isPublic = false
     )
 
+    fun onBackClicked(){
+        updateUi(ComposeEvent.NavigateToBackstack)
+    }
+
     fun onPreviewClicked() {
         updateUi(ComposeEvent.NavigateToPreview)
     }
@@ -118,16 +123,15 @@ class ComposeViewModel @Inject constructor(
     }
 
     private fun saveNewPoem(poem: Poem) {
-        updateUi(ComposeEvent.NavigateToEditFragment(poem))
+        updateUi(ComposeEvent.NavigateToPublish(poem))
     }
 
     private fun updateSavedPoem(poem: Poem) = viewModelScope.launch {
 
         repository.update(poem)
-        updateUi(ComposeEvent.NavigateToEditFragment(poem))
+        updateUi(ComposeEvent.NavigateToPublish(poem))
 
     }
-
 
     private fun showInvalidInputMessage(message: String) {
         updateUi(ComposeEvent.ShowInvalidInputMessage(message))
@@ -136,10 +140,9 @@ class ComposeViewModel @Inject constructor(
     private fun update(poem: Poem) = viewModelScope.launch {
 
         repository.update(poem)
-        updateUi(ComposeEvent.NavigateBackWithResult(RESULT_EDIT_OK))
+        updateUi(ComposeEvent.NavigateBackWithResult(RESULT_UPDATE_OK))
 
     }
-
 
     private fun save(poem: Poem) = viewModelScope.launch {
 
@@ -155,8 +158,9 @@ class ComposeViewModel @Inject constructor(
     sealed class ComposeEvent {
         data class ShowInvalidInputMessage(val message: String) : ComposeEvent()
         data class NavigateBackWithResult(val result: Int) : ComposeEvent()
-        data class NavigateToEditFragment(val poem: Poem) : ComposeEvent()
+        data class NavigateToPublish(val poem: Poem) : ComposeEvent()
         object NavigateToPreview : ComposeEvent()
+        object NavigateToBackstack : ComposeEvent()
         object NavigateToComposeView : ComposeEvent()
     }
 

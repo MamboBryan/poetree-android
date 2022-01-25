@@ -24,6 +24,6 @@ interface TopicsDao {
     fun getTopics(): PagingSource<Int, Topic>
 
     @Query("SELECT * FROM topics WHERE name LIKE '%' || :query || '%'")
-    fun getTopics(query: String): Flow<List<Topic>>
+    fun getTopics(query: String): PagingSource<Int, Topic>
 
 }

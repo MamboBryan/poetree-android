@@ -2,73 +2,37 @@ package com.mambo.compose
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.os.bundleOf
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.snackbar.Snackbar
+import com.irozon.sneaker.Sneaker
 import com.mambo.compose.databinding.FragmentComposeBinding
 import com.mambo.core.adapters.ViewPagerAdapter
-import com.mambo.data.models.Poem
+import com.mambo.core.viewmodel.MainViewModel
+import com.mambobryan.navigation.Destinations
+import com.mambobryan.navigation.extensions.getDeeplink
+import com.mambobryan.navigation.extensions.navigate
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-
 
 @AndroidEntryPoint
 class ComposeFragment : Fragment(R.layout.fragment_compose) {
 
     private val binding by viewBinding(FragmentComposeBinding::bind)
-    private val viewModel by viewModels<ComposeViewModel>()
+    private val viewModel: ComposeViewModel by viewModels()
+    private val sharedViewModel: MainViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.apply {
-
-            val poem = null
-
-            NavigationUI.setupWithNavController(toolbarCompose, findNavController())
-            toolbarCompose.title = if (poem == null) "Compose" else "Edit"
-
-            toolbarCompose.inflateMenu(R.menu.menu_compose)
-            toolbarCompose.setOnMenuItemClickListener { item ->
-
-                when (item.itemId) {
-
-                    R.id.menu_item_save -> {
-                        viewModel.onSave()
-                        true
-                    }
-
-                    R.id.menu_item_edit -> {
-                        viewModel.onEditClicked()
-                        true
-                    }
-
-                    R.id.menu_item_preview -> {
-                        viewModel.onPreviewClicked()
-                        true
-                    }
-
-                    R.id.menu_item_stash -> {
-                        viewModel.onStash()
-                        true
-                    }
-
-                    else -> {
-                        false
-                    }
-                }
-
-
-            }
-
-        }
-
+        setupNavigation()
+        setupViews()
         setUpViewPager()
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
@@ -77,20 +41,20 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
                     is ComposeViewModel.ComposeEvent.NavigateBackWithResult -> {
                         binding.root.clearFocus()
 
-                        setFragmentResult(
-                            "create_update_request",
-                            bundleOf("create_update_result" to event.result)
-                        )
+                        Sneaker.with(this@ComposeFragment)
+                            .setTitle("Success!")
+                            .setMessage("Poem Saved Successfully")
+                            .sneakSuccess()
 
-                        findNavController().popBackStack()
+                        navigateBack()
                     }
 
                     is ComposeViewModel.ComposeEvent.ShowInvalidInputMessage -> {
                         Snackbar.make(requireView(), event.message, Snackbar.LENGTH_LONG).show()
                     }
 
-                    is ComposeViewModel.ComposeEvent.NavigateToEditFragment -> {
-                        navigateToComposeFragment(event.poem)
+                    is ComposeViewModel.ComposeEvent.NavigateToPublish -> {
+                        navigateToPublish()
                     }
 
                     ComposeViewModel.ComposeEvent.NavigateToPreview -> {
@@ -100,8 +64,59 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
                     ComposeViewModel.ComposeEvent.NavigateToComposeView -> {
                         showEditView()
                     }
+
+                    ComposeViewModel.ComposeEvent.NavigateToBackstack -> {
+                        navigateBack()
+                    }
                 }
             }
+        }
+
+    }
+
+    private fun setupNavigation() = binding.apply {
+        NavigationUI.setupWithNavController(toolbarCompose, findNavController())
+        requireActivity().onBackPressedDispatcher.addCallback(this@ComposeFragment) {
+            viewModel.onBackClicked()
+        }.isEnabled
+    }
+
+    private fun setupViews() = binding.apply {
+
+        val poem = sharedViewModel.poem.value
+
+        toolbarCompose.title = if (poem == null) "Compose" else "Edit"
+        toolbarCompose.inflateMenu(R.menu.menu_compose)
+        toolbarCompose.setOnMenuItemClickListener { item ->
+
+            when (item.itemId) {
+
+                R.id.menu_item_publish -> {
+                    viewModel.onPublish()
+                    true
+                }
+
+                R.id.menu_item_edit -> {
+                    viewModel.onEditClicked()
+                    true
+                }
+
+                R.id.menu_item_preview -> {
+                    viewModel.onPreviewClicked()
+                    true
+                }
+
+                R.id.menu_item_stash -> {
+                    viewModel.onStash()
+                    true
+                }
+
+                else -> {
+                    false
+                }
+            }
+
+
         }
 
     }
@@ -116,19 +131,17 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
         updateMenu()
     }
 
-    private fun updateMenu() {
-        binding.apply {
+    private fun updateMenu() = binding.apply {
 
-            val menu = toolbarCompose.menu
-            val position = viewpagerCompose.currentItem
+        val menu = toolbarCompose.menu
+        val position = viewpagerCompose.currentItem
 
-            val previewAction = menu.findItem(R.id.menu_item_preview)
-            val editAction = menu.findItem(R.id.menu_item_edit)
+        val previewAction = menu.findItem(R.id.menu_item_preview)
+        val editAction = menu.findItem(R.id.menu_item_edit)
 
-            editAction.isVisible = position == 1
-            previewAction.isVisible = position != 1
+        editAction.isVisible = position == 1
+        previewAction.isVisible = position != 1
 
-        }
     }
 
     private fun setUpViewPager() {
@@ -143,8 +156,13 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
 
     }
 
-    private fun navigateToComposeFragment(poem: Poem) {
+    private fun navigateToPublish() {
+        val deeplink = getDeeplink(Destinations.PUBLISH)
+        navigate(deeplink)
+    }
 
+    private fun navigateBack() {
+        findNavController().popBackStack()
     }
 
 }

@@ -7,7 +7,7 @@
         <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleJvm" value="Embedded JDK" />
+        <option name="gradleJvm" value="11" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -28,6 +28,7 @@
             <option value="$PROJECT_DIR$/features/onboarding" />
             <option value="$PROJECT_DIR$/features/poem" />
             <option value="$PROJECT_DIR$/features/profile" />
+            <option value="$PROJECT_DIR$/features/publish" />
             <option value="$PROJECT_DIR$/features/search" />
             <option value="$PROJECT_DIR$/features/setup" />
             <option value="$PROJECT_DIR$/features/update-password" />

@@ -26,8 +26,11 @@ class TopicPagingAdapter :
             binding.apply {
 
                 layoutTopic.setOnClickListener {
-                if(absoluteAdapterPosition != RecyclerView.NO_POSITION)
-                    onTopicClickListener.onTopicClicked()
+                    if (absoluteAdapterPosition != RecyclerView.NO_POSITION) {
+                        val topic = getItem(absoluteAdapterPosition)
+                        if (topic != null)
+                            onTopicClickListener.onTopicClicked(topic)
+                    }
                 }
 
             }
