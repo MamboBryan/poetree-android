@@ -32,5 +32,7 @@ object Versions {
     const val okHttp = "4.7.2"
     const val recyclerview = "1.2.1"
     const val recyclerviewSelection = "1.0.0"
+    const val sneaker = "2.0.0"
+    const val alert = "1.0.1"
 
 }

@@ -74,6 +74,7 @@ dependencies {
     implementation(Dependencies.Libraries.hilt)
 
     implementation(Dependencies.Libraries.delegate)
+    implementation(Dependencies.Libraries.sneaker)
 
     kapt(Dependencies.Libraries.hiltCompiler)
 

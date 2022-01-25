@@ -54,6 +54,8 @@ object Dependencies {
         val switch by lazy { "com.github.zcweng:switch-button:${Versions.switch}" }
         val circularImage by lazy { "com.mikhaellopez:circularimageview:${Versions.circularImageView}" }
         val liquidSwipe by lazy { "com.cuberto:liquid-swipe:${Versions.liquidSwipe}" }
+        val sneaker by lazy {"com.irozon.sneaker:sneaker:${Versions.sneaker}"}
+        val alert by lazy {"'com.irozon.alertview:alertview:${Versions.sneaker}"}
 
         val timber by lazy { "com.jakewharton.timber:timber:${Versions.timber}" }
         val retrofit by lazy { "com.squareup.retrofit2:retrofit:${Versions.retrofit}" }

@@ -3,15 +3,14 @@ package com.mambo.compose
 import android.os.Bundle
 import android.view.View
 import androidx.activity.addCallback
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.snackbar.Snackbar
+import com.irozon.sneaker.Sneaker
 import com.mambo.compose.databinding.FragmentComposeBinding
 import com.mambo.core.adapters.ViewPagerAdapter
 import com.mambo.core.viewmodel.MainViewModel
@@ -42,10 +41,10 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
                     is ComposeViewModel.ComposeEvent.NavigateBackWithResult -> {
                         binding.root.clearFocus()
 
-                        setFragmentResult(
-                            "create_update_request",
-                            bundleOf("create_update_result" to event.result)
-                        )
+                        Sneaker.with(this@ComposeFragment)
+                            .setTitle("Success!")
+                            .setMessage("Poem Saved Successfully")
+                            .sneakSuccess()
 
                         navigateBack()
                     }
@@ -93,8 +92,7 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
             when (item.itemId) {
 
                 R.id.menu_item_publish -> {
-                    navigateToPublish()
-//                    viewModel.onPublish()
+                    viewModel.onPublish()
                     true
                 }
 

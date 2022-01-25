@@ -98,9 +98,7 @@ class PublishFragment : Fragment(R.layout.fragment_publish) {
         }
 
         lifecycleScope.launchWhenStarted {
-            viewModel.topic.collectLatest {
-                binding.btnPublish.isEnabled = it.isNotNull()
-            }
+            viewModel.topic.collectLatest { binding.btnPublish.isEnabled = it.isNotNull() }
         }
 
     }

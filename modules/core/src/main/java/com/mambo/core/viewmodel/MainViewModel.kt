@@ -25,14 +25,6 @@ class MainViewModel @Inject constructor(
     preferences: UserPreferences
 ) : AndroidViewModel(application) {
 
-    init {
-        runBlocking {
-            isOnBoarded = preferences.isOnBoarded.first()
-            isLoggedIn = preferences.isLoggedIn.first()
-            isUserSetup = preferences.isUserSetup.first()
-        }
-    }
-
     private val _connection = ConnectionLiveData(application)
     val connection: ConnectionLiveData get() = _connection
 
@@ -51,6 +43,14 @@ class MainViewModel @Inject constructor(
 
     val feeds = poemRepository.getLocalPoems("").cachedIn(viewModelScope)
 //    val localPoems = poemRepository.getLocalPoems("").cachedIn(viewModelScope)
+
+    init {
+        runBlocking {
+            isOnBoarded = preferences.isOnBoarded.first()
+            isLoggedIn = preferences.isLoggedIn.first()
+            isUserSetup = preferences.isUserSetup.first()
+        }
+    }
 
     fun updatePoem(poem: Poem?){
         _poem.value = poem

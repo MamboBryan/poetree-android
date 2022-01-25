@@ -22,7 +22,7 @@ class ComposeViewModel @Inject constructor(
     private val state: SavedStateHandle
 ) : ViewModel() {
 
-    val poem = state.get<Poem>("poem")
+    private val poem = state.get<Poem>("poem")
 
     var poemTitle = state.get<String>("poem_title") ?: poem?.title ?: ""
         set(value) {
@@ -66,6 +66,7 @@ class ComposeViewModel @Inject constructor(
 
             val newPoem = getNewPoem()
             saveNewPoem(newPoem)
+
         }
     }
 
@@ -110,7 +111,7 @@ class ComposeViewModel @Inject constructor(
     )
 
     fun onBackClicked(){
-
+        updateUi(ComposeEvent.NavigateToBackstack)
     }
 
     fun onPreviewClicked() {
