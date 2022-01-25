@@ -86,6 +86,7 @@
         <entry key="libraries/searchbar/src/main/res/layout/search_item.xml" value="0.3489583333333333" />
         <entry key="libraries/searchbar/src/main/res/layout/search_view.xml" value="0.3489583333333333" />
         <entry key="libraries/searchbar/src/main/res/layout/search_view_container.xml" value="0.3489583333333333" />
+        <entry key="modules/core/src/main/res/layout/layout_dialog_loading.xml" value="0.22" />
         <entry key="modules/ui/src/main/res/drawable/ic_home_active.xml" value="0.3645833333333333" />
         <entry key="modules/ui/src/main/res/drawable/ic_logo.xml" value="0.3645833333333333" />
         <entry key="modules/ui/src/main/res/drawable/ic_round_clear_24.xml" value="0.3651041666666667" />
