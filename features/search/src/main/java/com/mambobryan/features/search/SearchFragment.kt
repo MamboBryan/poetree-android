@@ -2,10 +2,12 @@ package com.mambobryan.features.search
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
+import com.mambo.core.viewmodel.MainViewModel
 import com.mambobryan.features.search.databinding.FragmentSearchBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -14,8 +16,10 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SearchFragment : Fragment(R.layout.fragment_search) {
 
-    private val binding by viewBinding(FragmentSearchBinding::bind)
+    private val sharedViewModel: MainViewModel by activityViewModels()
     private val viewModel: SearchViewModel by viewModels()
+
+    private val binding by viewBinding(FragmentSearchBinding::bind)
     private val adapter by lazy { SearchAdapter() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,9 +44,8 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
     }
 
-    private fun initViews() {
+    private fun initViews() =
         binding.apply {
-//            toolbarSearch.title = "Search"
 
             layoutPoems.recyclerView.adapter = adapter
             layoutPoems.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -55,7 +58,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                     super.onScrolled(recyclerView, dx, dy)
                 }
             })
+
         }
-    }
 
 }
