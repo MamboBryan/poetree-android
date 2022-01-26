@@ -20,6 +20,8 @@ class PoemRepository @Inject constructor() {
 
     fun getLocalPoems(query: String) = Pager(PagingConfig(10)) { poemsDao.getLocalPoems() }.flow
 
+    fun searchPoems(query: String) = Pager(PagingConfig(10)) { poemsDao.getPoems(query) }.flow
+
     fun getPoems() = poemsDao.getLocalPoems()
 
     suspend fun save(poem: Poem) = poemsDao.insert(poem)

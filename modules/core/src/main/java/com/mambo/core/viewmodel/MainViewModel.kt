@@ -10,7 +10,9 @@ import com.mambo.data.models.Topic
 import com.mambo.data.preferences.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -21,7 +23,7 @@ class MainViewModel @Inject constructor(
     application: Application,
     poemRepository: PoemRepository,
     preferences: UserPreferences,
-    state:SavedStateHandle
+    state: SavedStateHandle
 ) : AndroidViewModel(application) {
 
     private val _connection = ConnectionLiveData(application)
@@ -37,12 +39,17 @@ class MainViewModel @Inject constructor(
     var isUserSetup: Boolean
     var backIsPressed = false
 
-
-
     val feeds = poemRepository.getLocalPoems("").cachedIn(viewModelScope)
-    val searches = poemRepository.getLocalPoems("").cachedIn(viewModelScope)
+
+    private val searchQuery = MutableStateFlow("")
+    private val searchesFlow = searchQuery.flatMapLatest { poemRepository.searchPoems(it) }
+    val searches = searchesFlow.cachedIn(viewModelScope)
+
+    fun onSearchQueryUpdated(text:String){
+        searchQuery.value = text
+    }
+
     val bookmarks = poemRepository.getLocalPoems("").cachedIn(viewModelScope)
-    val published = poemRepository.getLocalPoems("").cachedIn(viewModelScope)
     val unpublished = poemRepository.getLocalPoems("").cachedIn(viewModelScope)
 
     private val _poem = MutableLiveData<Poem?>(null)
@@ -59,11 +66,11 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun setPoem(poem: Poem?){
+    fun setPoem(poem: Poem?) {
         _poem.value = poem
     }
 
-    fun setTopic(topic: Topic?){
+    fun setTopic(topic: Topic?) {
         _topic.value = topic
     }
 

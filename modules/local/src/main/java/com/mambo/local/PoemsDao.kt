@@ -30,7 +30,7 @@ interface PoemsDao {
     fun getPoem(id: Int): Flow<Poem>
 
     @Query("SELECT * FROM poems WHERE title LIKE '%' || :query || '%'")
-    fun getPoems(query: String): Flow<List<Poem>>
+    fun getPoems(query: String): PagingSource<Int, Poem>
 
     @Query("DELETE  FROM poems")
     suspend fun deleteAll()
