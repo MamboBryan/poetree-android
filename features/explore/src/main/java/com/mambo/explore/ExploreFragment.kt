@@ -67,7 +67,6 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
 
                         is LoadState.Error -> {
                             stateError.isVisible = true
-//                            stateContent.isRefreshing = false
                         }
 
                         is LoadState.NotLoading -> {
@@ -82,7 +81,6 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
                                 stateContent.isVisible = true
                             }
 
-//                            stateContent.isRefreshing = false
 
                         }
                     }
@@ -105,10 +103,6 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
                 recyclerView.adapter = adapter
                 recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
                 buttonRetry.setOnClickListener { adapter.retry() }
-//                stateContent.setOnRefreshListener {
-//                    recyclerView.scrollToPosition(0)
-//                    adapter.refresh()
-//                }
 
             }
         }
