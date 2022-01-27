@@ -23,7 +23,7 @@ class AuthViewModel @Inject constructor(
         try {
             //TODO network sign in call
             delay(2000)
-            preferences.loggedIn("")
+            preferences.signedIn("")
             hideLoading()
             showSuccess("Logged In Successfully")
             updateUi(AuthEvent.NavigateToFeeds)

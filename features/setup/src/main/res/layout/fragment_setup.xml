@@ -13,9 +13,28 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorSurface"
-            app:title="Setup Account" />
+            android:layout_height="wrap_content"
+            android:background="?attr/colorSurface">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:padding="16dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Setup account to continue"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -81,10 +100,10 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_user_dob"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:clickable="true"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:layout_height="wrap_content"
                     android:hint="Date Of Birth" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -108,7 +127,8 @@
                     android:focusableInTouchMode="false"
                     android:hint="Gender"
                     android:paddingStart="16dp"
-                    android:paddingTop="16dp" />
+                    android:paddingTop="24dp"
+                    android:paddingBottom="8dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <EditText
@@ -116,11 +136,11 @@
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_marginTop="16dp"
-                android:background="@color/white_200"
+                android:background="?attr/colorSurface"
                 android:ems="10"
                 android:gravity="start|top"
                 android:hint="Bio goes here ..."
-                android:inputType="textMultiLine"
+                android:inputType="textMultiLine|textCapSentences"
                 android:padding="16dp"
                 app:layout_constraintEnd_toEndOf="@+id/input_user_gender"
                 app:layout_constraintHorizontal_bias="0.5"

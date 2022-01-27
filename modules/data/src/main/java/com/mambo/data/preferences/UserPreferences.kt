@@ -11,7 +11,6 @@ import com.google.gson.Gson
 import com.mambo.data.BuildConfig
 import com.mambo.data.models.User
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,7 +33,7 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
         val USER_DETAILS = stringPreferencesKey("user_details")
     }
 
-    val darkModeFlow: Flow<Int> = dataStore.data.map { prefs ->
+    val darkMode = dataStore.data.map { prefs ->
         prefs[PreferencesKeys.DARK_MODE] ?: AppCompatDelegate.MODE_NIGHT_NO
     }
 
@@ -81,9 +80,17 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
     }
 
     suspend fun updateUserDetails(user: User) {
+        val json = Gson().toJson(user)
         dataStore.edit { prefs ->
-            val json = Gson().toJson(user)
             prefs[PreferencesKeys.USER_DETAILS] = json
+        }
+    }
+
+    suspend fun signedIn(token: String) {
+        dataStore.edit { prefs ->
+            prefs[PreferencesKeys.IS_SETUP] = true
+            prefs[PreferencesKeys.IS_LOGGED_IN] = true
+            prefs[PreferencesKeys.ACCESS_TOKEN] = token
         }
     }
 
@@ -94,15 +101,15 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
         }
     }
 
-    suspend fun loggedIn(token: String) {
-        dataStore.edit { prefs ->
+    suspend fun setup(user: User){
+        val json = Gson().toJson(user)
+        dataStore.edit { prefs->
             prefs[PreferencesKeys.IS_SETUP] = true
-            prefs[PreferencesKeys.IS_LOGGED_IN] = true
-            prefs[PreferencesKeys.ACCESS_TOKEN] = token
+            prefs[PreferencesKeys.USER_DETAILS] = json
         }
     }
 
-    suspend fun loggedOut() {
+    suspend fun signOut() {
         dataStore.edit { prefs ->
             prefs[PreferencesKeys.IS_SETUP] = false
             prefs[PreferencesKeys.IS_LOGGED_IN] = false

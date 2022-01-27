@@ -15,16 +15,20 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import coil.load
 import com.google.android.material.snackbar.Snackbar
+import com.mambo.core.utils.LoadingDialog
 import com.mambo.core.utils.fromDateToString
 import com.mambobryan.features.setup.databinding.FragmentSetupBinding
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
 import com.mambobryan.navigation.extensions.getNavOptionsPopUpToCurrent
 import com.mambobryan.navigation.extensions.navigate
+import com.tapadoo.alerter.Alerter
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import java.util.*
 
+@AndroidEntryPoint
 class SetupFragment : Fragment(R.layout.fragment_setup) {
 
     private val binding by viewBinding(FragmentSetupBinding::bind)
@@ -55,7 +59,9 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
         lifecycleScope.launchWhenStarted {
             viewModel.events.collect { event ->
                 when (event) {
-                    SetupViewModel.SetupEvent.NavigateToHome -> navigateToFeeds()
+                    SetupViewModel.SetupEvent.HideLoadingDialog -> LoadingDialog.dismiss()
+                    SetupViewModel.SetupEvent.ShowLoadingDialog -> LoadingDialog.show(requireContext())
+                    SetupViewModel.SetupEvent.NavigateToFeeds -> navigateToFeeds()
                     SetupViewModel.SetupEvent.OpenDatePicker -> openDateDialog()
                     SetupViewModel.SetupEvent.OpenImagePicker -> openGalleryForImage()
                     SetupViewModel.SetupEvent.ShowBioError -> {
@@ -69,6 +75,18 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
                     }
                     SetupViewModel.SetupEvent.ShowUsernameError -> {
                         binding.inputUserName.error = "Username cannot be empty"
+                    }
+                    is SetupViewModel.SetupEvent.ShowSetupError -> {
+                        Alerter.create(requireActivity())
+                            .setText(event.message)
+                            .setIcon(R.drawable.ic_baseline_check_circle_24)
+                            .setBackgroundColorRes(R.color.success)
+                            .show()
+                    }
+                    is SetupViewModel.SetupEvent.ShowSetupSuccess -> {
+                        Snackbar.make(requireView(), event.message, Snackbar.LENGTH_SHORT)
+                            .setAction("retry") { viewModel.onRetryClicked() }
+                            .show()
                     }
                 }
             }
