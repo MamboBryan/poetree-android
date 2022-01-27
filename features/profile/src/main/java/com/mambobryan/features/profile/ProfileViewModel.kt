@@ -43,7 +43,7 @@ class ProfileViewModel @Inject constructor(
     fun onLogOutConfirmed() = viewModelScope.launch {
         updateUi(ProfileEvent.ShowLoadingDialog)
         try {
-            preferences.logOut()
+            preferences.loggedOut()
             delay(2500)
             updateUi(ProfileEvent.HideLoadingDialog)
             updateUi(ProfileEvent.NavigateToLanding)

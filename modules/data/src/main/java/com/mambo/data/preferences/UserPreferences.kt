@@ -71,12 +71,28 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
         dataStore.edit { prefs -> prefs[PreferencesKeys.ACCESS_TOKEN] = token }
     }
 
-    suspend fun logOut() {
+    suspend fun signedUp(token: String) {
+        dataStore.edit { prefs ->
+            prefs[PreferencesKeys.IS_LOGGED_IN] = true
+            prefs[PreferencesKeys.ACCESS_TOKEN] = token
+        }
+    }
+
+    suspend fun loggedIn(token: String) {
+        dataStore.edit { prefs ->
+            prefs[PreferencesKeys.IS_SETUP] = true
+            prefs[PreferencesKeys.IS_LOGGED_IN] = true
+            prefs[PreferencesKeys.ACCESS_TOKEN] = token
+        }
+    }
+
+    suspend fun loggedOut() {
         dataStore.edit { prefs ->
             prefs[PreferencesKeys.IS_SETUP] = false
             prefs[PreferencesKeys.IS_LOGGED_IN] = false
             prefs[PreferencesKeys.ACCESS_TOKEN] = ""
         }
     }
+
 
 }

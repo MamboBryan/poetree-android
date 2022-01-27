@@ -6,11 +6,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.mambo.core.adapters.ViewPagerAdapter
+import com.mambo.core.utils.LoadingDialog
 import com.mambobryan.features.auth.databinding.FragmentAuthBinding
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
 import com.mambobryan.navigation.extensions.getNavOptionsPopUpToCurrent
 import com.mambobryan.navigation.extensions.navigate
+import com.tapadoo.alerter.Alerter
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -33,6 +35,22 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                     AuthEvent.NavigateToSetup -> navigateToSetup()
                     AuthEvent.NavigateToSignIn -> binding.vpAuth.setCurrentItem(0, true)
                     AuthEvent.NavigateToSignUp -> binding.vpAuth.setCurrentItem(1, true)
+                    AuthEvent.HideLoadingDialog -> LoadingDialog.dismiss()
+                    AuthEvent.ShowLoadingDialog -> LoadingDialog.show(requireContext())
+                    is AuthEvent.ShowErrorMessage -> {
+                        Alerter.create(requireActivity())
+                            .setText(event.message)
+                            .setIcon(R.drawable.ic_baseline_check_circle_24)
+                            .setBackgroundColorRes(R.color.success)
+                            .show()
+                    }
+                    is AuthEvent.ShowSuccessMessage -> {
+                        Alerter.create(requireActivity())
+                            .setText(event.message)
+                            .setIcon(R.drawable.ic_baseline_error_24)
+                            .setBackgroundColorRes(R.color.error)
+                            .show()
+                    }
                 }
             }
         }
