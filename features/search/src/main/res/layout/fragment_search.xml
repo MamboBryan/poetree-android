@@ -18,10 +18,11 @@
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar_search"
                 android:layout_width="wrap_content"
-                android:gravity="center_vertical"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical" />
 
             <com.mambobryan.libraries.searchbar.ui.MultiSearch
+                android:id="@+id/searchView_search"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -32,20 +33,13 @@
                 app:searchSelectionIndicator="@drawable/selected_item_indicator"
                 app:searchTextAppearance="@style/MultiSearchEditTextStyle" />
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:padding="8dp"
-                android:src="@drawable/ic_baseline_sort_24" />
-
         </androidx.appcompat.widget.LinearLayoutCompat>
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <include
         android:id="@+id/layout_poems"
-        layout="@layout/layout_complete_recycler_vertical"
+        layout="@layout/layout_complete_recycler_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />

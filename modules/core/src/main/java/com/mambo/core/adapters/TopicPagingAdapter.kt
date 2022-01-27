@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mambo.core.OnTopicClickListener
+import com.mambo.core.utils.lighten
 import com.mambo.data.models.Topic
 import com.mambo.data.utils.TOPIC_COMPARATOR
 import com.mambo.ui.databinding.ItemTopicBinding
@@ -39,8 +40,8 @@ class TopicPagingAdapter :
         fun bind(topic: Topic) {
             binding.apply {
 
-                tvTopicTitle.text = topic.name
-                layoutBg.setBackgroundColor(Color.parseColor(topic.color))
+                tvTopicTitle.text = topic.name.replaceFirstChar { it.uppercase() }
+                layoutBg.setBackgroundColor(lighten(Color.parseColor(topic.color), .25))
 
             }
         }

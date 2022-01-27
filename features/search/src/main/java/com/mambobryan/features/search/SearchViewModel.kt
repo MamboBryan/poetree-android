@@ -1,9 +1,9 @@
 package com.mambobryan.features.search
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.mambo.core.repository.PoemRepository
+import com.mambo.data.models.Poem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -18,15 +18,18 @@ class SearchViewModel @Inject constructor(
     private val _eventChannel = Channel<SearchEvent>()
     val events = _eventChannel.receiveAsFlow()
 
-    private val _poems = poemsRepository.poems()
-    val poems = _poems.asLiveData()
+    fun onPoemClicked(poem: Poem){
+        updateUi(SearchEvent.UpdatePoemInSharedViewModel(poem))
+        updateUi(SearchEvent.NavigateToPoem)
+    }
 
     private fun updateUi(event: SearchEvent) = viewModelScope.launch {
         _eventChannel.send(event)
     }
 
     sealed class SearchEvent{
-
+        data class UpdatePoemInSharedViewModel(val poem: Poem) :SearchEvent()
+        object NavigateToPoem : SearchEvent()
     }
 
 }

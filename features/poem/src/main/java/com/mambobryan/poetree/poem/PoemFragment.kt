@@ -62,7 +62,7 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
                         findNavController().popBackStack()
                     }
                     is PoemViewModel.PoemEvent.NavigateToEditPoem -> {
-                        sharedViewModel.updatePoem(event.poem)
+                        sharedViewModel.setPoem(event.poem)
                         navigateToEditPoem()
                     }
                     is PoemViewModel.PoemEvent.ShowPoemDeleteDialog -> {
@@ -197,7 +197,7 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
 
     override fun onDestroy() {
         super.onDestroy()
-        sharedViewModel.updatePoem(null)
+        sharedViewModel.setPoem(null)
     }
 
 }

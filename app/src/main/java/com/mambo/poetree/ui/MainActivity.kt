@@ -1,7 +1,10 @@
 package com.mambo.poetree.ui
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -18,7 +21,6 @@ import com.mambobryan.navigation.extensions.getDeeplink
 import com.mambobryan.navigation.extensions.getNavOptionsPopUpTo
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.runBlocking
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -54,12 +56,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initNavigation() {
-
-        var isSetUp: Boolean
-
-        runBlocking {
-            isSetUp = true
-        }
 
         if (!viewModel.isOnBoarded) {
             navigateToOnBoarding()
@@ -99,7 +95,29 @@ class MainActivity : AppCompatActivity() {
     private fun getLoadingNavOptions() = getNavOptionsPopUpTo(R.id.flow_loading)
 
     override fun onBackPressed() {
-        super.onBackPressed()
+        when (getDestinationId()) {
+
+            R.id.feedFragment,R.id.landingFragment, R.id.setupFragment -> {
+
+                if (viewModel.backIsPressed) {
+                    finish()
+                } else {
+                    viewModel.backIsPressed = true
+
+                    Toast.makeText(this, "Press \"BACK\" again to exit", Toast.LENGTH_SHORT)
+                        .show()
+
+                    Handler(Looper.getMainLooper())
+                        .postDelayed({ viewModel.backIsPressed = false }, 2000)
+                }
+
+            }
+
+            else -> {
+                super.onBackPressed()
+            }
+
+        }
 
     }
 

@@ -1,7 +1,6 @@
 package com.mambo.features.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -44,7 +43,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                     FeedViewModel.FeedEvent.NavigateToProfile -> navigateToProfile()
                     FeedViewModel.FeedEvent.NavigateToCompose -> navigateToCompose()
                     is FeedViewModel.FeedEvent.NavigateToPoem -> {
-                        mainViewModel.updatePoem(event.poem)
+                        mainViewModel.setPoem(event.poem)
                         navigateToPoem()
                     }
                 }

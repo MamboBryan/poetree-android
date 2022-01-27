@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.mambo.core.OnTopicClickListener
 import com.mambo.core.adapters.GenericStateAdapter
 import com.mambo.core.adapters.TopicPagingAdapter
+import com.mambo.core.viewmodel.MainViewModel
 import com.mambo.data.models.Topic
 import com.mambo.explore.databinding.FragmentExploreBinding
 import com.mambobryan.navigation.Destinations
@@ -27,6 +29,7 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
 
     private val binding by viewBinding(FragmentExploreBinding::bind)
     private val viewModel: ExploreViewModel by viewModels()
+    private val sharedViewModel: MainViewModel by activityViewModels()
 
     private val adapter = TopicPagingAdapter()
 
@@ -67,7 +70,6 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
 
                         is LoadState.Error -> {
                             stateError.isVisible = true
-//                            stateContent.isRefreshing = false
                         }
 
                         is LoadState.NotLoading -> {
@@ -82,7 +84,6 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
                                 stateContent.isVisible = true
                             }
 
-//                            stateContent.isRefreshing = false
 
                         }
                     }
@@ -105,15 +106,12 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
                 recyclerView.adapter = adapter
                 recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
                 buttonRetry.setOnClickListener { adapter.retry() }
-//                stateContent.setOnRefreshListener {
-//                    recyclerView.scrollToPosition(0)
-//                    adapter.refresh()
-//                }
 
             }
         }
         adapter.setListener(object : OnTopicClickListener {
             override fun onTopicClicked(topic: Topic) {
+                sharedViewModel.setTopic(topic)
                 viewModel.onTopicClicked()
             }
         })

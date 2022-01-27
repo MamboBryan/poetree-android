@@ -31,10 +31,9 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
         val ACCESS_TOKEN = stringPreferencesKey("access_token")
     }
 
-    val darkModeFlow: Flow<Int> =
-        dataStore.data.map { preferences ->
-            preferences[PreferencesKeys.DARK_MODE] ?: AppCompatDelegate.MODE_NIGHT_NO
-        }
+    val darkModeFlow: Flow<Int> = dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.DARK_MODE] ?: AppCompatDelegate.MODE_NIGHT_NO
+    }
 
     val isOnBoarded = dataStore.data.map { preferences ->
         preferences[PreferencesKeys.IS_ON_BOARDED] ?: false
@@ -56,7 +55,7 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
         dataStore.edit { preferences -> preferences[PreferencesKeys.DARK_MODE] = mode }
     }
 
-    suspend fun updateOnBoarded(){
+    suspend fun updateOnBoarded() {
         dataStore.edit { prefs -> prefs[PreferencesKeys.IS_ON_BOARDED] = true }
     }
 
@@ -64,12 +63,20 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
         dataStore.edit { prefs -> prefs[PreferencesKeys.IS_LOGGED_IN] = true }
     }
 
-    suspend fun updateSetupStatus(isSetup: Boolean){
+    suspend fun updateSetupStatus(isSetup: Boolean) {
         dataStore.edit { prefs -> prefs[PreferencesKeys.IS_SETUP] = true }
     }
 
-    suspend fun updateAccessToken(token: String){
+    suspend fun updateAccessToken(token: String) {
         dataStore.edit { prefs -> prefs[PreferencesKeys.ACCESS_TOKEN] = token }
+    }
+
+    suspend fun logOut() {
+        dataStore.edit { prefs ->
+            prefs[PreferencesKeys.IS_SETUP] = false
+            prefs[PreferencesKeys.IS_LOGGED_IN] = false
+            prefs[PreferencesKeys.ACCESS_TOKEN] = ""
+        }
     }
 
 }
