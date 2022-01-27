@@ -57,6 +57,7 @@ object Dependencies {
         val liquidSwipe by lazy { "com.cuberto:liquid-swipe:${Versions.liquidSwipe}" }
         val sneaker by lazy {"com.irozon.sneaker:sneaker:${Versions.sneaker}"}
         val alert by lazy {"com.irozon.alertview:alertview:${Versions.alert}"}
+        val alerter by lazy {"com.github.tapadoo:alerter:${Versions.alerter}"}
 
         val timber by lazy { "com.jakewharton.timber:timber:${Versions.timber}" }
         val retrofit by lazy { "com.squareup.retrofit2:retrofit:${Versions.retrofit}" }

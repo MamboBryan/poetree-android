@@ -18,7 +18,7 @@ class ProfileViewModel @Inject constructor(
 ) : ViewModel() {
 
     init {
-        runBlocking { mode = preferences.darkModeFlow.first() }
+        runBlocking { mode = preferences.darkMode.first() }
     }
 
     private val _eventChannel = Channel<ProfileEvent>()
@@ -43,7 +43,7 @@ class ProfileViewModel @Inject constructor(
     fun onLogOutConfirmed() = viewModelScope.launch {
         updateUi(ProfileEvent.ShowLoadingDialog)
         try {
-            preferences.logOut()
+            preferences.signOut()
             delay(2500)
             updateUi(ProfileEvent.HideLoadingDialog)
             updateUi(ProfileEvent.NavigateToLanding)

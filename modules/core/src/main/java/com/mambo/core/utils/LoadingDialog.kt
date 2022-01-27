@@ -9,7 +9,7 @@ object LoadingDialog {
 
     private var dialog: Dialog? = null
 
-    fun show(context: Context?, cancelable: Boolean, text: String? = "Please Wait") {
+    fun show(context: Context?, cancelable: Boolean = false, text: String? = "Please Wait") {
 
         initDialog(context, cancelable)
 
@@ -23,7 +23,6 @@ object LoadingDialog {
         dialog = Dialog(context!!)
         dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog!!.setContentView(R.layout.layout_dialog_loading)
-//        dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog!!.setCancelable(isCancellable)
     }
 

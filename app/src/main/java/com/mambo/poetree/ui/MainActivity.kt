@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         when (getDestinationId()) {
 
-            R.id.feedFragment,R.id.landingFragment, R.id.setupFragment -> {
+            R.id.feedFragment, R.id.landingFragment, R.id.setupFragment -> {
 
                 if (viewModel.backIsPressed) {
                     finish()
