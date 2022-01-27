@@ -31,7 +31,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.events.collect { event ->
                 when (event) {
-                    AuthEvent.NavigateToHome -> navigateToFeeds()
+                    AuthEvent.NavigateToFeeds -> navigateToFeeds()
                     AuthEvent.NavigateToSetup -> navigateToSetup()
                     AuthEvent.NavigateToSignIn -> binding.vpAuth.setCurrentItem(0, true)
                     AuthEvent.NavigateToSignUp -> binding.vpAuth.setCurrentItem(1, true)

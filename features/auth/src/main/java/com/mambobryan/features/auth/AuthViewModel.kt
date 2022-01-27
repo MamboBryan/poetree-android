@@ -23,10 +23,25 @@ class AuthViewModel @Inject constructor(
         try {
             //TODO network sign in call
             delay(2000)
-//            preferences.loggedIn("")
+            preferences.loggedIn("")
             hideLoading()
             showSuccess("Logged In Successfully")
-//            updateUi(AuthEvent.NavigateToHome)
+            updateUi(AuthEvent.NavigateToFeeds)
+        } catch (e: Exception) {
+            hideLoading()
+            showError(e.localizedMessage!!)
+        }
+    }
+
+    fun onSignUpClicked(email: String, password: String) = viewModelScope.launch {
+        showLoading()
+        try {
+            //TODO network sign up call
+            delay(2000)
+            preferences.signedUp("")
+            hideLoading()
+            showSuccess("Signed Up Successfully")
+            updateUi(AuthEvent.NavigateToSetup)
         } catch (e: Exception) {
             hideLoading()
             showError(e.localizedMessage!!)
@@ -35,19 +50,16 @@ class AuthViewModel @Inject constructor(
 
     fun onCreateClicked() = updateUi(AuthEvent.NavigateToSignUp)
 
-    fun onSignUpClicked(email: String, password: String) {
-        updateUi(AuthEvent.NavigateToSetup)
-    }
-
     fun onSignUpLoginClicked() = updateUi(AuthEvent.NavigateToSignIn)
 
+    private fun updateUi(event: AuthEvent) = viewModelScope.launch { _eventChannel.send(event) }
+
     private fun showError(message: String) = updateUi(AuthEvent.ShowErrorMessage(message))
+
     private fun showSuccess(message: String) = updateUi(AuthEvent.ShowErrorMessage(message))
 
     private fun showLoading() = updateUi(AuthEvent.ShowLoadingDialog)
 
     private fun hideLoading() = updateUi(AuthEvent.HideLoadingDialog)
-
-    private fun updateUi(event: AuthEvent) = viewModelScope.launch { _eventChannel.send(event) }
 
 }
