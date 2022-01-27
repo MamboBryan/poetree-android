@@ -77,15 +77,15 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
                         binding.inputUserName.error = "Username cannot be empty"
                     }
                     is SetupViewModel.SetupEvent.ShowSetupError -> {
+                        Snackbar.make(requireView(), event.message, Snackbar.LENGTH_SHORT)
+                            .setAction("retry") { viewModel.onRetryClicked() }
+                            .show()
+                    }
+                    is SetupViewModel.SetupEvent.ShowSetupSuccess -> {
                         Alerter.create(requireActivity())
                             .setText(event.message)
                             .setIcon(R.drawable.ic_baseline_check_circle_24)
                             .setBackgroundColorRes(R.color.success)
-                            .show()
-                    }
-                    is SetupViewModel.SetupEvent.ShowSetupSuccess -> {
-                        Snackbar.make(requireView(), event.message, Snackbar.LENGTH_SHORT)
-                            .setAction("retry") { viewModel.onRetryClicked() }
                             .show()
                     }
                 }
