@@ -53,6 +53,12 @@ class MainViewModel @Inject constructor(
     private val _bookmarks = bookmarksQuery.flatMapLatest { poemRepository.searchPoems(it) }
     val bookmarks = _bookmarks.cachedIn(viewModelScope)
 
+    private val libraryQuery = MutableStateFlow("")
+    private val _publicPoems = libraryQuery.flatMapLatest { poemRepository.searchPoems(it) }
+    val publicPoems = _publicPoems.cachedIn(viewModelScope)
+    private val _privatePoems = libraryQuery.flatMapLatest { poemRepository.searchPoems(it) }
+    val privatePoems = _privatePoems.cachedIn(viewModelScope)
+
     private val _poem = MutableLiveData<Poem?>(null)
     val poem: LiveData<Poem?> get() = _poem
 
@@ -77,6 +83,10 @@ class MainViewModel @Inject constructor(
 
     fun updateBookmarkQuery(query:String){
         bookmarksQuery.value = query
+    }
+
+    fun updateLibraryQuery(query: String){
+        libraryQuery.value = query
     }
 
     private fun updateUi(event: MainEvent) = viewModelScope.launch {
