@@ -56,7 +56,7 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
 
         lifecycleScope.launch {
             adapter.loadStateFlow.collectLatest { loadState ->
-                binding.layoutState.apply {
+                binding.layoutStateExplore.apply {
 
                     stateContent.isVisible = false
                     stateEmpty.isVisible = false
@@ -99,7 +99,7 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
             ivUserImage.setOnClickListener { viewModel.onProfileImageClicked() }
             layoutSearch.setOnClickListener { viewModel.onSearchFieldClicked() }
 
-            layoutState.apply {
+            layoutStateExplore.apply {
                 tvEmpty.text = "Topics are empty"
                 tvError.text = "Couldn't load topics!"
 
