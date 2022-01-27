@@ -52,7 +52,7 @@
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_marginTop="16dp"
-                android:src="@drawable/ic_logo"
+                android:src="@drawable/ic_baseline_account_circle_24"
                 app:civ_border="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -150,7 +150,7 @@
             <Button
                 android:id="@+id/btn_save_details"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="55dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:text="save"

@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mambo.data.models.User
 import com.mambo.data.preferences.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -98,7 +99,7 @@ class SetupViewModel @Inject constructor(
         try {
             //TODO network call to setup user
             delay(2000)
-//            preferences.setup(user)
+            preferences.setup(User("this","ThisThat", "that'sit"))
             updateUi(SetupEvent.HideLoadingDialog)
             updateUi(SetupEvent.ShowSetupSuccess("Setup Successfully!"))
             updateUi(SetupEvent.NavigateToFeeds)

@@ -171,8 +171,7 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
     }
 
     private fun navigateToFeeds() {
-        val deeplink = getDeeplink(Destinations.FEED)
-        navigate(deeplink, getNavOptionsPopUpToCurrent())
+        navigate(getDeeplink(Destinations.FEED), getNavOptionsPopUpToCurrent())
     }
 
 }

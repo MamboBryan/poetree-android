@@ -46,7 +46,7 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
     }
 
     val isUserSetup = dataStore.data.map { prefs ->
-        prefs[PreferencesKeys.IS_SETUP] ?: false
+        prefs[PreferencesKeys.IS_SETUP] ?: true
     }
 
     val accessToken = dataStore.data.map { prefs ->
