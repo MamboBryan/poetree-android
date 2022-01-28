@@ -29,7 +29,6 @@ class PoemViewModel @Inject constructor(
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> get() = _isLoading
 
-
     private var title = ""
     private var content = ""
     private var topic = ""
@@ -58,24 +57,12 @@ class PoemViewModel @Inject constructor(
         val topic = _poem.value?.topic?.name ?: "Topicless"
         val duration = prettyTime.formatDuration(_poem.value?.createdAt)
 
-        html.append("$topic • $duration")
+        html.append("$topic • $duration ")
         html.append("<h2><b> ${_poem.value?.title}</b></h2>")
         html.append("By • ${_poem.value?.user?.username}")
         html.append("<br><br>")
         html.append("<i>${_poem.value?.content}</i>")
         html.append("<br><br>")
-
-        if (isOnline) {
-            html.append("")
-            html.append("${_poem.value?.likesCount} likes")
-            html.append(" • ")
-            html.append("${_poem.value?.commentsCount} comments")
-            html.append(" • ")
-            html.append("${_poem.value?.bookmarksCount} bookmarks")
-            html.append(" • ")
-            html.append("${_poem.value?.readsCount} reads")
-            html.append("")
-        }
 
         return html.toString()
     }
@@ -116,16 +103,6 @@ class PoemViewModel @Inject constructor(
     }
 
     fun onPublishClicked() = viewModelScope.launch {
-        showLoading()
-        try {
-            delay(2000)
-            hideLoading()
-        } catch (e: Exception) {
-            hideLoading()
-        }
-    }
-
-    fun onUnPublishClicked() = viewModelScope.launch {
         showLoading()
         try {
             delay(2000)
@@ -185,9 +162,7 @@ class PoemViewModel @Inject constructor(
 
     private fun hideLoading() = updateUi(PoemEvent.HideLoadingDialog)
 
-    private fun updateUi(event: PoemEvent) = viewModelScope.launch {
-        _eventChannel.send(event)
-    }
+    private fun updateUi(event: PoemEvent) = viewModelScope.launch { _eventChannel.send(event) }
 
     sealed class PoemEvent {
         object ShowLoadingDialog : PoemEvent()

@@ -1,5 +1,6 @@
 package com.mambobryan.poetree.poem
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +20,7 @@ import com.irozon.alertview.AlertView
 import com.irozon.alertview.objects.AlertAction
 import com.irozon.sneaker.Sneaker
 import com.mambo.core.utils.LoadingDialog
+import com.mambo.core.utils.prettyCount
 import com.mambo.core.viewmodel.MainViewModel
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
@@ -105,7 +107,7 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
                         }
                     }
                     PoemViewModel.PoemEvent.ClearCommentEditText -> {
-                        binding.layoutPoemComment.edtComment.setText("")
+                        binding.layoutPoemComment.edtComment.getText().clear()
                     }
                 }
             }
@@ -144,7 +146,7 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
             }
         }
 
-        viewModel.isLoading.observe(viewLifecycleOwner){ isLoading ->
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.layoutPoemComment.apply {
                 edtComment.isEnabled = isLoading.not()
                 ivComment.isVisible = isLoading.not()
@@ -162,22 +164,21 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
 //        if (viewModel.isUser)
         toolbar.inflateMenu(R.menu.menu_poem)
 
+        val publishAction = toolbar.menu.findItem(R.id.action_poem_publish)
+        publishAction.isVisible = viewModel.poem.value?.isPublic ?: false
+
         toolbar.setOnMenuItemClickListener {
             return@setOnMenuItemClickListener when (it.itemId) {
                 R.id.action_poem_edit -> {
                     viewModel.onEditClicked()
                     true
                 }
-                R.id.action_poem_delete -> {
-                    viewModel.onDeleteClicked()
-                    true
-                }
                 R.id.action_poem_publish -> {
                     viewModel.onPublishClicked()
                     true
                 }
-                R.id.action_poem_unpublish -> {
-                    viewModel.onUnPublishClicked()
+                R.id.action_poem_delete -> {
+                    viewModel.onDeleteClicked()
                     true
                 }
                 else -> false
@@ -187,10 +188,20 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
         layoutPoemActions.isVisible = viewModel.isOnline
 
         layoutPoemActions.isVisible = true
+        val color = viewModel.poem.value?.topic?.color ?: "#F7F7A1"
+        layoutPoemActions.setBackgroundColor(Color.parseColor(color))
 
         ivPoemLike.setOnClickListener { viewModel.onLikeClicked() }
+//        tvPoemLikes.text = prettyCount(viewModel.poem.value?.likesCount!!)
+        tvPoemLikes.text = prettyCount(2000)
+
         ivPoemBookmark.setOnClickListener { viewModel.onBookmarkClicked() }
+        tvPoemBookmarks.text = prettyCount(200000)
+
         ivPoemComment.setOnClickListener { viewModel.onCommentsClicked() }
+        tvPoemComments.text = prettyCount(200)
+        tvPoemReads.text = prettyCount(2000000)
+
         ivPoemArtist.setOnClickListener { viewModel.onArtistImageClicked() }
 
         layoutPoemComment.apply {
@@ -210,7 +221,7 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
         editor.setEditorFontColor(textColor)
         editor.setEditorBackgroundColor(backgroundColor)
         editor.setPadding(24, 32, 24, 16)
-        editor.loadCSS("*{margin:0;}")
+//        editor.loadCSS("*{margin:0;}")
 
     }
 
@@ -220,7 +231,7 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
             "You are about to delete this poem. Do you wish you to continue?",
             AlertStyle.IOS
         )
-        alert.addAction(AlertAction("Yes", AlertActionStyle.DEFAULT) {
+        alert.addAction(AlertAction("Yes", AlertActionStyle.NEGATIVE) {
             viewModel.onDeleteConfirmed()
         })
         alert.show(requireActivity() as AppCompatActivity)
