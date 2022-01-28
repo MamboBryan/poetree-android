@@ -1,7 +1,10 @@
 package com.mambo.core.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.mambo.core.repository.PoemRepository
 import com.mambo.core.utils.ConnectionLiveData
@@ -45,7 +48,7 @@ class MainViewModel @Inject constructor(
     private val _searches = searchQuery.flatMapLatest { poemRepository.searchPoems(it) }
     val searches = _searches.cachedIn(viewModelScope)
 
-    fun onSearchQueryUpdated(text:String){
+    fun onSearchQueryUpdated(text: String) {
         searchQuery.value = text
     }
 
@@ -59,7 +62,7 @@ class MainViewModel @Inject constructor(
     private val _privatePoems = libraryQuery.flatMapLatest { poemRepository.searchPoems(it) }
     val privatePoems = _privatePoems.cachedIn(viewModelScope)
 
-    private val _poem = MutableLiveData<Poem?>(null)
+    private val _poem = state.getLiveData<Poem?>("poem", null)
     val poem: LiveData<Poem?> get() = _poem
 
     private val _topic = state.getLiveData<Topic?>("topic")
@@ -81,11 +84,11 @@ class MainViewModel @Inject constructor(
         _topic.value = topic
     }
 
-    fun updateBookmarkQuery(query:String){
+    fun updateBookmarkQuery(query: String) {
         bookmarksQuery.value = query
     }
 
-    fun updateLibraryQuery(query: String){
+    fun updateLibraryQuery(query: String) {
         libraryQuery.value = query
     }
 

@@ -20,7 +20,6 @@ import com.irozon.alertview.objects.AlertAction
 import com.irozon.sneaker.Sneaker
 import com.mambo.core.utils.LoadingDialog
 import com.mambo.core.viewmodel.MainViewModel
-import com.mambo.libraries.editor.WYSIWYG
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
 import com.mambobryan.navigation.extensions.getNavOptionsPopUpToCurrent
@@ -33,9 +32,10 @@ import kotlinx.coroutines.flow.collect
 @AndroidEntryPoint
 class PoemFragment : Fragment(R.layout.fragment_poem) {
 
-    private val binding by viewBinding(FragmentPoemBinding::bind)
-    private val viewModel: PoemViewModel by viewModels()
     private val sharedViewModel: MainViewModel by activityViewModels()
+    private val viewModel: PoemViewModel by viewModels()
+
+    private val binding by viewBinding(FragmentPoemBinding::bind)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,7 +78,46 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
                             .setAction("retry") { viewModel.onCommentSendClicked() }
                             .show()
                     }
+                    is PoemViewModel.PoemEvent.TogglePoemBookmarked -> {
+                        binding.apply {
+                            val icon = if (event.isBookmarked) R.drawable.ic_baseline_bookmark_24
+                            else R.drawable.ic_baseline_bookmark_border_24
+
+                            ivPoemBookmark.setImageDrawable(
+                                ContextCompat.getDrawable(
+                                    requireContext(),
+                                    icon
+                                )
+                            )
+                        }
+                    }
+                    is PoemViewModel.PoemEvent.TogglePoemLiked -> {
+                        binding.apply {
+                            val icon = if (event.isLiked) R.drawable.ic_baseline_favorite_24
+                            else R.drawable.ic_baseline_favorite_border_24
+
+                            ivPoemLike.setImageDrawable(
+                                ContextCompat.getDrawable(
+                                    requireContext(),
+                                    icon
+                                )
+                            )
+                        }
+                    }
+                    PoemViewModel.PoemEvent.ClearCommentEditText -> {
+                        binding.layoutPoemComment.edtComment.setText("")
+                    }
                 }
+            }
+        }
+
+        viewModel.poem.observe(viewLifecycleOwner) { poem ->
+            binding.apply {
+
+                layoutPoemContent.isVisible = true
+
+                editor.html = viewModel.getHtml()
+                editor.setCode()
             }
         }
 
@@ -105,6 +144,14 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
             }
         }
 
+        viewModel.isLoading.observe(viewLifecycleOwner){ isLoading ->
+            binding.layoutPoemComment.apply {
+                edtComment.isEnabled = isLoading.not()
+                ivComment.isVisible = isLoading.not()
+                progressComment.isVisible = isLoading
+            }
+        }
+
     }
 
     private fun initViews() = binding.apply {
@@ -112,7 +159,8 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
         NavigationUI.setupWithNavController(toolbar, findNavController())
         toolbar.title = null
 
-        if (viewModel.isUser) toolbar.inflateMenu(R.menu.menu_poem)
+//        if (viewModel.isUser)
+        toolbar.inflateMenu(R.menu.menu_poem)
 
         toolbar.setOnMenuItemClickListener {
             return@setOnMenuItemClickListener when (it.itemId) {
@@ -136,14 +184,17 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
             }
         }
 
-        layoutArtist.isVisible = viewModel.poem?.userId == "1"
         layoutPoemActions.isVisible = viewModel.isOnline
 
-        layoutArtist.setOnClickListener { viewModel.onArtistImageClicked() }
+        layoutPoemActions.isVisible = true
+
+        ivPoemLike.setOnClickListener { viewModel.onLikeClicked() }
+        ivPoemBookmark.setOnClickListener { viewModel.onBookmarkClicked() }
         ivPoemComment.setOnClickListener { viewModel.onCommentsClicked() }
+        ivPoemArtist.setOnClickListener { viewModel.onArtistImageClicked() }
 
         layoutPoemComment.apply {
-            layoutCommentRoot.isVisible = viewModel.isOnline
+//            layoutCommentRoot.isVisible = viewModel.isOnline
             edtComment.doAfterTextChanged { viewModel.onCommentUpdated(it.toString()) }
             ivComment.setOnClickListener { viewModel.onCommentSendClicked() }
         }
@@ -151,24 +202,16 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
     }
 
     private fun initEditor() = binding.apply {
-        val wysiwygEditor = editor
+
         val textColor = ContextCompat.getColor(requireContext(), R.color.color_on_background)
         val backgroundColor = ContextCompat.getColor(requireContext(), R.color.color_background)
 
-        wysiwygEditor.setInputEnabled(false)
-        wysiwygEditor.setEditorFontColor(textColor)
-        wysiwygEditor.setEditorBackgroundColor(backgroundColor)
-        wysiwygEditor.setPadding(16, 16, 16, 16)
+        editor.setInputEnabled(false)
+        editor.setEditorFontColor(textColor)
+        editor.setEditorBackgroundColor(backgroundColor)
+        editor.setPadding(24, 32, 24, 16)
+        editor.loadCSS("*{margin:0;}")
 
-        wysiwygEditor.html = viewModel.getHtml()
-        wysiwygEditor.setCode()
-
-        wysiwygEditor.setOnInitialLoadListener(object : WYSIWYG.AfterInitialLoadListener {
-            override fun onAfterInitialLoad(isReady: Boolean) {
-                layoutPoemLoading.isVisible = !isReady
-                layoutPoemContent.isVisible = isReady
-            }
-        })
     }
 
     private fun showConfirmDeleteDialog() {

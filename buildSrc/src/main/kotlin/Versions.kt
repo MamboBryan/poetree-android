@@ -36,5 +36,6 @@ object Versions {
     const val alert = "1.0.1"
     const val alerter = "7.2.4"
     const val support = "27.1.0"
+    const val likeButton = "0.2.3"
 
 }

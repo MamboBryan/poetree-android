@@ -22,43 +22,14 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorSurface">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/layout_artist"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <com.mikhaellopez.circularimageview.CircularImageView
-                        android:layout_width="35dp"
-                        android:id="@+id/iv_poem_artist"
-                        android:layout_height="35dp"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center_vertical"
-                        android:src="@drawable/profile"
-                        app:civ_border="false" />
-
-                    <TextView
-                        android:id="@+id/tv_poem_artist_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center_vertical"
-                        android:paddingStart="8dp"
-                        android:text="MamboBryan"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.Toolbar>
+                android:background="?attr/colorSurface" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_marginBottom="55dp"
         android:layout_height="match_parent"
+        android:layout_marginBottom="55dp"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -77,10 +48,10 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:visibility="gone"
             android:id="@+id/layout_poem_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
             <com.mambo.libraries.editor.WYSIWYG
                 android:id="@+id/editor"
@@ -108,6 +79,14 @@
                     android:src="@drawable/ic_baseline_favorite_border_24" />
 
                 <ImageView
+                    android:id="@+id/iv_poem_bookmark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="16dp"
+                    android:src="@drawable/ic_baseline_bookmark_border_24" />
+
+                <ImageView
                     android:id="@+id/iv_poem_comment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -115,13 +94,17 @@
                     android:padding="16dp"
                     android:src="@drawable/ic_outline_mode_comment_24" />
 
-                <ImageView
-                    android:id="@+id/iv_poem_bookmark"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/iv_poem_artist"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="16dp"
-                    android:src="@drawable/ic_baseline_bookmark_border_24" />
+                    android:gravity="center"
+                    android:src="@drawable/profile"
+                    app:civ_border="false" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 

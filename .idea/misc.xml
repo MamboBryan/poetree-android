@@ -80,7 +80,9 @@
         <entry key="features/setup/src/main/res/layout/fragment_setup.xml" value="0.3489583333333333" />
         <entry key="features/update-password/src/main/res/layout/fragment_update_password.xml" value="0.3489583333333333" />
         <entry key="libraries/editor/src/main/res/drawable/blockquote.xml" value="0.3651041666666667" />
+        <entry key="libraries/editor/src/main/res/drawable/code.xml" value="0.29907407407407405" />
         <entry key="libraries/editor/src/main/res/drawable/ic_baseline_font_download_24.xml" value="0.3651041666666667" />
+        <entry key="libraries/editor/src/main/res/drawable/visibility_off.xml" value="0.29907407407407405" />
         <entry key="libraries/searchbar/src/main/res/drawable/ic_round_clear.xml" value="0.3651041666666667" />
         <entry key="libraries/searchbar/src/main/res/drawable/ic_round_search_24dp.xml" value="0.3651041666666667" />
         <entry key="libraries/searchbar/src/main/res/drawable/indicator_line.xml" value="0.3651041666666667" />

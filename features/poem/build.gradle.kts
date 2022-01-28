@@ -74,6 +74,7 @@ dependencies {
 
     implementation(Dependencies.Libraries.circularImage)
     implementation(Dependencies.Libraries.prettyTime)
+    implementation(Dependencies.Libraries.likeButton)
     implementation(Dependencies.Libraries.delegate)
     implementation(Dependencies.Libraries.sneaker)
     implementation(Dependencies.Libraries.alert)
