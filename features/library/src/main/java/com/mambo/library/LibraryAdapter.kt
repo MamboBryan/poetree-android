@@ -1,27 +1,33 @@
-package com.mambo.core.adapters
+package com.mambo.library
 
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.mambo.core.OnPoemClickListener
 import com.mambo.data.models.Poem
 import com.mambo.data.utils.POEM_COMPARATOR
-import com.mambo.ui.databinding.ItemPoemBinding
+import com.mambo.library.databinding.ItemPoemLibraryBinding
 import org.ocpsoft.prettytime.PrettyTime
+import javax.inject.Inject
 
-class PoemPagingAdapter :
-    PagingDataAdapter<Poem, PoemPagingAdapter.PoemViewHolder>(POEM_COMPARATOR) {
+class LibraryAdapter @Inject constructor() :
+    PagingDataAdapter<Poem, LibraryAdapter.PoemViewHolder>(POEM_COMPARATOR) {
 
     private lateinit var onPoemClickListener: OnPoemClickListener
+    private var isPublic = false
+
+    fun isPublic(isPublic: Boolean) {
+        this.isPublic = isPublic
+    }
 
     fun setListener(listener: OnPoemClickListener) {
         onPoemClickListener = listener
     }
 
-    inner class PoemViewHolder(private val binding: ItemPoemBinding) :
+    inner class PoemViewHolder(private val binding: ItemPoemLibraryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         private val prettyTime = PrettyTime()
@@ -29,7 +35,7 @@ class PoemPagingAdapter :
         init {
             binding.apply {
 
-                layoutPoemClick.setOnClickListener {
+                layoutPoemLibraryClick.setOnClickListener {
                     if (absoluteAdapterPosition != RecyclerView.NO_POSITION) {
                         val poem = getItem(absoluteAdapterPosition)
                         if (poem != null)
@@ -43,22 +49,15 @@ class PoemPagingAdapter :
         fun bind(poem: Poem) {
             binding.apply {
 
-                Log.i("FEEDS", "poem bind called :: ${poem.title}")
-
                 val duration = prettyTime.formatDuration(poem.createdAt)
-                val message = " \u2022 $duration "
 
-                tvPoemUsername.text = poem.user?.username
-                tvPoemTitle.text = poem.title
-                tvPoemDate.text = message
+                tvPublishedTitle.text = poem.title
+                tvPublishedDuration.text = duration
 
-                tvLikes.text = "${poem.likesCount}"
-                tvComments.text = "${poem.commentsCount}"
-                tvBookmarks.text = "${poem.bookmarksCount}"
-                tvReads.text = "${poem.readsCount}"
+                ivPublishedIcon.load(if (isPublic) R.drawable.ic_baseline_public_24 else R.drawable.ic_baseline_edit_note_24)
 
-                val color = poem.topic?.color ?: "#C8F9F3"
-                layoutPoem.setBackgroundColor(Color.parseColor(color))
+                val color = poem.topic?.color ?: if (isPublic) "#e7c6ff" else "#c8b6ff"
+                layoutPoemLibrary.setBackgroundColor(Color.parseColor(color))
 
             }
         }
@@ -73,7 +72,7 @@ class PoemPagingAdapter :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PoemViewHolder {
         val binding =
-            ItemPoemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemPoemLibraryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return PoemViewHolder(binding)
     }
 }

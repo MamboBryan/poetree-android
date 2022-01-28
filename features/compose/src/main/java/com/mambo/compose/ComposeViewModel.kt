@@ -4,8 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mambo.core.repository.PoemRepository
-import com.mambo.core.utils.Result.RESULT_CREATE_OK
-import com.mambo.core.utils.Result.RESULT_UPDATE_OK
 import com.mambo.data.models.Poem
 import com.mambo.data.models.User
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -110,7 +108,7 @@ class ComposeViewModel @Inject constructor(
         isPublic = false
     )
 
-    fun onBackClicked(){
+    fun onBackClicked() {
         updateUi(ComposeEvent.NavigateToBackstack)
     }
 
@@ -140,14 +138,14 @@ class ComposeViewModel @Inject constructor(
     private fun update(poem: Poem) = viewModelScope.launch {
 
         repository.update(poem)
-        updateUi(ComposeEvent.NavigateBackWithResult(RESULT_UPDATE_OK))
+        updateUi(ComposeEvent.NavigateToBackstack)
 
     }
 
     private fun save(poem: Poem) = viewModelScope.launch {
 
         repository.save(poem)
-        updateUi(ComposeEvent.NavigateBackWithResult(RESULT_CREATE_OK))
+        updateUi(ComposeEvent.NavigateToBackstack)
 
     }
 

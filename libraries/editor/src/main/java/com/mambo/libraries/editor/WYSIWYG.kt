@@ -64,9 +64,12 @@ class WYSIWYG @SuppressLint("SetJavaScriptEnabled") constructor(
     private var mLoadListener: AfterInitialLoadListener? = null
 
     constructor(context: Context)
-            : this(context, null) {}
+            : this(context, null) {
+    }
+
     constructor(context: Context, attrs: AttributeSet?)
-            : this(context, attrs, R.attr.webViewStyle) {}
+            : this(context, attrs, R.attr.webViewStyle) {
+    }
 
     protected fun createWebviewClient(): EditorWebViewClient {
         return EditorWebViewClient()
@@ -162,12 +165,8 @@ class WYSIWYG @SuppressLint("SetJavaScriptEnabled") constructor(
         )
     }
 
-    override fun setPaddingRelative(
-        start: Int,
-        top: Int,
-        end: Int,
-        bottom: Int
-    ) { // still not support RTL.
+    override fun setPaddingRelative(start: Int, top: Int, end: Int, bottom: Int) {
+        // still not support RTL.
         setPadding(start, top, end, bottom)
     }
 

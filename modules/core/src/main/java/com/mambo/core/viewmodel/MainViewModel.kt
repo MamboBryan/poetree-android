@@ -1,7 +1,10 @@
 package com.mambo.core.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.mambo.core.repository.PoemRepository
 import com.mambo.core.utils.ConnectionLiveData
@@ -42,17 +45,24 @@ class MainViewModel @Inject constructor(
     val feeds = poemRepository.getLocalPoems("").cachedIn(viewModelScope)
 
     private val searchQuery = MutableStateFlow("")
-    private val searchesFlow = searchQuery.flatMapLatest { poemRepository.searchPoems(it) }
-    val searches = searchesFlow.cachedIn(viewModelScope)
+    private val _searches = searchQuery.flatMapLatest { poemRepository.searchPoems(it) }
+    val searches = _searches.cachedIn(viewModelScope)
 
-    fun onSearchQueryUpdated(text:String){
+    fun onSearchQueryUpdated(text: String) {
         searchQuery.value = text
     }
 
-    val bookmarks = poemRepository.getLocalPoems("").cachedIn(viewModelScope)
-    val unpublished = poemRepository.getLocalPoems("").cachedIn(viewModelScope)
+    private val bookmarksQuery = MutableStateFlow("")
+    private val _bookmarks = bookmarksQuery.flatMapLatest { poemRepository.searchPoems(it) }
+    val bookmarks = _bookmarks.cachedIn(viewModelScope)
 
-    private val _poem = MutableLiveData<Poem?>(null)
+    private val libraryQuery = MutableStateFlow("")
+    private val _publicPoems = libraryQuery.flatMapLatest { poemRepository.searchPoems(it) }
+    val publicPoems = _publicPoems.cachedIn(viewModelScope)
+    private val _privatePoems = libraryQuery.flatMapLatest { poemRepository.searchPoems(it) }
+    val privatePoems = _privatePoems.cachedIn(viewModelScope)
+
+    private val _poem = state.getLiveData<Poem?>("poem", null)
     val poem: LiveData<Poem?> get() = _poem
 
     private val _topic = state.getLiveData<Topic?>("topic")
@@ -72,6 +82,14 @@ class MainViewModel @Inject constructor(
 
     fun setTopic(topic: Topic?) {
         _topic.value = topic
+    }
+
+    fun updateBookmarkQuery(query: String) {
+        bookmarksQuery.value = query
+    }
+
+    fun updateLibraryQuery(query: String) {
+        libraryQuery.value = query
     }
 
     private fun updateUi(event: MainEvent) = viewModelScope.launch {

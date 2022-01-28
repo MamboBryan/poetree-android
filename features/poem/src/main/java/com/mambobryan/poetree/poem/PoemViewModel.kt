@@ -21,10 +21,14 @@ class PoemViewModel @Inject constructor(
     val events = _eventChannel.receiveAsFlow()
 
     private val _poem = state.getLiveData<Poem>("poem", null)
-    val poem = _poem.value
+    val poem: LiveData<Poem> get() = _poem
 
     private val _comment = MutableLiveData("")
     val comment: LiveData<String> get() = _comment
+
+    private val _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
 
     private var title = ""
     private var content = ""
@@ -49,24 +53,28 @@ class PoemViewModel @Inject constructor(
 
     fun getHtml(): String {
         val html = StringBuilder()
+        val prettyTime = PrettyTime()
 
-        html.append("<h2><i><b> $title </b></i></h2>")
-        html.append("\n")
-        html.append("<i><b>${topic}</b> • ${duration}</i>")
+        val topic = _poem.value?.topic?.name ?: "Topicless"
+        val duration = prettyTime.formatDuration(_poem.value?.createdAt)
+
+        html.append("$topic • $duration")
+        html.append("<h2><b> ${_poem.value?.title}</b></h2>")
+        html.append("By • ${_poem.value?.user?.username}")
         html.append("<br><br>")
-        html.append("<i>${content}</i>")
+        html.append("<i>${_poem.value?.content}</i>")
         html.append("<br><br>")
 
         if (isOnline) {
-            html.append("<i>")
-            html.append("${poem?.likesCount} likes")
+            html.append("")
+            html.append("${_poem.value?.likesCount} likes")
             html.append(" • ")
-            html.append("${poem?.commentsCount} comments")
+            html.append("${_poem.value?.commentsCount} comments")
             html.append(" • ")
-            html.append("${poem?.bookmarksCount} bookmarks")
+            html.append("${_poem.value?.bookmarksCount} bookmarks")
             html.append(" • ")
-            html.append("${poem?.readsCount} reads")
-            html.append("</i>")
+            html.append("${_poem.value?.readsCount} reads")
+            html.append("")
         }
 
         return html.toString()
@@ -77,12 +85,14 @@ class PoemViewModel @Inject constructor(
     }
 
     fun onCommentSendClicked() = viewModelScope.launch {
-        showLoading()
+        _isLoading.value = true
         try {
             delay(2500)
-            hideLoading()
+            _isLoading.value = false
+            _comment.value = ""
+            updateUi(PoemEvent.ClearCommentEditText)
         } catch (e: Exception) {
-            hideLoading()
+            _isLoading.value = false
             updateUi(PoemEvent.ShowSnackBarError("Failed Sending Comment"))
         }
     }
@@ -95,22 +105,20 @@ class PoemViewModel @Inject constructor(
 
     fun onDeleteClicked() = updateUi(PoemEvent.ShowPoemDeleteDialog)
 
-    fun onDeleteConfirmed() = viewModelScope.launch {
-        showLoading()
-        try {
-            delay(4000)
-            hideLoading()
-            updateUi(PoemEvent.ShowSuccessSneaker("Poem Deleted Successfully!"))
-            updateUi(PoemEvent.NavigateToBackstack)
-        } catch (e: Exception) {
-            hideLoading()
-        }
+    fun onDeleteConfirmed() {
+
+        val isRemote = _poem.value?.isPublic ?: false
+
+        if (isRemote)
+            deleteFromRemote()
+        else
+            deleteFromLocal()
     }
 
     fun onPublishClicked() = viewModelScope.launch {
         showLoading()
         try {
-            delay(4000)
+            delay(2000)
             hideLoading()
         } catch (e: Exception) {
             hideLoading()
@@ -120,8 +128,54 @@ class PoemViewModel @Inject constructor(
     fun onUnPublishClicked() = viewModelScope.launch {
         showLoading()
         try {
-            delay(4000)
+            delay(2000)
             hideLoading()
+        } catch (e: Exception) {
+            hideLoading()
+        }
+    }
+
+    fun onLikeClicked() = viewModelScope.launch {
+        updateUi(PoemEvent.TogglePoemLiked(true))
+        try {
+            //TODO network call to like/unlike
+            delay(2000)
+        } catch (e: Exception) {
+            updateUi(PoemEvent.TogglePoemLiked(false))
+        }
+    }
+
+    fun onBookmarkClicked() = viewModelScope.launch {
+        updateUi(PoemEvent.TogglePoemBookmarked(true))
+        try {
+            //TODO network call to like/unlike
+            delay(2000)
+        } catch (e: Exception) {
+            updateUi(PoemEvent.TogglePoemBookmarked(false))
+        }
+    }
+
+    private fun deleteFromRemote() = viewModelScope.launch {
+        showLoading()
+        try {
+            //TODO network call to delete
+            delay(2000)
+            hideLoading()
+            updateUi(PoemEvent.ShowSuccessSneaker("Poem Deleted Successfully!"))
+            updateUi(PoemEvent.NavigateToBackstack)
+        } catch (e: Exception) {
+            hideLoading()
+        }
+    }
+
+    private fun deleteFromLocal() = viewModelScope.launch {
+        showLoading()
+        try {
+            //TODO database call to delete
+            delay(2000)
+            hideLoading()
+            updateUi(PoemEvent.ShowSuccessSneaker("Poem Deleted Successfully!"))
+            updateUi(PoemEvent.NavigateToBackstack)
         } catch (e: Exception) {
             hideLoading()
         }
@@ -142,6 +196,9 @@ class PoemViewModel @Inject constructor(
         object NavigateToArtistDetails : PoemEvent()
         object NavigateToComments : PoemEvent()
         object ShowPoemDeleteDialog : PoemEvent()
+        object ClearCommentEditText : PoemEvent()
+        data class TogglePoemLiked(val isLiked: Boolean) : PoemEvent()
+        data class TogglePoemBookmarked(val isBookmarked: Boolean) : PoemEvent()
         data class ShowSnackBarError(val message: String) : PoemEvent()
         data class ShowSuccessSneaker(val message: String) : PoemEvent()
         data class NavigateToEditPoem(val poem: Poem) : PoemEvent()
