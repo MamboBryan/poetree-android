@@ -52,6 +52,7 @@
                     android:layout_marginStart="24dp"
                     android:layout_marginBottom="24dp"
                     android:text="TextView"
+                    android:textColor="@color/black"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
@@ -62,6 +63,7 @@
                     android:layout_marginEnd="24dp"
                     android:text="TextView"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textColor="@color/black"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/tv_published_duration"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -72,6 +74,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginTop="24dp"
+                    android:tint="@color/black"
                     app:layout_constraintBottom_toTopOf="@+id/tv_published_title"
                     app:layout_constraintStart_toStartOf="@+id/tv_published_duration"
                     app:layout_constraintTop_toTopOf="parent"

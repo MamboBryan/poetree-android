@@ -12,7 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mambo.core.adapters.ViewPagerAdapter
-import com.mambo.core.extensions.onQueryTextSubmit
+import com.mambo.core.extensions.onQueryTextChanged
 import com.mambo.core.viewmodel.MainViewModel
 import com.mambo.library.databinding.FragmentLibraryBinding
 import com.mambobryan.navigation.Destinations
@@ -36,7 +36,7 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
         val searchItem = menu.findItem(R.id.action_library_search)
         val searchView = searchItem.actionView as SearchView
 
-        searchView.onQueryTextSubmit { sharedViewModel.updateBookmarkQuery(it) }
+        searchView.onQueryTextChanged { sharedViewModel.updateLibraryQuery(it) }
 
         super.onCreateOptionsMenu(menu, inflater)
 
