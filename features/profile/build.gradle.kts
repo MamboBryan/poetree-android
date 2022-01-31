@@ -70,6 +70,7 @@ dependencies {
     implementation(Dependencies.Libraries.hilt)
 
     implementation(Dependencies.Libraries.circularImage)
+    implementation(Dependencies.Libraries.scrollLayout)
     implementation(Dependencies.Libraries.prettyTime)
     implementation(Dependencies.Libraries.delegate)
     implementation(Dependencies.Libraries.alert)

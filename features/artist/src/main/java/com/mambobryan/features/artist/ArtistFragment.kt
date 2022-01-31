@@ -105,8 +105,8 @@ class ArtistFragment : Fragment(R.layout.fragment_artist) {
     }
 
     private fun initViews() = binding.apply {
-        layoutHeader.ivDarkMode.isVisible = false
-        layoutHeader.ivBack.setOnClickListener { findNavController().popBackStack() }
+        layoutHeader.ivHeaderDarkMode.isVisible = false
+        layoutHeader.ivHeaderBack.setOnClickListener { findNavController().popBackStack() }
 
         setupUserView()
 
@@ -136,7 +136,7 @@ class ArtistFragment : Fragment(R.layout.fragment_artist) {
 
     private fun setupUserView() = binding.apply {
         val user = sharedViewModel.user.value
-        layoutHeader.tvTitle.text = "MamboBryan"
+        layoutHeader.tvHeaderTitle.text = "MamboBryan"
         layoutDetails.apply {
             tvArtistName.text = "MamboBryan"
 //            tvArtistBio.text =""
@@ -147,17 +147,17 @@ class ArtistFragment : Fragment(R.layout.fragment_artist) {
     }
 
     private fun setUpScrollView() = binding.apply {
-        layoutHeader.ivSplit.visibility = View.GONE
-        layoutHeader.tvTitle.translationY = -1000f
+        layoutHeader.ivHeaderSplit.visibility = View.GONE
+        layoutHeader.tvHeaderTitle.translationY = -1000f
         layoutScrollRoot.setOnScrollListener { ty, _ ->
 
             var translationY = ty
             translationY = -translationY
 
-            val tvTitle = layoutHeader.tvTitle
+            val tvTitle = layoutHeader.tvHeaderTitle
             val tvName = layoutDetails.tvArtistName
             val ivArtistImage = layoutDetails.ivArtistMage
-            val ivSplit = layoutHeader.ivSplit
+            val ivSplit = layoutHeader.ivHeaderSplit
 
             if (titleMaxScrollHeight == 0f) {
                 titleMaxScrollHeight = ((tvTitle.parent as View).bottom - tvTitle.top).toFloat()

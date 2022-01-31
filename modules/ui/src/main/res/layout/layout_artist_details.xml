@@ -104,6 +104,7 @@
         android:id="@+id/iv_artist_mage"
         android:layout_width="150dp"
         android:layout_height="150dp"
+        app:civ_border="false"
         android:src="@drawable/profile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
