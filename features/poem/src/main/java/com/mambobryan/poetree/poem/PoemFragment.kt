@@ -1,6 +1,5 @@
 package com.mambobryan.poetree.poem
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -56,10 +55,9 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
                     PoemViewModel.PoemEvent.NavigateToArtistDetails -> navigateToArtistDetails()
                     PoemViewModel.PoemEvent.NavigateToComments -> navigateToComments()
                     PoemViewModel.PoemEvent.HideLoadingDialog -> LoadingDialog.dismiss()
-                    PoemViewModel.PoemEvent.ShowLoadingDialog -> LoadingDialog.show(
-                        requireContext(),
-                        false
-                    )
+                    PoemViewModel.PoemEvent.ShowLoadingDialog -> {
+                        LoadingDialog.show(requireContext(), false)
+                    }
                     PoemViewModel.PoemEvent.NavigateToBackstack -> {
                         findNavController().popBackStack()
                     }
@@ -107,13 +105,13 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
                         }
                     }
                     PoemViewModel.PoemEvent.ClearCommentEditText -> {
-                        binding.layoutPoemComment.edtComment.getText().clear()
+                        binding.layoutPoemComment.edtComment.text.clear()
                     }
                 }
             }
         }
 
-        viewModel.poem.observe(viewLifecycleOwner) { poem ->
+        viewModel.poem.observe(viewLifecycleOwner) {
             binding.apply {
 
                 layoutPoemContent.isVisible = true
@@ -188,8 +186,6 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
         layoutPoemActions.isVisible = viewModel.isOnline
 
         layoutPoemActions.isVisible = true
-        val color = viewModel.poem.value?.topic?.color ?: "#F7F7A1"
-        layoutPoemActions.setBackgroundColor(Color.parseColor(color))
 
         ivPoemLike.setOnClickListener { viewModel.onLikeClicked() }
 //        tvPoemLikes.text = prettyCount(viewModel.poem.value?.likesCount!!)
@@ -221,7 +217,6 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
         editor.setEditorFontColor(textColor)
         editor.setEditorBackgroundColor(backgroundColor)
         editor.setPadding(24, 32, 24, 16)
-//        editor.loadCSS("*{margin:0;}")
 
     }
 

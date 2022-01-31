@@ -10,6 +10,7 @@ import com.mambo.core.repository.PoemRepository
 import com.mambo.core.utils.ConnectionLiveData
 import com.mambo.data.models.Poem
 import com.mambo.data.models.Topic
+import com.mambo.data.models.User
 import com.mambo.data.preferences.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -48,10 +49,6 @@ class MainViewModel @Inject constructor(
     private val _searches = searchQuery.flatMapLatest { poemRepository.searchPoems(it) }
     val searches = _searches.cachedIn(viewModelScope)
 
-    fun onSearchQueryUpdated(text: String) {
-        searchQuery.value = text
-    }
-
     private val bookmarksQuery = MutableStateFlow("")
     private val _bookmarks = bookmarksQuery.flatMapLatest { poemRepository.searchPoems(it) }
     val bookmarks = _bookmarks.cachedIn(viewModelScope)
@@ -68,6 +65,9 @@ class MainViewModel @Inject constructor(
     private val _topic = state.getLiveData<Topic?>("topic")
     val topic: LiveData<Topic?> get() = _topic
 
+    private val _user = state.getLiveData<User?>("user", null)
+    val user: LiveData<User?> get() = _user
+
     init {
         runBlocking {
             isOnBoarded = preferences.isOnBoarded.first()
@@ -82,6 +82,14 @@ class MainViewModel @Inject constructor(
 
     fun setTopic(topic: Topic?) {
         _topic.value = topic
+    }
+
+    fun setUser(user: User?){
+        _user.value = user
+    }
+
+    fun onSearchQueryUpdated(text: String) {
+        searchQuery.value = text
     }
 
     fun updateBookmarkQuery(query: String) {

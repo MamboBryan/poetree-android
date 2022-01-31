@@ -79,9 +79,10 @@
                     android:layout_height="wrap_content"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:padding="8dp"
+                    android:layout_marginTop="16dp"
                     android:src="@drawable/ic_baseline_favorite_border_24"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/tv_poem_reads" />
 
                 <TextView
                     android:id="@+id/tv_poem_likes"
@@ -137,11 +138,10 @@
                     android:id="@+id/iv_poem_reads"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
                     android:padding="8dp"
                     android:src="@drawable/ic_baseline_done_all_24"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_poem_comments" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/tv_poem_reads"
@@ -157,14 +157,14 @@
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:layout_gravity="center"
-                    android:layout_marginTop="24dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:gravity="center"
                     android:src="@drawable/profile"
+                    android:layout_marginTop="16dp"
                     app:civ_border="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_poem_reads" />
+                    app:layout_constraintTop_toBottomOf="@+id/tv_poem_comments" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -67,9 +67,7 @@ class BookmarksFragment : Fragment(R.layout.fragment_bookmarks) {
         }
 
         lifecycleScope.launch {
-            sharedViewModel.bookmarks.collectLatest {
-                adapter.submitData(it)
-            }
+            sharedViewModel.bookmarks.collectLatest { adapter.submitData(it) }
         }
 
         lifecycleScope.launch {

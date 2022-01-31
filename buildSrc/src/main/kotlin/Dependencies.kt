@@ -59,6 +59,7 @@ object Dependencies {
         val alert by lazy {"com.irozon.alertview:alertview:${Versions.alert}"}
         val alerter by lazy {"com.github.tapadoo:alerter:${Versions.alerter}"}
         val likeButton by lazy {"com.github.jd-alexander:LikeButton:${Versions.likeButton}"}
+        val scrollLayout by lazy {"com.github.w446108264:ScrollableLayout:${Versions.scrollLayout}"}
 
         val timber by lazy { "com.jakewharton.timber:timber:${Versions.timber}" }
         val retrofit by lazy { "com.squareup.retrofit2:retrofit:${Versions.retrofit}" }
