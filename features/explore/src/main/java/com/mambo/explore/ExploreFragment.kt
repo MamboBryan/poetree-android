@@ -41,7 +41,6 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
         lifecycleScope.launch {
             viewModel.events.collect { event ->
                 when (event) {
-                    ExploreViewModel.ExploreEvent.NavigateToProfile -> navigateToProfile()
                     ExploreViewModel.ExploreEvent.NavigateToSearch -> navigateToSearch()
                     is ExploreViewModel.ExploreEvent.NavigateToSearchByTopic -> navigateToSearch()
                 }
@@ -96,7 +95,6 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
     private fun initViews() {
         binding.apply {
 
-            ivUserImage.setOnClickListener { viewModel.onProfileImageClicked() }
             layoutSearch.setOnClickListener { viewModel.onSearchFieldClicked() }
 
             layoutStateExplore.apply {
@@ -119,11 +117,6 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
             header = GenericStateAdapter(adapter::retry),
             footer = GenericStateAdapter(adapter::retry)
         )
-    }
-
-    private fun navigateToProfile(){
-        val deeplink = getDeeplink(Destinations.PROFILE)
-        navigate(deeplink)
     }
 
     private fun navigateToSearch(){
