@@ -37,6 +37,8 @@ class FeedViewModel @Inject constructor(
 
     fun onCreatePoemClicked() = updateUi(FeedEvent.NavigateToCompose)
 
+    fun onSettingsClicked() = updateUi(FeedEvent.NavigateToSettings)
+
     private fun updateUi(event: FeedEvent) = viewModelScope.launch {
         _eventChannel.send(event)
     }
@@ -45,6 +47,7 @@ class FeedViewModel @Inject constructor(
         data class NavigateToPoem(val poem: Poem) : FeedEvent()
         object NavigateToProfile : FeedEvent()
         object NavigateToCompose : FeedEvent()
+        object NavigateToSettings : FeedEvent()
     }
 
 }

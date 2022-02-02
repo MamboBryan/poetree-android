@@ -73,7 +73,7 @@ dependencies {
 
     implementation(Dependencies.Libraries.delegate)
     implementation(Dependencies.Libraries.timber)
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation(Dependencies.Libraries.alert)
 
     kapt(Dependencies.Libraries.hiltCompiler)
 

@@ -74,6 +74,7 @@ dependencies {
     implementation(project(Modules.Features.loading))
     implementation(project(Modules.Features.setup))
     implementation(project(Modules.Features.publish))
+    implementation(project(Modules.Features.settings))
 
     implementation(Dependencies.Libraries.core)
     implementation(Dependencies.Libraries.kotlin)

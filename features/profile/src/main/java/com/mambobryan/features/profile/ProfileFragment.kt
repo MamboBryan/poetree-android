@@ -89,15 +89,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             tvArtistLikes.text = prettyCount(200000)
         }
 
-        try {
-            val info =
-                requireActivity().packageManager?.getPackageInfo(requireActivity().packageName, 0)
-            val versionName = info?.versionName
-            tvSettingsVersion.text = "Poetree for Android v$versionName"
-
-        } catch (e: PackageManager.NameNotFoundException) {
-            Log.e("Settings", "setupUserView: ${e.localizedMessage}")
-        }
     }
 
     private fun setUpScrollView() = binding.apply {

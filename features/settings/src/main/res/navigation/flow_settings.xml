@@ -9,5 +9,7 @@
         android:id="@+id/settingsFragment"
         android:name="com.mambobryan.features.settings.SettingsFragment"
         android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings">
+        <deepLink app:uri="@string/settings" />
+    </fragment>
 </navigation>

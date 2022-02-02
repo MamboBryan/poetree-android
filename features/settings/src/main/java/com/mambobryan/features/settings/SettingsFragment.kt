@@ -1,59 +1,133 @@
 package com.mambobryan.features.settings
 
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
+import com.irozon.alertview.AlertActionStyle
+import com.irozon.alertview.AlertStyle
+import com.irozon.alertview.AlertView
+import com.irozon.alertview.objects.AlertAction
+import com.mambo.core.utils.LoadingDialog
+import com.mambobryan.features.settings.databinding.FragmentSettingsBinding
+import com.mambobryan.navigation.Destinations
+import com.mambobryan.navigation.extensions.getDeeplink
+import com.mambobryan.navigation.extensions.getNavOptionsPopUpToCurrent
+import com.mambobryan.navigation.extensions.navigate
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import timber.log.Timber
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+@AndroidEntryPoint
+class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [SettingsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class SettingsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private val binding by viewBinding(FragmentSettingsBinding::bind)
+    private val viewModel: SettingsViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initViews()
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.events.collect { event ->
+                when (event) {
+                    SettingsViewModel.SettingsEvent.NavigateToPrivacyPolicy -> openRepoViaLink()
+                    SettingsViewModel.SettingsEvent.NavigateToTermsAndConditions -> openRepoViaLink()
+                    SettingsViewModel.SettingsEvent.NavigateToUpdateAccount -> navigateToUpdateAccount()
+                    SettingsViewModel.SettingsEvent.NavigateToUpdatePassword -> navigateToUpdatePassword()
+                    SettingsViewModel.SettingsEvent.NavigateToLanding -> navigateToLanding()
+                    SettingsViewModel.SettingsEvent.ShowLogOutDialog -> showLogoutDialog()
+                    SettingsViewModel.SettingsEvent.ShowDeleteAccountDialog -> showDeleteAccountDialog()
+                    SettingsViewModel.SettingsEvent.HideLoadingDialog -> {
+                        LoadingDialog.dismiss()
+                    }
+                    SettingsViewModel.SettingsEvent.ShowLoadingDialog -> {
+                        LoadingDialog.show(requireContext())
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun initViews() = binding.apply {
+
+        NavigationUI.setupWithNavController(toolbarSettings, findNavController())
+        toolbarSettings.title = "Settings"
+
+        tvSettingsEdit.setOnClickListener { viewModel.onUpdateAccountClicked() }
+        tvSettingsPassword.setOnClickListener { viewModel.onUpdatePasswordClicked() }
+        tvSettingsTerms.setOnClickListener { viewModel.onTermsAndConditionsClicked() }
+        tvSettingsPrivacy.setOnClickListener { viewModel.onPrivacyPolicyClicked() }
+        btnSettingsDelete.setOnClickListener { viewModel.onDeleteAccountClicked() }
+        btnSettingsLogOut.setOnClickListener { viewModel.onLogOutClicked() }
+
+        try {
+            val info =
+                requireActivity().packageManager?.getPackageInfo(requireActivity().packageName, 0)
+            val versionName = info?.versionName
+            tvSettingsVersion.text = "Poetree for Android v$versionName"
+
+        } catch (e: PackageManager.NameNotFoundException) {
+            Timber.e("Version Name: ${e.localizedMessage}")
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false)
+    private fun showLogoutDialog() {
+        val alert = AlertView(
+            "Logging Out",
+            "We're going to miss you! \n Are you sure you want to logout?",
+            AlertStyle.BOTTOM_SHEET
+        )
+        alert.addAction(
+            AlertAction("Yes", AlertActionStyle.NEGATIVE) {
+                viewModel.onLogOutConfirmed()
+            }
+        )
+        alert.show(requireActivity() as AppCompatActivity)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SettingsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SettingsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    private fun showDeleteAccountDialog() {
+        val alert = AlertView(
+            "Delete Account",
+            "You're about to delete your account! \n This process cannot be reversed.",
+            AlertStyle.IOS
+        )
+        alert.addAction(
+            AlertAction("Confirm", AlertActionStyle.NEGATIVE) {
+                viewModel.onDeleteAccountConfirmed()
             }
+        )
+        alert.show(requireActivity() as AppCompatActivity)
     }
+
+    private fun navigateToUpdateAccount() {
+        navigate(getDeeplink(Destinations.ACCOUNT_EDIT))
+    }
+
+    private fun navigateToUpdatePassword() {
+        navigate(getDeeplink(Destinations.UPDATE_PASSWORD))
+    }
+
+    private fun navigateToLanding() {
+        navigate(getDeeplink(Destinations.LANDING), getNavOptionsPopUpToCurrent())
+    }
+
+    private fun openRepoViaLink() {
+        val url = "https://github.com/MamboBryan/poetree"
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(url)
+        startActivity(intent)
+    }
+
+
 }

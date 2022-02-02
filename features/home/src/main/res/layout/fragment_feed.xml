@@ -49,12 +49,13 @@
                     app:layout_constraintTop_toTopOf="@+id/textView2" />
 
                 <ImageView
-                    android:id="@+id/imageView"
+                    android:id="@+id/iv_feed_settings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:padding="8dp"
-                    android:src="@drawable/ic_baseline_more_vert_24"
+                    android:src="@drawable/ic_baseline_more_horiz_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

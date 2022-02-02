@@ -78,6 +78,7 @@
         <entry key="features/search/src/main/res/drawable/selected_item_indicator.xml" value="0.3645833333333333" />
         <entry key="features/search/src/main/res/layout/fragment_search.xml" value="0.18059299191374664" />
         <entry key="features/search/src/main/res/layout/item_poem_search.xml" value="0.3489583333333333" />
+        <entry key="features/settings/src/main/res/layout/fragment_settings.xml" value="0.31927083333333334" />
         <entry key="features/setup/src/main/res/layout/fragment_setup.xml" value="0.3489583333333333" />
         <entry key="features/update-password/src/main/res/layout/fragment_update_password.xml" value="0.3489583333333333" />
         <entry key="libraries/editor/src/main/res/drawable/blockquote.xml" value="0.3651041666666667" />
