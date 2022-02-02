@@ -2,6 +2,7 @@ package com.mambo.features.home
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -11,7 +12,6 @@ import com.mambo.core.OnPoemClickListener
 import com.mambo.core.adapters.GenericStateAdapter
 import com.mambo.core.adapters.PoemPagingAdapter
 import com.mambo.core.viewmodel.MainViewModel
-import androidx.core.view.isVisible
 import com.mambo.data.models.Poem
 import com.mambo.features.home.databinding.FragmentFeedBinding
 import com.mambobryan.navigation.Destinations
@@ -42,6 +42,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                 when (event) {
                     FeedViewModel.FeedEvent.NavigateToProfile -> navigateToProfile()
                     FeedViewModel.FeedEvent.NavigateToCompose -> navigateToCompose()
+                    FeedViewModel.FeedEvent.NavigateToSettings -> navigateToSettings()
                     is FeedViewModel.FeedEvent.NavigateToPoem -> {
                         mainViewModel.setPoem(event.poem)
                         navigateToPoem()
@@ -99,6 +100,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         binding.apply {
 
             imageUser.setOnClickListener { viewModel.onUserImageClicked() }
+            ivFeedSettings.setOnClickListener { viewModel.onSettingsClicked() }
             btnCreatePoem.setOnClickListener { viewModel.onCreatePoemClicked() }
 
             layoutState.apply {
@@ -137,10 +139,13 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         navigate(deeplink)
     }
 
-    private fun navigateToPoem(){
+    private fun navigateToPoem() {
         val deeplink = getDeeplink(Destinations.POEM)
         navigate(deeplink)
     }
 
+    private fun navigateToSettings() {
+        navigate(getDeeplink(Destinations.SETTINGS))
+    }
 
 }

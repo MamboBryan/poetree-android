@@ -46,9 +46,9 @@ android {
 
 dependencies {
 
-    implementation(project(BuildModules.Commons.ui))
-    implementation(project(BuildModules.Commons.core))
-    implementation(project(BuildModules.Commons.data))
+    implementation(project(Modules.Commons.ui))
+    implementation(project(Modules.Commons.core))
+    implementation(project(Modules.Commons.data))
 
     implementation(Dependencies.Libraries.core)
     implementation(Dependencies.Libraries.kotlin)

@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.mambo.core.OnPoemClickListener
+import com.mambo.core.adapters.ArtistPoemsAdapter
 import com.mambo.core.adapters.GenericStateAdapter
 import com.mambo.core.utils.prettyCount
 import com.mambo.core.viewmodel.MainViewModel
@@ -25,7 +26,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.abs
-
 
 @AndroidEntryPoint
 class ArtistFragment : Fragment(R.layout.fragment_artist) {

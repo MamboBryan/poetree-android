@@ -46,11 +46,11 @@ android {
 
 dependencies {
 
-    implementation(project(BuildModules.Commons.ui))
-    implementation(project(BuildModules.Commons.core))
-    implementation(project(BuildModules.Commons.data))
-    implementation(project(BuildModules.Commons.navigation))
-    implementation(project(BuildModules.Libraries.searchbar))
+    implementation(project(Modules.Commons.ui))
+    implementation(project(Modules.Commons.core))
+    implementation(project(Modules.Commons.data))
+    implementation(project(Modules.Commons.navigation))
+    implementation(project(Modules.Libraries.searchbar))
 
     implementation(Dependencies.Libraries.core)
     implementation(Dependencies.Libraries.kotlin)

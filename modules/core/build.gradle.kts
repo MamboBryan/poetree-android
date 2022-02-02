@@ -46,10 +46,10 @@ android {
 
 dependencies {
 
-    implementation(project(BuildModules.Commons.ui))
-    implementation(project(BuildModules.Commons.data))
-    implementation(project(BuildModules.Commons.local))
-    implementation(project(BuildModules.Commons.remote))
+    implementation(project(Modules.Commons.ui))
+    implementation(project(Modules.Commons.data))
+    implementation(project(Modules.Commons.local))
+    implementation(project(Modules.Commons.remote))
 
     implementation(Dependencies.Libraries.core)
     implementation(Dependencies.Libraries.kotlin)

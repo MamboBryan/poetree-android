@@ -1,4 +1,4 @@
-package com.mambobryan.features.artist
+package com.mambo.core.adapters
 
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mambo.core.OnPoemClickListener
 import com.mambo.data.models.Poem
 import com.mambo.data.utils.POEM_COMPARATOR
-import com.mambobryan.features.artist.databinding.ItemPoemArtistBinding
+import com.mambo.ui.databinding.ItemPoemArtistBinding
 import org.ocpsoft.prettytime.PrettyTime
 import javax.inject.Inject
 
@@ -43,12 +43,11 @@ class ArtistPoemsAdapter @Inject constructor() :
         fun bind(poem: Poem) {
             binding.apply {
 
-
                 val duration = prettyTime.formatDuration(poem.createdAt)
-                val message = " \u2022 $duration "
+                val message = "${poem.topic?.name ?: "Topicless"} \u2022 $duration "
 
                 tvPoemTitle.text = poem.title
-                tvPoemDuration.text = duration
+                tvPoemDuration.text = message
 
                 val color = poem.topic?.color ?: "#94F292"
                 layoutArtistBg.setBackgroundColor(Color.parseColor(color))

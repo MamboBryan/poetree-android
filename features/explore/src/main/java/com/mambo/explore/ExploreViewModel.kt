@@ -20,8 +20,6 @@ class ExploreViewModel @Inject constructor(
 
     val topics = repository.getTopics().cachedIn(viewModelScope)
 
-    fun onProfileImageClicked() = updateUi(ExploreEvent.NavigateToProfile)
-
     fun onSearchFieldClicked() = updateUi(ExploreEvent.NavigateToSearch)
 
     fun onTopicClicked() = updateUi(ExploreEvent.NavigateToSearchByTopic)
@@ -31,7 +29,6 @@ class ExploreViewModel @Inject constructor(
     }
 
     sealed class ExploreEvent {
-        object NavigateToProfile : ExploreEvent()
         object NavigateToSearch : ExploreEvent()
         object NavigateToSearchByTopic : ExploreEvent()
     }

@@ -1,32 +1,37 @@
 package com.mambobryan.features.profile
 
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import com.irozon.alertview.AlertActionStyle
 import com.irozon.alertview.AlertStyle
 import com.irozon.alertview.AlertTheme
 import com.irozon.alertview.AlertView
 import com.irozon.alertview.objects.AlertAction
-import com.mambo.core.utils.LoadingDialog
+import com.mambo.core.OnPoemClickListener
+import com.mambo.core.adapters.ArtistPoemsAdapter
+import com.mambo.core.adapters.GenericStateAdapter
 import com.mambo.core.utils.prettyCount
+import com.mambo.core.viewmodel.MainViewModel
+import com.mambo.data.models.Poem
 import com.mambobryan.features.profile.databinding.FragmentProfileBinding
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
-import com.mambobryan.navigation.extensions.getNavOptionsPopUpToCurrent
 import com.mambobryan.navigation.extensions.navigate
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.math.abs
 
 
@@ -34,7 +39,12 @@ import kotlin.math.abs
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private val binding by viewBinding(FragmentProfileBinding::bind)
+
     private val viewModel: ProfileViewModel by viewModels()
+    private val sharedViewModel: MainViewModel by activityViewModels()
+
+    @Inject
+    lateinit var adapter: ArtistPoemsAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,18 +54,53 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         lifecycleScope.launchWhenStarted {
             viewModel.events.collect { event ->
                 when (event) {
-                    ProfileViewModel.ProfileEvent.NavigateToPrivacyPolicy -> openRepoViaLink()
-                    ProfileViewModel.ProfileEvent.NavigateToTermsAndConditions -> openRepoViaLink()
-                    ProfileViewModel.ProfileEvent.NavigateToUpdateAccount -> navigateToUpdateAccount()
-                    ProfileViewModel.ProfileEvent.NavigateToUpdatePassword -> navigateToUpdatePassword()
-                    ProfileViewModel.ProfileEvent.NavigateToLanding -> navigateToLanding()
                     ProfileViewModel.ProfileEvent.ShowDarkModeDialog -> showDarkModeDialog()
-                    ProfileViewModel.ProfileEvent.ShowLogOutDialog -> showLogoutDialog()
-                    ProfileViewModel.ProfileEvent.HideLoadingDialog -> {
-                        LoadingDialog.dismiss()
+                    is ProfileViewModel.ProfileEvent.NavigateToPoem -> {
+                        sharedViewModel.setPoem(event.poem)
+                        navigateToLanding()
                     }
-                    ProfileViewModel.ProfileEvent.ShowLoadingDialog -> {
-                        LoadingDialog.show(requireContext(), false)
+                }
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            sharedViewModel.myPublicPoems.collectLatest { adapter.submitData(it) }
+        }
+
+        lifecycleScope.launch {
+            adapter.loadStateFlow.collectLatest { loadState ->
+                binding.layoutProfileState.apply {
+
+                    stateContent.isVisible = false
+                    stateEmpty.isVisible = false
+                    stateError.isVisible = false
+                    stateLoading.isVisible = false
+
+                    when (loadState.source.refresh) {
+                        is LoadState.Loading -> {
+                            stateLoading.isVisible = true
+                        }
+
+                        is LoadState.Error -> {
+                            stateError.isVisible = true
+                            stateContent.isRefreshing = false
+                        }
+
+                        is LoadState.NotLoading -> {
+
+                            if (loadState.append.endOfPaginationReached) {
+                                if (adapter.itemCount < 1)
+                                    stateEmpty.isVisible = true
+                                else {
+                                    stateContent.isVisible = true
+                                }
+                            } else {
+                                stateContent.isVisible = true
+                            }
+
+                            stateContent.isRefreshing = false
+
+                        }
                     }
                 }
             }
@@ -70,12 +115,26 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
         layoutProfileHeader.ivHeaderDarkMode.setOnClickListener { viewModel.onAppThemeClicked() }
         layoutProfileHeader.ivHeaderBack.setOnClickListener { findNavController().popBackStack() }
-        tvProfileEdit.setOnClickListener { viewModel.onUpdateAccountClicked() }
-        tvProfilePassword.setOnClickListener { viewModel.onUpdatePasswordClicked() }
-        tvProfileTerms.setOnClickListener { viewModel.onTermsAndConditionsClicked() }
-        tvProfilePrivacy.setOnClickListener { viewModel.onPrivacyPolicyClicked() }
-        btnProfileLogOut.setOnClickListener { viewModel.onLogOutClicked() }
 
+        layoutProfileState.apply {
+            buttonRetry.setOnClickListener { adapter.retry() }
+            recyclerView.adapter = adapter
+            recyclerView.setHasFixedSize(true)
+            stateContent.setOnRefreshListener {
+                recyclerView.scrollToPosition(0)
+                adapter.refresh()
+            }
+        }
+        adapter.setListener(object : OnPoemClickListener {
+            override fun onPoemClicked(poem: Poem) {
+                viewModel.onPoemClicked(poem)
+            }
+        })
+
+        adapter.withLoadStateHeaderAndFooter(
+            header = GenericStateAdapter(adapter::retry),
+            footer = GenericStateAdapter(adapter::retry)
+        )
     }
 
     private fun setupUserView() = binding.apply {
@@ -89,15 +148,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             tvArtistLikes.text = prettyCount(200000)
         }
 
-        try {
-            val info =
-                requireActivity().packageManager?.getPackageInfo(requireActivity().packageName, 0)
-            val versionName = info?.versionName
-            tvSettingsVersion.text = "Poetree for Android v$versionName"
-
-        } catch (e: PackageManager.NameNotFoundException) {
-            Log.e("Settings", "setupUserView: ${e.localizedMessage}")
-        }
     }
 
     private fun setUpScrollView() = binding.apply {
@@ -147,18 +197,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
     }
 
-    private fun showLogoutDialog() {
-        val alert = AlertView(
-            "Logging Out",
-            "We're going to miss you! \n Are you sure you want to logout?",
-            AlertStyle.BOTTOM_SHEET
-        )
-        alert.addAction(
-            AlertAction("Yes", AlertActionStyle.NEGATIVE) { viewModel.onLogOutConfirmed() }
-        )
-        alert.show(requireActivity() as AppCompatActivity)
-    }
-
     private fun showDarkModeDialog() {
 
         val modes = listOf(
@@ -190,23 +228,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     }
 
-    private fun navigateToUpdateAccount() {
-        navigate(getDeeplink(Destinations.ACCOUNT_EDIT))
-    }
-
-    private fun navigateToUpdatePassword() {
-        navigate(getDeeplink(Destinations.UPDATE_PASSWORD))
-    }
-
     private fun navigateToLanding() {
-        navigate(getDeeplink(Destinations.LANDING), getNavOptionsPopUpToCurrent())
-    }
-
-    private fun openRepoViaLink() {
-        val url = "https://github.com/MamboBryan/poetree"
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse(url)
-        startActivity(intent)
+        navigate(getDeeplink(Destinations.POEM))
     }
 
 }

@@ -46,10 +46,10 @@ android {
 
 dependencies {
 
-    implementation(project(BuildModules.Commons.ui))
-    implementation(project(BuildModules.Commons.core))
-    implementation(project(BuildModules.Commons.data))
-    implementation(project(BuildModules.Commons.navigation))
+    implementation(project(Modules.Commons.ui))
+    implementation(project(Modules.Commons.core))
+    implementation(project(Modules.Commons.data))
+    implementation(project(Modules.Commons.navigation))
 
     implementation(Dependencies.Libraries.core)
     implementation(Dependencies.Libraries.kotlin)
@@ -67,6 +67,7 @@ dependencies {
     implementation(Dependencies.Libraries.lifecycle)
     implementation(Dependencies.Libraries.liveData)
     implementation(Dependencies.Libraries.fragment)
+    implementation(Dependencies.Libraries.paging)
     implementation(Dependencies.Libraries.hilt)
 
     implementation(Dependencies.Libraries.circularImage)

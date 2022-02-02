@@ -16,5 +16,6 @@ object Destinations {
     val AUTH = R.string.auth
     val LANDING = R.string.landing
     val PUBLISH = R.string.publish
+    val SETTINGS = R.string.settings
 
 }

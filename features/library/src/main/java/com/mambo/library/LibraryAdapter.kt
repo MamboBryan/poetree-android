@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
 import com.mambo.core.OnPoemClickListener
 import com.mambo.data.models.Poem
 import com.mambo.data.utils.POEM_COMPARATOR
@@ -17,11 +16,6 @@ class LibraryAdapter @Inject constructor() :
     PagingDataAdapter<Poem, LibraryAdapter.PoemViewHolder>(POEM_COMPARATOR) {
 
     private lateinit var onPoemClickListener: OnPoemClickListener
-    private var isPublic = false
-
-    fun isPublic(isPublic: Boolean) {
-        this.isPublic = isPublic
-    }
 
     fun setListener(listener: OnPoemClickListener) {
         onPoemClickListener = listener
@@ -54,9 +48,7 @@ class LibraryAdapter @Inject constructor() :
                 tvPublishedTitle.text = poem.title
                 tvPublishedDuration.text = duration
 
-                ivPublishedIcon.load(if (isPublic) R.drawable.ic_baseline_public_24 else R.drawable.ic_baseline_edit_note_24)
-
-                val color = poem.topic?.color ?: if (isPublic) "#e7c6ff" else "#c8b6ff"
+                val color = poem.topic?.color ?: "#FDC29B"
                 layoutPoemLibrary.setBackgroundColor(Color.parseColor(color))
 
             }
