@@ -1,6 +1,10 @@
 package com.mambobryan.features.profile
 
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -25,6 +29,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlin.math.abs
 
+
 @AndroidEntryPoint
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
@@ -39,8 +44,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         lifecycleScope.launchWhenStarted {
             viewModel.events.collect { event ->
                 when (event) {
-                    ProfileViewModel.ProfileEvent.NavigateToPrivacyPolicy -> navigateToPrivacyPolicy()
-                    ProfileViewModel.ProfileEvent.NavigateToTermsAndConditions -> navigateToTermsAndConditions()
+                    ProfileViewModel.ProfileEvent.NavigateToPrivacyPolicy -> openRepoViaLink()
+                    ProfileViewModel.ProfileEvent.NavigateToTermsAndConditions -> openRepoViaLink()
                     ProfileViewModel.ProfileEvent.NavigateToUpdateAccount -> navigateToUpdateAccount()
                     ProfileViewModel.ProfileEvent.NavigateToUpdatePassword -> navigateToUpdatePassword()
                     ProfileViewModel.ProfileEvent.NavigateToLanding -> navigateToLanding()
@@ -89,6 +94,16 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             tvArtistReads.text = prettyCount(2000000)
             tvArtistBookmarks.text = prettyCount(20000)
             tvArtistLikes.text = prettyCount(200000)
+        }
+
+        try {
+            val info =
+                requireActivity().packageManager?.getPackageInfo(requireActivity().packageName, 0)
+            val versionName = info?.versionName
+            tvSettingsVersion.text = "Poetree for Android v$versionName"
+
+        } catch (e: PackageManager.NameNotFoundException) {
+            Log.e("Settings", "setupUserView: ${e.localizedMessage}")
         }
     }
 
@@ -194,7 +209,11 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         navigate(getDeeplink(Destinations.LANDING), getNavOptionsPopUpToCurrent())
     }
 
-    private fun navigateToPrivacyPolicy() {}
+    private fun openRepoViaLink() {
+        val url = "https://github.com/MamboBryan/poetree"
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(url)
+        startActivity(intent)
+    }
 
-    private fun navigateToTermsAndConditions() {}
 }
