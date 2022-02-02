@@ -99,12 +99,14 @@ class MainViewModel @Inject constructor(
         libraryQuery.value = query
     }
 
+    fun setupDailyInteractionReminder() = updateUi(MainEvent.SetupDailyInteractionReminder)
+
     private fun updateUi(event: MainEvent) = viewModelScope.launch {
         _eventChannel.send(event)
     }
 
     sealed class MainEvent {
-        data class UpdateDarkMode(val mode: Int) : MainEvent()
+        object SetupDailyInteractionReminder : MainEvent()
     }
 
 }
