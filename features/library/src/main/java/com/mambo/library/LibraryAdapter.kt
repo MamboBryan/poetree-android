@@ -16,11 +16,6 @@ class LibraryAdapter @Inject constructor() :
     PagingDataAdapter<Poem, LibraryAdapter.PoemViewHolder>(POEM_COMPARATOR) {
 
     private lateinit var onPoemClickListener: OnPoemClickListener
-    private var isPublic = false
-
-    fun isPublic(isPublic: Boolean) {
-        this.isPublic = isPublic
-    }
 
     fun setListener(listener: OnPoemClickListener) {
         onPoemClickListener = listener
