@@ -56,6 +56,13 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             }
         }
 
+        lifecycleScope.launchWhenStarted {
+            viewModel.darkModeFlow.collect {
+                AppCompatDelegate.setDefaultNightMode(it)
+                (requireActivity() as AppCompatActivity).delegate.applyDayNight()
+            }
+        }
+
     }
 
     private fun initViews() = binding.apply {

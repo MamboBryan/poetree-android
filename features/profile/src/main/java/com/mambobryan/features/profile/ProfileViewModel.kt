@@ -24,6 +24,7 @@ class ProfileViewModel @Inject constructor(
     private val _eventChannel = Channel<ProfileEvent>()
     val events = _eventChannel.receiveAsFlow()
 
+    val darkModeFlow = preferences.darkMode
     var mode: Int
 
     fun onAppThemeClicked() = updateUi(ProfileEvent.ShowDarkModeDialog)

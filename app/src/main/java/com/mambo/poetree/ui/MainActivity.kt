@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
@@ -17,14 +15,13 @@ import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
 import com.mambobryan.navigation.extensions.getNavOptionsPopUpTo
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
-    private val viewModel by viewModels<MainViewModel>()
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,10 +42,6 @@ class MainActivity : AppCompatActivity() {
         setUpDestinationListener()
 
         initNavigation()
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.darkMode.collect { updateDarkMode(it) }
-        }
 
     }
 
@@ -95,7 +88,6 @@ class MainActivity : AppCompatActivity() {
         when (getDestinationId()) {
 
             R.id.feedFragment, R.id.landingFragment, R.id.setupFragment -> {
-
                 finish()
             }
 
@@ -104,13 +96,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-
-    }
-
-    private fun updateDarkMode(mode: Int) {
-
-        AppCompatDelegate.setDefaultNightMode(mode)
-        delegate.applyDayNight()
 
     }
 

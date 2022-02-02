@@ -36,12 +36,9 @@ class MainViewModel @Inject constructor(
     private val _eventChannel = Channel<MainEvent>()
     val events = _eventChannel.receiveAsFlow()
 
-    val darkMode = preferences.darkMode
-
     var isOnBoarded: Boolean
     var isLoggedIn: Boolean
     var isUserSetup: Boolean
-    var backIsPressed = false
 
     val feeds = poemRepository.getLocalPoems("").cachedIn(viewModelScope)
 
@@ -62,7 +59,7 @@ class MainViewModel @Inject constructor(
     private val _poem = state.getLiveData<Poem?>("poem", null)
     val poem: LiveData<Poem?> get() = _poem
 
-    private val _topic = state.getLiveData<Topic?>("topic")
+    private val _topic = state.getLiveData<Topic?>("topic", null)
     val topic: LiveData<Topic?> get() = _topic
 
     private val _user = state.getLiveData<User?>("user", null)
