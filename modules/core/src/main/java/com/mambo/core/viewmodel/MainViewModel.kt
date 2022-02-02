@@ -39,7 +39,9 @@ class MainViewModel @Inject constructor(
     var isUserSetup: Boolean
 
     val darkModeFlow = preferences.darkMode
+
     val feeds = poemRepository.getLocalPoems("").cachedIn(viewModelScope)
+    val myPublicPoems = poemRepository.getLocalPoems("").cachedIn(viewModelScope)
 
     private val searchTopic = MutableStateFlow<Topic?>(null)
     private val searchQuery = MutableStateFlow("")

@@ -67,6 +67,7 @@ dependencies {
     implementation(Dependencies.Libraries.lifecycle)
     implementation(Dependencies.Libraries.liveData)
     implementation(Dependencies.Libraries.fragment)
+    implementation(Dependencies.Libraries.paging)
     implementation(Dependencies.Libraries.hilt)
 
     implementation(Dependencies.Libraries.circularImage)
