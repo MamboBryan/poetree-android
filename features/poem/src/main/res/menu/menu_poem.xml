@@ -10,10 +10,6 @@
         android:title="Publish" />
 
     <item
-        android:id="@+id/action_poem_unpublish"
-        android:title="Unpublish" />
-
-    <item
         android:id="@+id/action_poem_delete"
         android:title="Delete" />
 </menu>

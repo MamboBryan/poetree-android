@@ -2,6 +2,7 @@ package com.mambobryan.features.comments
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -88,13 +89,23 @@ class CommentAdapter :
 
         private val prettyTime = PrettyTime()
 
+        init {
+            binding.apply {
+                ivCommentUser.setOnClickListener { }
+                ivCommentActions.setOnClickListener { }
+                ivCommentLike.setOnClickListener { }
+            }
+        }
+
         fun bind(comment: String) {
             binding.apply {
 
-                tvCommentUser.text = names[adapterPosition]
-                tvCommentDays.text = times[adapterPosition]
-                tvCommentContent.text = titles[adapterPosition]
-                ivUser.load(images[adapterPosition])
+                tvCommentUser.text = names[absoluteAdapterPosition]
+                tvCommentDays.text = times[absoluteAdapterPosition]
+                tvCommentContent.text = titles[absoluteAdapterPosition]
+                ivCommentUser.load(images[absoluteAdapterPosition])
+
+                ivCommentActions.isVisible = absoluteAdapterPosition % 2 == 0
 
             }
         }

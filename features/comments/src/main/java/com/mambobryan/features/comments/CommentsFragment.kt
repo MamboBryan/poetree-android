@@ -2,9 +2,12 @@ package com.mambobryan.features.comments
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.core.view.isVisible
+import com.mambo.core.utils.prettyCount
 import com.mambobryan.features.comments.databinding.FragmentCommentsBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,10 +40,51 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
 
         }
 
+        viewModel.content.observe(viewLifecycleOwner) {
+            binding.layoutCommentsEdit.apply {
+
+                ivComment.isEnabled = !it.isNullOrEmpty()
+
+                if (it.isNullOrEmpty())
+                    ivComment.setColorFilter(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.primary_100
+                        ), android.graphics.PorterDuff.Mode.SRC_IN
+                    )
+                else
+                    ivComment.setColorFilter(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.colorPrimary
+                        ), android.graphics.PorterDuff.Mode.SRC_IN
+                    )
+
+            }
+        }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.layoutCommentsEdit.apply {
+                edtComment.isEnabled = isLoading.not()
+                ivComment.isVisible = isLoading.not()
+                progressComment.isVisible = isLoading
+            }
+        }
+
     }
 
     private fun initViews() = binding.apply {
+        val count = 200000
+        tvCommentsTitle.text = "The Minority View Of Self Image"
+        tvCommentsCount.text = "Comments (${prettyCount(count)})"
+
         layoutComments.recyclerView.adapter = adapter
+
+        layoutCommentsEdit.apply {
+//            layoutCommentRoot.isVisible = viewModel.isOnline
+            edtComment.doAfterTextChanged { viewModel.onContentUpdated(it.toString()) }
+            ivComment.setOnClickListener { viewModel.onCommentSendClicked() }
+        }
     }
 
 }

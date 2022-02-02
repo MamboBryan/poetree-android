@@ -35,6 +35,7 @@
         <entry key="features/account/src/main/res/layout/fragment_account.xml" value="0.3489583333333333" />
         <entry key="features/artist/src/main/res/layout/fragment_artist.xml" value="0.25" />
         <entry key="features/artist/src/main/res/layout/item_poem_artist.xml" value="0.3489583333333333" />
+        <entry key="features/artist/src/main/res/layout/layout_artist_header.xml" value="0.25" />
         <entry key="features/auth/src/main/res/layout/fragment_auth.xml" value="0.3416666666666667" />
         <entry key="features/auth/src/main/res/layout/fragment_sign_in.xml" value="0.3489583333333333" />
         <entry key="features/auth/src/main/res/layout/fragment_sign_up.xml" value="0.33229166666666665" />
@@ -43,7 +44,7 @@
         <entry key="features/bookmarks/src/main/res/layout/item_poem_bookmark.xml" value="0.2073170731707317" />
         <entry key="features/bookmarks/src/main/res/menu/menu_bookmarks.xml" value="0.3489583333333333" />
         <entry key="features/comments/src/main/res/layout/fragment_comments.xml" value="0.33229166666666665" />
-        <entry key="features/comments/src/main/res/layout/item_comment.xml" value="0.3489583333333333" />
+        <entry key="features/comments/src/main/res/layout/item_comment.xml" value="0.33" />
         <entry key="features/compose/src/main/res/layout/fragment_compose.xml" value="0.3489583333333333" />
         <entry key="features/compose/src/main/res/layout/fragment_edit.xml" value="0.3489583333333333" />
         <entry key="features/compose/src/main/res/layout/fragment_poem_preview.xml" value="0.3489583333333333" />
@@ -69,7 +70,7 @@
         <entry key="features/onboarding/src/main/res/layout/fragment_writer.xml" value="0.3489583333333333" />
         <entry key="features/poem/src/main/res/layout/fragment_poem.xml" value="0.33" />
         <entry key="features/poem/src/main/res/menu/menu_poem.xml" value="0.3489583333333333" />
-        <entry key="features/profile/src/main/res/layout/fragment_profile.xml" value="0.33" />
+        <entry key="features/profile/src/main/res/layout/fragment_profile.xml" value="0.25" />
         <entry key="features/publish/src/main/res/drawable/selected_item_indicator.xml" value="0.31203703703703706" />
         <entry key="features/publish/src/main/res/layout/fragment_publish.xml" value="0.33" />
         <entry key="features/publish/src/main/res/layout/item_topic_choice.xml" value="0.33" />
@@ -104,6 +105,7 @@
         <entry key="modules/ui/src/main/res/layout/item_poem.xml" value="0.3484375" />
         <entry key="modules/ui/src/main/res/layout/item_poem_detailed.xml" value="0.3489583333333333" />
         <entry key="modules/ui/src/main/res/layout/item_topic.xml" value="0.32320441988950277" />
+        <entry key="modules/ui/src/main/res/layout/layout_artist_details.xml" value="0.25" />
         <entry key="modules/ui/src/main/res/layout/layout_comment.xml" value="0.3484375" />
         <entry key="modules/ui/src/main/res/layout/layout_complete_recycler_horizontal.xml" value="0.2694746376811594" />
         <entry key="modules/ui/src/main/res/layout/layout_complete_recycler_refresh.xml" value="0.2966485507246377" />

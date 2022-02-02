@@ -8,13 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
 import com.irozon.alertview.AlertActionStyle
 import com.irozon.alertview.AlertStyle
 import com.irozon.alertview.AlertTheme
 import com.irozon.alertview.AlertView
 import com.irozon.alertview.objects.AlertAction
 import com.mambo.core.utils.LoadingDialog
+import com.mambo.core.utils.prettyCount
 import com.mambobryan.features.profile.databinding.FragmentProfileBinding
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
@@ -23,6 +23,7 @@ import com.mambobryan.navigation.extensions.navigate
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlin.math.abs
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
@@ -58,16 +59,77 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     }
 
     private fun initViews() = binding.apply {
-        NavigationUI.setupWithNavController(toolbar, findNavController())
-        toolbar.title = "Profile"
 
-        ivAppTheme.setOnClickListener { viewModel.onAppThemeClicked() }
+        setupUserView()
+        setUpScrollView()
+
+        layoutProfileHeader.ivHeaderDarkMode.setOnClickListener { viewModel.onAppThemeClicked() }
+        layoutProfileHeader.ivHeaderBack.setOnClickListener { findNavController().popBackStack() }
         tvProfileEdit.setOnClickListener { viewModel.onUpdateAccountClicked() }
         tvProfilePassword.setOnClickListener { viewModel.onUpdatePasswordClicked() }
         tvProfileTerms.setOnClickListener { viewModel.onTermsAndConditionsClicked() }
         tvProfilePrivacy.setOnClickListener { viewModel.onPrivacyPolicyClicked() }
         btnProfileLogOut.setOnClickListener { viewModel.onLogOutClicked() }
 
+    }
+
+    private fun setupUserView() = binding.apply {
+//        val user = sharedViewModel.user.value
+        layoutProfileHeader.tvHeaderTitle.text = "MamboBryan"
+        layoutProfileDetails.apply {
+            tvArtistName.text = "MamboBryan"
+//            tvArtistBio.text =""
+            tvArtistReads.text = prettyCount(2000000)
+            tvArtistBookmarks.text = prettyCount(20000)
+            tvArtistLikes.text = prettyCount(200000)
+        }
+    }
+
+    private fun setUpScrollView() = binding.apply {
+        layoutProfileHeader.ivHeaderSplit.visibility = View.GONE
+        layoutProfileHeader.tvHeaderTitle.translationY = -1000f
+        layoutScrollRoot.setOnScrollListener { ty, _ ->
+
+            var titleMaxScrollHeight = 0f
+            var headerMaxHeight = 0f
+            var avatarTop = 0f
+            var maxScrollHeight = 0f
+
+            var translationY = ty
+            translationY = -translationY
+
+            val tvTitle = layoutProfileHeader.tvHeaderTitle
+            val tvName = layoutProfileDetails.tvArtistName
+            val ivArtistImage = layoutProfileDetails.ivArtistMage
+            val ivSplit = layoutProfileHeader.ivHeaderSplit
+
+            if (titleMaxScrollHeight == 0f) {
+                titleMaxScrollHeight = ((tvTitle.parent as View).bottom - tvTitle.top).toFloat()
+                maxScrollHeight = headerMaxHeight + titleMaxScrollHeight
+            }
+
+            if (headerMaxHeight == 0f) {
+                headerMaxHeight = tvName.top.toFloat()
+                maxScrollHeight = headerMaxHeight + titleMaxScrollHeight
+            }
+
+            if (avatarTop == 0f) {
+                avatarTop = ivArtistImage.top.toFloat()
+            }
+
+            var alpha = 0
+            val baseAlpha = 60
+            if (0 > avatarTop + translationY) {
+                alpha =
+                    255.coerceAtMost((abs(avatarTop + translationY) * (255 - baseAlpha) / (headerMaxHeight - avatarTop) + baseAlpha).toInt())
+                ivSplit.visibility = View.VISIBLE
+            } else {
+                ivSplit.visibility = View.GONE
+            }
+            ivSplit.background.alpha = alpha
+            tvTitle.translationY =
+                (0.coerceAtLeast(maxScrollHeight.toInt() + translationY)).toFloat()
+        }
     }
 
     private fun showLogoutDialog() {
