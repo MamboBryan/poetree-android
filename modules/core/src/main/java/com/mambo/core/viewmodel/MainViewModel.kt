@@ -14,10 +14,7 @@ import com.mambo.data.models.User
 import com.mambo.data.preferences.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -36,15 +33,18 @@ class MainViewModel @Inject constructor(
     private val _eventChannel = Channel<MainEvent>()
     val events = _eventChannel.receiveAsFlow()
 
-    var darkMode : Int
+    var darkMode: Int
     var isOnBoarded: Boolean
     var isLoggedIn: Boolean
     var isUserSetup: Boolean
 
     val feeds = poemRepository.getLocalPoems("").cachedIn(viewModelScope)
 
+    private val searchTopic = MutableStateFlow<Topic?>(null)
     private val searchQuery = MutableStateFlow("")
-    private val _searches = searchQuery.flatMapLatest { poemRepository.searchPoems(it) }
+    private val _searches = combine(searchTopic, searchQuery) { topic, query ->
+        Triple(topic, query, null)
+    }.flatMapLatest { (topic, query, _) -> poemRepository.searchPoems(topic, query) }
     val searches = _searches.cachedIn(viewModelScope)
 
     private val bookmarksQuery = MutableStateFlow("")
@@ -83,7 +83,7 @@ class MainViewModel @Inject constructor(
         _topic.value = topic
     }
 
-    fun setUser(user: User?){
+    fun setUser(user: User?) {
         _user.value = user
     }
 
