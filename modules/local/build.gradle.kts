@@ -42,7 +42,7 @@ android {
 
 dependencies {
 
-    implementation(project(BuildModules.Commons.data))
+    implementation(project(Modules.Commons.data))
 
     implementation(Dependencies.Libraries.core)
     implementation(Dependencies.Libraries.kotlin)

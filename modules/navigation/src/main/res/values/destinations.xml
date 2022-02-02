@@ -15,5 +15,6 @@
     <string name="auth">app://com.mambobryan.poetree/account/auth</string>
     <string name="landing">app://com.mambobryan.poetree/landing</string>
     <string name="publish">app://com.mambobryan.poetree/publish</string>
+    <string name="settings">app://com.mambobryan.poetree/settings</string>
 
 </resources>

@@ -1,7 +1,3 @@
-
-import org.jetbrains.kotlin.konan.properties.Properties
-import java.io.FileInputStream
-
 plugins {
     id(Plugins.library)
     id(Plugins.android)
@@ -9,7 +5,9 @@ plugins {
     id(Plugins.parcelize)
     id(Plugins.hilt)
     id(Plugins.navigation)
+    id("org.jetbrains.kotlin.android")
 }
+
 android {
     compileSdkVersion(Configs.compileSdkVersion)
 
@@ -32,7 +30,7 @@ android {
         }
     }
 
-    buildFeatures {
+    buildFeatures{
         viewBinding = true
     }
 
@@ -44,22 +42,6 @@ android {
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions {
             jvmTarget = "1.8"
-        }
-    }
-}
-
-val props = Properties().apply {
-    load(FileInputStream(File(rootProject.rootDir, "github.properties")))
-}
-val githubUserId: String? = props.getProperty("gpr.user")
-val githubApiKey:String? = props.getProperty("gpr.key")
-
-repositories {
-    maven(url = uri("https://maven.pkg.github.com/Cuberto/liquid-swipe-android")) {
-        name = "GitHubPackages"
-        credentials {
-            username = githubUserId ?: System.getenv("GPR_USER")
-            password = githubApiKey ?: System.getenv("GPR_API_KEY")
         }
     }
 }
@@ -78,23 +60,20 @@ dependencies {
     implementation(Dependencies.Libraries.constraintLayout)
     implementation(Dependencies.Libraries.legacySupport)
 
-    implementation(Dependencies.Libraries.viewModel)
-    implementation(Dependencies.Libraries.liveData)
-    implementation(Dependencies.Libraries.lifecycle)
     implementation(Dependencies.Libraries.lifecycleExtensions)
-    implementation(Dependencies.Libraries.savedState)
-    implementation(Dependencies.Libraries.fragment)
     implementation(Dependencies.Libraries.navigationFragment)
     implementation(Dependencies.Libraries.navigationUi)
+    implementation(Dependencies.Libraries.savedState)
     implementation(Dependencies.Libraries.coroutines)
+    implementation(Dependencies.Libraries.viewModel)
+    implementation(Dependencies.Libraries.lifecycle)
+    implementation(Dependencies.Libraries.liveData)
+    implementation(Dependencies.Libraries.fragment)
     implementation(Dependencies.Libraries.hilt)
 
     implementation(Dependencies.Libraries.delegate)
-    implementation(Dependencies.Libraries.circularImage)
-    implementation(Dependencies.Libraries.liquidSwipe)
-    implementation(Dependencies.Libraries.prettyTime)
-    implementation(Dependencies.Libraries.coil)
-    implementation(Dependencies.Libraries.switch)
+    implementation(Dependencies.Libraries.timber)
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
 
     kapt(Dependencies.Libraries.hiltCompiler)
 

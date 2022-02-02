@@ -1,4 +1,4 @@
-object BuildModules {
+object Modules {
 
     object Features {
         const val auth = ":features:auth"
@@ -19,6 +19,7 @@ object BuildModules {
         const val loading = ":features:loading"
         const val setup = ":features:setup"
         const val publish = ":features:publish"
+        const val settings = ":features:settings"
     }
 
     object Commons {
