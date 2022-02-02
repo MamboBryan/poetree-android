@@ -35,8 +35,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-
-        updateDarkModeTheme()
         setContentView(binding.root)
 
         val navHostFragment =
@@ -58,14 +56,18 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        lifecycleScope.launchWhenStarted {
+            viewModel.darkModeFlow.collect { updateDarkMode(it) }
+        }
+
         setUpDestinationListener()
 
         initNavigation()
 
     }
 
-    private fun updateDarkModeTheme() {
-        AppCompatDelegate.setDefaultNightMode(viewModel.darkMode)
+    private fun updateDarkMode(mode: Int) {
+        AppCompatDelegate.setDefaultNightMode(mode)
         delegate.applyDayNight()
     }
 
