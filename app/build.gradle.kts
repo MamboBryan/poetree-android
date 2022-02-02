@@ -103,6 +103,8 @@ dependencies {
     implementation(Dependencies.Libraries.richEditor)
     implementation(Dependencies.Libraries.prettyTime)
     implementation(Dependencies.Libraries.delegate)
+    implementation(Dependencies.Libraries.hiltWork)
+    implementation(Dependencies.Libraries.workManager)
     implementation(Dependencies.Libraries.switch)
     implementation(Dependencies.Libraries.circularImage)
 
@@ -111,11 +113,13 @@ dependencies {
     implementation(platform(Dependencies.Libraries.okHttpBOM))
     implementation(Dependencies.Libraries.okHttpLogging)
     implementation(Dependencies.Libraries.okHttp)
+    implementation(Dependencies.Libraries.androidXStartup)
 
     testImplementation(Dependencies.Libraries.junit)
 
     kapt(Dependencies.Libraries.hiltCompiler)
     kapt(Dependencies.Libraries.roomCompiler)
+    kapt(Dependencies.Libraries.hiltWorkCompiler)
 
 }
 

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
@@ -23,8 +24,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private val viewModel: MainViewModel by viewModels()
 
+    override fun onStart() {
+        super.onStart()
+
+        delegate.applyDayNight()
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        updateDarkModeTheme()
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -43,6 +53,11 @@ class MainActivity : AppCompatActivity() {
 
         initNavigation()
 
+    }
+
+    private fun updateDarkModeTheme() {
+        AppCompatDelegate.setDefaultNightMode(viewModel.darkMode)
+        delegate.applyDayNight()
     }
 
     private fun initNavigation() {

@@ -44,6 +44,10 @@ object Dependencies {
         val roomCompiler by lazy { "androidx.room:room-compiler:${Versions.room}" }
         val paging by lazy { "androidx.paging:paging-runtime:${Versions.paging}" }
         val recyclerviewSelection by lazy { "androidx.recyclerview:recyclerview-selection:${Versions.recyclerviewSelection}" }
+        val hiltWork by lazy { "androidx.hilt:hilt-work:${Versions.hiltWork}" }
+        val hiltWorkCompiler by lazy { "androidx.hilt:hilt-compiler:${Versions.hiltWork}" }
+        val workManager by lazy { "androidx.work:work-runtime-ktx:${Versions.workManager}" }
+        val androidXStartup by lazy { "androidx.startup:startup-runtime:${Versions.androidXStartup}" }
 
         val gson by lazy { "com.google.code.gson:gson:${Versions.gson}" }
         val coil by lazy { "io.coil-kt:coil:${Versions.coil}" }

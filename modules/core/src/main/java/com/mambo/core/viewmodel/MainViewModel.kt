@@ -36,6 +36,7 @@ class MainViewModel @Inject constructor(
     private val _eventChannel = Channel<MainEvent>()
     val events = _eventChannel.receiveAsFlow()
 
+    var darkMode : Int
     var isOnBoarded: Boolean
     var isLoggedIn: Boolean
     var isUserSetup: Boolean
@@ -67,6 +68,7 @@ class MainViewModel @Inject constructor(
 
     init {
         runBlocking {
+            darkMode = preferences.darkMode.first()
             isOnBoarded = preferences.isOnBoarded.first()
             isLoggedIn = preferences.isLoggedIn.first()
             isUserSetup = preferences.isUserSetup.first()
