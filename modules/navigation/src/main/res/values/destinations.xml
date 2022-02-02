@@ -9,7 +9,7 @@
     <string name="comments">app://com.mambobryan.poetree/comments</string>
     <string name="edit_account">app://com.mambobryan.poetree/account/edit</string>
     <string name="update_password">app://com.mambobryan.poetree/account/update_password</string>
-    <string name="on_boarding">app://com.mambobryan.poetree/account/update_password</string>
+    <string name="on_boarding">app://com.mambobryan.poetree/account/on_boarding</string>
     <string name="feed">app://com.mambobryan.poetree/feed</string>
     <string name="setup">app://com.mambobryan.poetree/account/setup</string>
     <string name="auth">app://com.mambobryan.poetree/account/auth</string>
