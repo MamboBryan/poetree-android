@@ -3,10 +3,12 @@ package com.mambobryan.features.auth
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.mambo.core.adapters.ViewPagerAdapter
 import com.mambo.core.utils.LoadingDialog
+import com.mambo.core.viewmodel.MainViewModel
 import com.mambobryan.features.auth.databinding.FragmentAuthBinding
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
@@ -22,6 +24,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
 
     private val binding by viewBinding(FragmentAuthBinding::bind)
     private val viewModel: AuthViewModel by viewModels()
+    private val sharedViewModel: MainViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,6 +54,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                             .setBackgroundColorRes(R.color.error)
                             .show()
                     }
+                    AuthEvent.SetupDailyNotificationReminder -> sharedViewModel.setupDailyInteractionReminder()
                 }
             }
         }
