@@ -33,6 +33,7 @@ class BookmarksFragment : Fragment(R.layout.fragment_bookmarks) {
 
     private val sharedViewModel: MainViewModel by activityViewModels()
     private val viewModel: BookmarksViewModel by viewModels()
+
     private val binding by viewBinding(FragmentBookmarksBinding::bind)
 
     @Inject

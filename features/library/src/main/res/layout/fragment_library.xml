@@ -18,21 +18,11 @@
             app:layout_scrollFlags="scroll|snap"
             app:menu="@menu/menu_library" />
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs_library"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_collapseMode="pin"
-            app:tabIndicatorColor="@color/nav_item_active"
-            app:tabMode="fixed"
-            app:tabSelectedTextColor="@color/nav_item_active"
-            app:tabTextColor="@color/nav_item_inactive">
-
-        </com.google.android.material.tabs.TabLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPager_library"
+    <include
+        android:id="@+id/layout_library_state"
+        layout="@layout/layout_complete_recycler_vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
