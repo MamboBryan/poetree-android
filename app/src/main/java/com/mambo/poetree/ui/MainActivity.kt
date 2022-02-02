@@ -1,10 +1,7 @@
 package com.mambo.poetree.ui
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -99,18 +96,7 @@ class MainActivity : AppCompatActivity() {
 
             R.id.feedFragment, R.id.landingFragment, R.id.setupFragment -> {
 
-                if (viewModel.backIsPressed) {
-                    finish()
-                } else {
-                    viewModel.backIsPressed = true
-
-                    Toast.makeText(this, "Press \"BACK\" again to exit", Toast.LENGTH_SHORT)
-                        .show()
-
-                    Handler(Looper.getMainLooper())
-                        .postDelayed({ viewModel.backIsPressed = false }, 2000)
-                }
-
+                finish()
             }
 
             else -> {
