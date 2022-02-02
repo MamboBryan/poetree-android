@@ -26,6 +26,7 @@ class AuthViewModel @Inject constructor(
             preferences.signedIn("")
             hideLoading()
             showSuccess("Logged In Successfully")
+            setupDailyInteractionReminder()
             updateUi(AuthEvent.NavigateToFeeds)
         } catch (e: Exception) {
             hideLoading()
@@ -41,6 +42,7 @@ class AuthViewModel @Inject constructor(
             preferences.signedUp("")
             hideLoading()
             showSuccess("Signed Up Successfully")
+            setupDailyInteractionReminder()
             updateUi(AuthEvent.NavigateToSetup)
         } catch (e: Exception) {
             hideLoading()
@@ -61,5 +63,7 @@ class AuthViewModel @Inject constructor(
     private fun showLoading() = updateUi(AuthEvent.ShowLoadingDialog)
 
     private fun hideLoading() = updateUi(AuthEvent.HideLoadingDialog)
+
+    private fun setupDailyInteractionReminder() = updateUi(AuthEvent.SetupDailyNotificationReminder)
 
 }

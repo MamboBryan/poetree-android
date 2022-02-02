@@ -58,8 +58,10 @@ dependencies {
     implementation(Dependencies.Libraries.materialDesign)
     implementation(Dependencies.Libraries.constraintLayout)
 
+    implementation(Dependencies.Libraries.workManager)
     implementation(Dependencies.Libraries.coroutines)
     implementation(Dependencies.Libraries.datastore)
+    implementation(Dependencies.Libraries.hiltWork)
     implementation(Dependencies.Libraries.paging)
     implementation(Dependencies.Libraries.hilt)
 
@@ -72,6 +74,7 @@ dependencies {
     implementation(Dependencies.Libraries.prettyTime)
 
     kapt(Dependencies.Libraries.hiltCompiler)
+    kapt(Dependencies.Libraries.hiltWorkCompiler)
 }
 
 kapt {

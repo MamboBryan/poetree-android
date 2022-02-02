@@ -14,10 +14,7 @@ import com.mambo.data.models.User
 import com.mambo.data.preferences.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -36,17 +33,19 @@ class MainViewModel @Inject constructor(
     private val _eventChannel = Channel<MainEvent>()
     val events = _eventChannel.receiveAsFlow()
 
-    val darkMode = preferences.darkMode
-
+    var darkMode: Int
     var isOnBoarded: Boolean
     var isLoggedIn: Boolean
     var isUserSetup: Boolean
-    var backIsPressed = false
 
+    val darkModeFlow = preferences.darkMode
     val feeds = poemRepository.getLocalPoems("").cachedIn(viewModelScope)
 
+    private val searchTopic = MutableStateFlow<Topic?>(null)
     private val searchQuery = MutableStateFlow("")
-    private val _searches = searchQuery.flatMapLatest { poemRepository.searchPoems(it) }
+    private val _searches = combine(searchTopic, searchQuery) { topic, query ->
+        Triple(topic, query, null)
+    }.flatMapLatest { (topic, query, _) -> poemRepository.searchPoems(topic, query) }
     val searches = _searches.cachedIn(viewModelScope)
 
     private val bookmarksQuery = MutableStateFlow("")
@@ -62,7 +61,7 @@ class MainViewModel @Inject constructor(
     private val _poem = state.getLiveData<Poem?>("poem", null)
     val poem: LiveData<Poem?> get() = _poem
 
-    private val _topic = state.getLiveData<Topic?>("topic")
+    private val _topic = state.getLiveData<Topic?>("topic", null)
     val topic: LiveData<Topic?> get() = _topic
 
     private val _user = state.getLiveData<User?>("user", null)
@@ -70,6 +69,7 @@ class MainViewModel @Inject constructor(
 
     init {
         runBlocking {
+            darkMode = preferences.darkMode.first()
             isOnBoarded = preferences.isOnBoarded.first()
             isLoggedIn = preferences.isLoggedIn.first()
             isUserSetup = preferences.isUserSetup.first()
@@ -84,7 +84,7 @@ class MainViewModel @Inject constructor(
         _topic.value = topic
     }
 
-    fun setUser(user: User?){
+    fun setUser(user: User?) {
         _user.value = user
     }
 
@@ -100,12 +100,14 @@ class MainViewModel @Inject constructor(
         libraryQuery.value = query
     }
 
+    fun setupDailyInteractionReminder() = updateUi(MainEvent.SetupDailyInteractionReminder)
+
     private fun updateUi(event: MainEvent) = viewModelScope.launch {
         _eventChannel.send(event)
     }
 
     sealed class MainEvent {
-        data class UpdateDarkMode(val mode: Int) : MainEvent()
+        object SetupDailyInteractionReminder : MainEvent()
     }
 
 }

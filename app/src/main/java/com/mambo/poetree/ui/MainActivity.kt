@@ -1,10 +1,7 @@
 package com.mambo.poetree.ui
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -13,7 +10,10 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.mambo.core.viewmodel.MainViewModel
+import com.mambo.core.work.InteractReminderWork
 import com.mambo.poetree.R
 import com.mambo.poetree.databinding.ActivityMainBinding
 import com.mambobryan.navigation.Destinations
@@ -21,16 +21,19 @@ import com.mambobryan.navigation.extensions.getDeeplink
 import com.mambobryan.navigation.extensions.getNavOptionsPopUpTo
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
-    private val viewModel by viewModels<MainViewModel>()
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -45,14 +48,27 @@ class MainActivity : AppCompatActivity() {
 //            binding.layoutConnection.constraintLayoutNetworkStatus.isVisible = !isNetworkAvailable
 //        }
 
+        lifecycleScope.launchWhenStarted {
+            viewModel.events.collect { event ->
+                when (event) {
+                    MainViewModel.MainEvent.SetupDailyInteractionReminder -> setupDailyInteractionReminder()
+                }
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.darkModeFlow.collect { updateDarkMode(it) }
+        }
+
         setUpDestinationListener()
 
         initNavigation()
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.darkMode.collect { updateDarkMode(it) }
-        }
+    }
 
+    private fun updateDarkMode(mode: Int) {
+        AppCompatDelegate.setDefaultNightMode(mode)
+        delegate.applyDayNight()
     }
 
     private fun initNavigation() {
@@ -72,7 +88,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        navigateToHome()
+        navigateToFeeds()
 
     }
 
@@ -80,7 +96,7 @@ class MainActivity : AppCompatActivity() {
         navController.navigate(getDeeplink(Destinations.ON_BOARDING), getLoadingNavOptions())
     }
 
-    private fun navigateToHome() {
+    private fun navigateToFeeds() {
         navController.navigate(getDeeplink(Destinations.FEED), getLoadingNavOptions())
     }
 
@@ -98,19 +114,7 @@ class MainActivity : AppCompatActivity() {
         when (getDestinationId()) {
 
             R.id.feedFragment, R.id.landingFragment, R.id.setupFragment -> {
-
-                if (viewModel.backIsPressed) {
-                    finish()
-                } else {
-                    viewModel.backIsPressed = true
-
-                    Toast.makeText(this, "Press \"BACK\" again to exit", Toast.LENGTH_SHORT)
-                        .show()
-
-                    Handler(Looper.getMainLooper())
-                        .postDelayed({ viewModel.backIsPressed = false }, 2000)
-                }
-
+                finish()
             }
 
             else -> {
@@ -118,13 +122,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-
-    }
-
-    private fun updateDarkMode(mode: Int) {
-
-        AppCompatDelegate.setDefaultNightMode(mode)
-        delegate.applyDayNight()
 
     }
 
@@ -161,5 +158,26 @@ class MainActivity : AppCompatActivity() {
         binding.apply {
             navBottomMain.visibility = View.VISIBLE
         }
+    }
+
+    private fun setupDailyInteractionReminder() {
+
+        val then = Calendar.getInstance()
+        val now = Calendar.getInstance()
+
+        then.set(Calendar.HOUR_OF_DAY, 17)         // set hour
+        then.set(Calendar.MINUTE, 15)             // set minute
+        then.set(Calendar.SECOND, 0)             // set seconds
+
+        val time = then.timeInMillis - now.timeInMillis
+
+        val work =
+            PeriodicWorkRequestBuilder<InteractReminderWork>(24, TimeUnit.HOURS)
+                .setInitialDelay(time, TimeUnit.MILLISECONDS)
+                .addTag(InteractReminderWork.TAG)
+                .build()
+
+        WorkManager.getInstance(this).enqueue(work)
+
     }
 }

@@ -13,4 +13,5 @@ sealed class AuthEvent {
     object NavigateToSetup : AuthEvent()
     object NavigateToFeeds : AuthEvent()
 
+    object SetupDailyNotificationReminder : AuthEvent()
 }

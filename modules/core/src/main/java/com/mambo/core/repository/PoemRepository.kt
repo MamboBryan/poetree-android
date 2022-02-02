@@ -3,6 +3,7 @@ package com.mambo.core.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.mambo.data.models.Poem
+import com.mambo.data.models.Topic
 import com.mambo.local.PoemsDao
 import com.mambo.remote.service.ApiService
 import kotlinx.coroutines.flow.Flow
@@ -21,6 +22,13 @@ class PoemRepository @Inject constructor() {
     fun getLocalPoems(query: String) = Pager(PagingConfig(10)) { poemsDao.getLocalPoems() }.flow
 
     fun searchPoems(query: String) = Pager(PagingConfig(10)) { poemsDao.getPoems(query) }.flow
+
+    fun searchPoems(topic: Topic?, query: String) = Pager(PagingConfig(10)) {
+        if (topic != null)
+            poemsDao.getPoems(query)
+        else
+            poemsDao.getPoems(query)
+    }.flow
 
     fun getPoems() = poemsDao.getLocalPoems()
 

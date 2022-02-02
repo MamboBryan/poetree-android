@@ -43,10 +43,13 @@
                 android:id="@+id/tv_profile_edit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/ic_baseline_arrow_forward_ios_10"
-                android:padding="16dp"
-                android:text="Edit/Update"
                 android:background="?attr/selectableItemBackground"
+                android:drawableEnd="@drawable/ic_baseline_arrow_forward_ios_10"
+                android:paddingStart="16dp"
+                android:paddingTop="24dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="24dp"
+                android:text="Edit/Update"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -56,10 +59,13 @@
                 android:id="@+id/tv_profile_password"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/ic_baseline_arrow_forward_ios_10"
-                android:padding="16dp"
-                android:text="Update Password"
                 android:background="?attr/selectableItemBackground"
+                android:drawableEnd="@drawable/ic_baseline_arrow_forward_ios_10"
+                android:paddingStart="16dp"
+                android:paddingTop="24dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="24dp"
+                android:text="Update Password"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -69,11 +75,14 @@
                 android:id="@+id/tv_profile_privacy"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
                 android:drawableEnd="@drawable/ic_baseline_arrow_forward_ios_10"
                 android:drawablePadding="24dp"
-                android:padding="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="24dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="24dp"
                 android:text="Privacy Policy"
-                android:background="?attr/selectableItemBackground"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -83,11 +92,14 @@
                 android:id="@+id/tv_profile_terms"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
                 android:drawableEnd="@drawable/ic_baseline_arrow_forward_ios_10"
                 android:drawablePadding="24dp"
-                android:padding="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="24dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="24dp"
                 android:text="Terms of Use"
-                android:background="?attr/selectableItemBackground"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -106,6 +118,20 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_profile_password" />
 
             <Button
+                android:id="@+id/btn_profile_delete"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_margin="16dp"
+                android:text="Delete Account"
+                android:textColor="?attr/colorError"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_profile_terms"
+                app:strokeColor="?attr/colorError" />
+
+
+            <Button
                 android:id="@+id/btn_profile_log_out"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
@@ -115,7 +141,17 @@
                 android:textColor="?attr/colorOnError"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_profile_terms" />
+                app:layout_constraintTop_toBottomOf="@+id/btn_profile_delete" />
+
+            <TextView
+                android:id="@+id/tv_settings_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Version 1.0.0-alpha"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_profile_log_out" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
