@@ -20,32 +20,60 @@ class ComposeViewModel @Inject constructor(
     private val state: SavedStateHandle
 ) : ViewModel() {
 
-    private var poem = state.get<Poem>("poem")
+    private val _eventChannel = Channel<ComposeEvent>()
+    val events = _eventChannel.receiveAsFlow()
+
+    var poem = state.get<Poem>("poem")
         set(value) {
             field = value
             state.set("poem", value)
         }
 
-    var poemTitle = state.get<String>("poem_title") ?: poem?.title ?: ""
+    var poemTitle = state.get<String>("poem_title") ?: ""
         set(value) {
             field = value
             state.set("poem_title", value)
         }
 
-    var poemContent = state.get<String>("poem_content") ?: poem?.content ?: ""
+    var poemContent = state.get<String>("poem_content") ?: ""
         set(value) {
             field = value
             state.set("poem_content", value)
         }
 
-    private val _eventChannel = Channel<ComposeEvent>()
-    val events = _eventChannel.receiveAsFlow()
+    fun onEditClicked() {
+        updateUi(ComposeEvent.NavigateToComposeView)
+    }
 
-    private fun getUser() = User(
-        "1",
-        "MamboBryan",
-        "https://images.unsplash.com/photo-1558945657-484aa38065ec?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=633&q=80"
-    )
+    fun onPreviewClicked() {
+        updateUi(ComposeEvent.NavigateToPreview)
+    }
+
+    fun onStash() {
+
+        if (poemContent.isBlank()) {
+            showInvalidInputMessage("Content cannot be empty")
+            return
+        }
+
+        if (poemTitle.isBlank()) {
+            val dateFormat = SimpleDateFormat("EEE, MMM d, ''yy")
+            val date = dateFormat.format(Date())
+            poemTitle = "Untitled $date"
+        }
+
+        if (poem != null) {
+
+            val updatedPoem = poem!!.copy(title = poemTitle, content = poemContent)
+            update(updatedPoem)
+
+        } else {
+
+            val newPoem = getNewPoem()
+            save(newPoem)
+
+        }
+    }
 
     fun onPublish() {
 
@@ -72,34 +100,23 @@ class ComposeViewModel @Inject constructor(
         }
     }
 
-    fun onStash() {
+    fun onBackClicked() {
+        updateUi(ComposeEvent.NavigateToBackstack)
+    }
 
-        val today = Date()
-
-        val dateFormat = SimpleDateFormat("EEE, MMM d, ''yy")
-        val date = dateFormat.format(today)
-
-        if (poemContent.isBlank()) {
-            showInvalidInputMessage("Content cannot be empty")
-            return
-        }
-
-        if (poemTitle.isBlank()) {
-            poemTitle = "Untitled $date"
-        }
-
-        if (poem != null) {
-
-            val updatedPoem = poem!!.copy(content = poemContent)
-            update(updatedPoem)
-
-        } else {
-
-            val newPoem = getNewPoem()
-            save(newPoem)
-
+    fun updatePoem(selectedPoem: Poem?) {
+        if (selectedPoem != null) {
+            poem = selectedPoem
+            poemTitle = selectedPoem.title!!
+            poemContent = selectedPoem.content!!
         }
     }
+
+    private fun getUser() = User(
+        "1",
+        "MamboBryan",
+        "https://images.unsplash.com/photo-1558945657-484aa38065ec?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=633&q=80"
+    )
 
     private fun getNewPoem() = Poem(
         createdAt = Date(),
@@ -112,40 +129,16 @@ class ComposeViewModel @Inject constructor(
         isPublic = false
     )
 
-    fun updatePoem(selectedPoem: Poem?) {
-        this.poem = selectedPoem
+    private fun save(poem: Poem) = viewModelScope.launch {
 
-        if (selectedPoem != null) {
-            poemTitle = selectedPoem.title!!
-            poemContent = selectedPoem.content!!
-        }
-
-    }
-
-    fun onBackClicked() {
+        repository.save(poem)
         updateUi(ComposeEvent.NavigateToBackstack)
-    }
 
-    fun onPreviewClicked() {
-        updateUi(ComposeEvent.NavigateToPreview)
-    }
-
-    fun onEditClicked() {
-        updateUi(ComposeEvent.NavigateToComposeView)
     }
 
     private fun saveAndPublish(poem: Poem) = viewModelScope.launch {
         repository.save(poem)
         updateUi(ComposeEvent.NavigateToPublish(poem))
-    }
-
-    private fun updateAndPublish(poem: Poem) = viewModelScope.launch {
-        repository.update(poem)
-        updateUi(ComposeEvent.NavigateToPublish(poem))
-    }
-
-    private fun showInvalidInputMessage(message: String) {
-        updateUi(ComposeEvent.ShowInvalidInputMessage(message))
     }
 
     private fun update(poem: Poem) = viewModelScope.launch {
@@ -155,11 +148,13 @@ class ComposeViewModel @Inject constructor(
 
     }
 
-    private fun save(poem: Poem) = viewModelScope.launch {
+    private fun updateAndPublish(poem: Poem) = viewModelScope.launch {
+        repository.update(poem)
+        updateUi(ComposeEvent.NavigateToPublish(poem))
+    }
 
-        repository.save(poem)
-        updateUi(ComposeEvent.NavigateToBackstack)
-
+    private fun showInvalidInputMessage(message: String) {
+        updateUi(ComposeEvent.ShowInvalidInputMessage(message))
     }
 
     private fun updateUi(event: ComposeEvent) = viewModelScope.launch {

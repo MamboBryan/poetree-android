@@ -1,7 +1,7 @@
 package com.mambo.remote.di
 
 import com.mambo.remote.interceptors.AuthInterceptor
-import com.mambo.remote.service.ApiService
+import com.mambo.remote.service.PoemsApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -50,6 +50,6 @@ object RemoteModule {
 
     @Singleton
     @Provides
-    fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
+    fun provideApiService(retrofit: Retrofit): PoemsApi = retrofit.create(PoemsApi::class.java)
 
 }

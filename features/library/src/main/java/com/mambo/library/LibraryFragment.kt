@@ -68,7 +68,7 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
         }
 
         lifecycleScope.launch {
-            sharedViewModel.bookmarks.collectLatest { adapter.submitData(it) }
+            sharedViewModel.unpublishedPoems.collectLatest { adapter.submitData(it) }
         }
 
         lifecycleScope.launch {

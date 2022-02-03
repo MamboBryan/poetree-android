@@ -38,9 +38,8 @@ class WriteFragment : Fragment(R.layout.fragment_write) {
             val textColor = ContextCompat.getColor(requireContext(), R.color.color_on_background)
             val backgroundColor = ContextCompat.getColor(requireContext(), R.color.color_background)
 
-            wysiwygEditor.html = (viewModel.poemContent)
+            wysiwygEditor.html = viewModel.poemContent
 
-            wysiwygEditor.setEditorHeight(200)
             wysiwygEditor.setEditorFontSize(16)
             wysiwygEditor.setEditorFontColor(textColor)
             wysiwygEditor.setEditorBackgroundColor(backgroundColor)

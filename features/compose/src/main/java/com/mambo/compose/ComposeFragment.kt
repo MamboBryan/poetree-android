@@ -29,13 +29,15 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         viewModel.updatePoem(sharedViewModel.poem.value)
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        sharedViewModel.poem.observe(viewLifecycleOwner){
+            viewModel.updatePoem(it)
+        }
 
         setupNavigation()
         setupViews()
@@ -54,17 +56,12 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
                         navigateToPublish()
                     }
 
-                    ComposeViewModel.ComposeEvent.NavigateToPreview -> {
-                        showPreview()
-                    }
+                    ComposeViewModel.ComposeEvent.NavigateToPreview -> showPreview()
 
-                    ComposeViewModel.ComposeEvent.NavigateToComposeView -> {
-                        showEditView()
-                    }
+                    ComposeViewModel.ComposeEvent.NavigateToComposeView -> showEditView()
 
-                    ComposeViewModel.ComposeEvent.NavigateToBackstack -> {
-                        navigateBack()
-                    }
+                    ComposeViewModel.ComposeEvent.NavigateToBackstack -> navigateBack()
+
                 }
             }
         }
@@ -80,27 +77,29 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
 
     private fun setupViews() = binding.apply {
 
-        val poem = sharedViewModel.poem.value
-
-        toolbarCompose.title = if (poem == null) "Compose" else "Edit"
+        toolbarCompose.title = if (viewModel.poem == null) "Compose" else "Edit"
         toolbarCompose.inflateMenu(R.menu.menu_compose)
         toolbarCompose.setOnMenuItemClickListener { item ->
 
             when (item.itemId) {
 
-                R.id.menu_item_edit -> {
+                R.id.action_compose_edit -> {
                     viewModel.onEditClicked()
                     true
                 }
-                R.id.menu_item_preview -> {
+                R.id.action_compose_preview -> {
                     viewModel.onPreviewClicked()
                     true
                 }
-                R.id.menu_item_stash -> {
+                R.id.action_compose_stash -> {
                     viewModel.onStash()
                     true
                 }
-                R.id.menu_item_publish -> {
+                R.id.action_compose_publish -> {
+                    viewModel.onPublish()
+                    true
+                }
+                R.id.action_compose_choose_topic -> {
                     viewModel.onPublish()
                     true
                 }
@@ -129,8 +128,8 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
         val menu = toolbarCompose.menu
         val position = viewpagerCompose.currentItem
 
-        val previewAction = menu.findItem(R.id.menu_item_preview)
-        val editAction = menu.findItem(R.id.menu_item_edit)
+        val previewAction = menu.findItem(R.id.action_compose_preview)
+        val editAction = menu.findItem(R.id.action_compose_edit)
 
         editAction.isVisible = position == 1
         previewAction.isVisible = position != 1

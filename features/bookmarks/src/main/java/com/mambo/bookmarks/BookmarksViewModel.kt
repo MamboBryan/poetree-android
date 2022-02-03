@@ -1,7 +1,6 @@
 package com.mambo.bookmarks
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.mambo.core.repository.PoemRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,14 +11,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BookmarksViewModel @Inject constructor(
-    poemsRepository: PoemRepository
 ): ViewModel() {
 
     private val _eventChannel = Channel<BookmarkEvent>()
     val events = _eventChannel.receiveAsFlow()
-
-    private val _poems = poemsRepository.poems()
-    val poems = _poems.asLiveData()
 
     fun onSearchClicked() = updateUi(BookmarkEvent.ToggleSearchEditText)
 

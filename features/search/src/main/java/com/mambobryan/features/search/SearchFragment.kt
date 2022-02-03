@@ -60,7 +60,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         }
 
         lifecycleScope.launchWhenStarted {
-            sharedViewModel.searches.collectLatest { adapter.submitData(it) }
+            sharedViewModel.searchedPoems.collectLatest { adapter.submitData(it) }
         }
 
         lifecycleScope.launchWhenStarted {

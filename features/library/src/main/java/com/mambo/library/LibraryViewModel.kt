@@ -1,9 +1,7 @@
 package com.mambo.library
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.mambo.core.repository.PoemRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -12,14 +10,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LibraryViewModel @Inject constructor(
-    poemsRepository: PoemRepository
 ) : ViewModel() {
 
     private val _eventChannel = Channel<LibraryEvent>()
     val events = _eventChannel.receiveAsFlow()
-
-    private val _poems = poemsRepository.poems()
-    val poems = _poems.asLiveData()
 
     fun onComposeButtonClicked() = updateUi(LibraryEvent.NavigateToCompose)
 

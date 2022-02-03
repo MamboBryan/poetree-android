@@ -5,7 +5,7 @@ import androidx.paging.PagingConfig
 import com.mambo.data.models.Poem
 import com.mambo.data.models.Topic
 import com.mambo.local.PoemsDao
-import com.mambo.remote.service.ApiService
+import com.mambo.remote.service.PoemsApi
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -15,22 +15,27 @@ class PoemRepository @Inject constructor() {
     lateinit var poemsDao: PoemsDao
 
     @Inject
-    lateinit var poemsApi: ApiService
+    lateinit var poemsApi: PoemsApi
 
     fun poems(): Flow<List<Poem>> = poemsDao.getAll()
 
-    fun getLocalPoems(query: String) = Pager(PagingConfig(10)) { poemsDao.getLocalPoems() }.flow
-
-    fun searchPoems(query: String) = Pager(PagingConfig(10)) { poemsDao.getPoems(query) }.flow
+    fun feedPoems() = Pager(PagingConfig(10)) { poemsDao.getAllPoems() }.flow
 
     fun searchPoems(topic: Topic?, query: String) = Pager(PagingConfig(10)) {
-        if (topic != null)
-            poemsDao.getPoems(query)
-        else
-            poemsDao.getPoems(query)
+        if (topic != null) poemsDao.getPoems(query)
+        else poemsDao.getPoems(query)
     }.flow
 
-    fun getPoems() = poemsDao.getLocalPoems()
+    fun bookmarkPoems(query: String) =
+        Pager(PagingConfig(10)) { poemsDao.getBookmarks(query) }.flow
+
+    fun unpublishedPoems(userId: String, query: String) =
+        Pager(PagingConfig(10)) { poemsDao.getUnPublishedPoems(userId, query) }.flow
+
+    fun publishedPoems() =
+        Pager(PagingConfig(10)) { poemsDao.getAllPoems() }.flow
+
+    fun searchPoems(query: String) = Pager(PagingConfig(10)) { poemsDao.getPoems(query) }.flow
 
     suspend fun save(poem: Poem) = poemsDao.insert(poem)
 
@@ -38,19 +43,4 @@ class PoemRepository @Inject constructor() {
 
     suspend fun delete(poem: Poem) = poemsDao.delete(poem)
 
-    suspend fun bookmark(poem: Poem) {}
-
-    suspend fun publish(poem: Poem) {}
-
-    suspend fun unPublish(poem: Poem) {}
-
-    suspend fun like(poem: Poem) {}
-
-    suspend fun unlike(poem: Poem) {}
-
-    suspend fun read(poem: Poem) {}
-
-    suspend fun comment(comment: String) {}
-
-    suspend fun deleteRemote(poem: Poem) {}
 }
