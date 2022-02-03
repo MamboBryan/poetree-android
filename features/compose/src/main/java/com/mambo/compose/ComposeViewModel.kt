@@ -20,7 +20,11 @@ class ComposeViewModel @Inject constructor(
     private val state: SavedStateHandle
 ) : ViewModel() {
 
-    private val poem = state.get<Poem>("poem")
+    private var poem = state.get<Poem>("poem")
+        set(value) {
+            field = value
+            state.set("poem", value)
+        }
 
     var poemTitle = state.get<String>("poem_title") ?: poem?.title ?: ""
         set(value) {
@@ -57,13 +61,13 @@ class ComposeViewModel @Inject constructor(
 
         if (poem != null) {
 
-            val updatedPoem = poem.copy(title = poemTitle, content = poemContent)
-            updateSavedPoem(updatedPoem)
+            val updatedPoem = poem!!.copy(title = poemTitle, content = poemContent)
+            updateAndPublish(updatedPoem)
 
         } else {
 
             val newPoem = getNewPoem()
-            saveNewPoem(newPoem)
+            saveAndPublish(newPoem)
 
         }
     }
@@ -86,7 +90,7 @@ class ComposeViewModel @Inject constructor(
 
         if (poem != null) {
 
-            val updatedPoem = poem.copy(content = poemContent)
+            val updatedPoem = poem!!.copy(content = poemContent)
             update(updatedPoem)
 
         } else {
@@ -108,6 +112,16 @@ class ComposeViewModel @Inject constructor(
         isPublic = false
     )
 
+    fun updatePoem(selectedPoem: Poem?) {
+        this.poem = selectedPoem
+
+        if (selectedPoem != null) {
+            poemTitle = selectedPoem.title!!
+            poemContent = selectedPoem.content!!
+        }
+
+    }
+
     fun onBackClicked() {
         updateUi(ComposeEvent.NavigateToBackstack)
     }
@@ -120,15 +134,14 @@ class ComposeViewModel @Inject constructor(
         updateUi(ComposeEvent.NavigateToComposeView)
     }
 
-    private fun saveNewPoem(poem: Poem) {
+    private fun saveAndPublish(poem: Poem) = viewModelScope.launch {
+        repository.save(poem)
         updateUi(ComposeEvent.NavigateToPublish(poem))
     }
 
-    private fun updateSavedPoem(poem: Poem) = viewModelScope.launch {
-
+    private fun updateAndPublish(poem: Poem) = viewModelScope.launch {
         repository.update(poem)
         updateUi(ComposeEvent.NavigateToPublish(poem))
-
     }
 
     private fun showInvalidInputMessage(message: String) {
@@ -155,7 +168,6 @@ class ComposeViewModel @Inject constructor(
 
     sealed class ComposeEvent {
         data class ShowInvalidInputMessage(val message: String) : ComposeEvent()
-        data class NavigateBackWithResult(val result: Int) : ComposeEvent()
         data class NavigateToPublish(val poem: Poem) : ComposeEvent()
         object NavigateToPreview : ComposeEvent()
         object NavigateToBackstack : ComposeEvent()

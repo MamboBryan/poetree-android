@@ -21,7 +21,7 @@ import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class FeedFragment : Fragment(R.layout.fragment_feed) {
@@ -30,14 +30,16 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
     private val viewModel: FeedViewModel by viewModels()
 
     private val binding by viewBinding(FragmentFeedBinding::bind)
-    private val adapter by lazy { PoemPagingAdapter() }
+
+    @Inject
+    lateinit var adapter: PoemPagingAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
 
-        lifecycleScope.launchWhenCreated {
+        lifecycleScope.launchWhenStarted {
             viewModel.events.collect { event ->
                 when (event) {
                     FeedViewModel.FeedEvent.NavigateToProfile -> navigateToProfile()
@@ -51,13 +53,13 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             }
         }
 
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenStarted {
             mainViewModel.feeds.collectLatest { adapter.submitData(it) }
         }
 
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenStarted {
             adapter.loadStateFlow.collectLatest { loadState ->
-                binding.layoutState.apply {
+                binding.layoutFeedState.apply {
 
                     stateContent.isVisible = false
                     stateEmpty.isVisible = false
@@ -103,7 +105,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             ivFeedSettings.setOnClickListener { viewModel.onSettingsClicked() }
             btnCreatePoem.setOnClickListener { viewModel.onCreatePoemClicked() }
 
-            layoutState.apply {
+            layoutFeedState.apply {
                 buttonRetry.setOnClickListener { adapter.retry() }
                 recyclerView.adapter = adapter
                 recyclerView.setHasFixedSize(true)

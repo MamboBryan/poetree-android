@@ -10,7 +10,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.snackbar.Snackbar
-import com.irozon.sneaker.Sneaker
 import com.mambo.compose.databinding.FragmentComposeBinding
 import com.mambo.core.adapters.ViewPagerAdapter
 import com.mambo.core.viewmodel.MainViewModel
@@ -28,6 +27,13 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
     private val viewModel: ComposeViewModel by viewModels()
     private val sharedViewModel: MainViewModel by activityViewModels()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        viewModel.updatePoem(sharedViewModel.poem.value)
+
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -38,22 +44,13 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.events.collect { event ->
                 when (event) {
-                    is ComposeViewModel.ComposeEvent.NavigateBackWithResult -> {
-                        binding.root.clearFocus()
-
-                        Sneaker.with(this@ComposeFragment)
-                            .setTitle("Success!")
-                            .setMessage("Poem Saved Successfully")
-                            .sneakSuccess()
-
-                        navigateBack()
-                    }
 
                     is ComposeViewModel.ComposeEvent.ShowInvalidInputMessage -> {
                         Snackbar.make(requireView(), event.message, Snackbar.LENGTH_LONG).show()
                     }
 
                     is ComposeViewModel.ComposeEvent.NavigateToPublish -> {
+                        sharedViewModel.setPoem(event.poem)
                         navigateToPublish()
                     }
 
@@ -91,26 +88,22 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
 
             when (item.itemId) {
 
-                R.id.menu_item_publish -> {
-                    viewModel.onPublish()
-                    true
-                }
-
                 R.id.menu_item_edit -> {
                     viewModel.onEditClicked()
                     true
                 }
-
                 R.id.menu_item_preview -> {
                     viewModel.onPreviewClicked()
                     true
                 }
-
                 R.id.menu_item_stash -> {
                     viewModel.onStash()
                     true
                 }
-
+                R.id.menu_item_publish -> {
+                    viewModel.onPublish()
+                    true
+                }
                 else -> {
                     false
                 }

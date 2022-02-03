@@ -11,8 +11,9 @@ import com.mambo.data.models.Poem
 import com.mambo.data.utils.POEM_COMPARATOR
 import com.mambo.ui.databinding.ItemPoemBinding
 import org.ocpsoft.prettytime.PrettyTime
+import javax.inject.Inject
 
-class PoemPagingAdapter :
+class PoemPagingAdapter @Inject constructor() :
     PagingDataAdapter<Poem, PoemPagingAdapter.PoemViewHolder>(POEM_COMPARATOR) {
 
     private lateinit var onPoemClickListener: OnPoemClickListener
