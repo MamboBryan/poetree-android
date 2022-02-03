@@ -57,7 +57,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
 
         lifecycleScope.launch {
             adapter.loadStateFlow.collectLatest { loadState ->
-                binding.layoutState.apply {
+                binding.layoutFeedState.apply {
 
                     stateContent.isVisible = false
                     stateEmpty.isVisible = false
@@ -103,7 +103,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             ivFeedSettings.setOnClickListener { viewModel.onSettingsClicked() }
             btnCreatePoem.setOnClickListener { viewModel.onCreatePoemClicked() }
 
-            layoutState.apply {
+            layoutFeedState.apply {
                 buttonRetry.setOnClickListener { adapter.retry() }
                 recyclerView.adapter = adapter
                 recyclerView.setHasFixedSize(true)

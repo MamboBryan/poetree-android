@@ -64,7 +64,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <include
-        android:id="@+id/layout_state"
+        android:id="@+id/layout_feed_state"
         layout="@layout/layout_complete_recycler_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
