@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.mambo.compose.databinding.FragmentPreviewBinding
+import com.mambo.data.utils.isNotNull
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,51 +23,35 @@ class PreviewFragment : Fragment(R.layout.fragment_preview) {
 
     }
 
-    private fun setUpPoemPreview() {
-        binding.apply {
-
-            val wysiwygEditor = editorPoem
-
-            wysiwygEditor.setInputEnabled(false)
-            wysiwygEditor.setPadding(32, 32, 32, 32)
-
-        }
-    }
-
     override fun onResume() {
         super.onResume()
 
         updatePoemPreview()
+
     }
 
-    private fun updatePoemPreview() {
+    private fun setUpPoemPreview() = binding.apply {
 
-        val title =
-            if (viewModel.poemTitle.isNotEmpty()) viewModel.poemTitle else "Untitled"
+        val wysiwygEditor = editorPreviewPoem
 
-        val content =
-            if (viewModel.poemContent.isNotEmpty()) viewModel.poemContent else "No art has been penned down"
+        wysiwygEditor.setInputEnabled(false)
+        wysiwygEditor.setPadding(32, 32, 32, 32)
 
-        binding.apply {
+    }
 
-            val wysiwygEditor = editorPoem
+    private fun updatePoemPreview() = binding.apply {
 
-            val textColor = ContextCompat.getColor(requireContext(), R.color.color_on_background)
-            val backgroundColor = ContextCompat.getColor(requireContext(), R.color.color_background)
+        val textColor = ContextCompat.getColor(requireContext(), R.color.color_on_background)
+        val backgroundColor = ContextCompat.getColor(requireContext(), R.color.color_background)
 
-            val html =
-                """
-                    <h2><i><b> $title </b></i></h2>
-                    <i>$content </i>
-                       
-                """.trimIndent()
+        editorPreviewPoem.setEditorFontColor(textColor)
+        editorPreviewPoem.setEditorBackgroundColor(backgroundColor)
 
-            wysiwygEditor.html = html
+        editorPreviewPoem.html = viewModel.getHtml()
+        editorPreviewPoem.setCode()
 
-            wysiwygEditor.setEditorFontColor(textColor)
-            wysiwygEditor.setEditorBackgroundColor(backgroundColor)
-            wysiwygEditor.setCode()
-        }
+        fabPreviewPublish.isEnabled = viewModel.poemContent.isNotEmpty() &&
+                viewModel.poemTitle.isNotEmpty() && viewModel.topic.isNotNull()
 
     }
 

@@ -18,7 +18,7 @@ interface PoemsDao {
     suspend fun insert( poem: Poem): Long
 
     @Update
-    suspend fun update(poem: Poem)
+    suspend fun update(poem: Poem): Int
 
     @Delete
     suspend fun delete(poems: Poem)

@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <com.mambo.libraries.editor.WYSIWYG
-        android:id="@+id/editor_poem"
+        android:id="@+id/editor_preview_poem"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
@@ -16,6 +16,7 @@
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:layout_width="wrap_content"
+        android:id="@+id/fab_preview_publish"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
