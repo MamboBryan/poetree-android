@@ -27,6 +27,13 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
     private val viewModel: ComposeViewModel by viewModels()
     private val sharedViewModel: MainViewModel by activityViewModels()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        viewModel.updatePoem(sharedViewModel.poem.value)
+
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

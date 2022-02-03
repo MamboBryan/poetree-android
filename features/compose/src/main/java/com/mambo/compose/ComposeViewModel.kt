@@ -20,7 +20,11 @@ class ComposeViewModel @Inject constructor(
     private val state: SavedStateHandle
 ) : ViewModel() {
 
-    private val poem = state.get<Poem>("poem")
+    private var poem = state.get<Poem>("poem")
+        set(value) {
+            field = value
+            state.set("poem", value)
+        }
 
     var poemTitle = state.get<String>("poem_title") ?: poem?.title ?: ""
         set(value) {
@@ -57,7 +61,7 @@ class ComposeViewModel @Inject constructor(
 
         if (poem != null) {
 
-            val updatedPoem = poem.copy(title = poemTitle, content = poemContent)
+            val updatedPoem = poem!!.copy(title = poemTitle, content = poemContent)
             updateSavedPoem(updatedPoem)
 
         } else {
@@ -86,7 +90,7 @@ class ComposeViewModel @Inject constructor(
 
         if (poem != null) {
 
-            val updatedPoem = poem.copy(content = poemContent)
+            val updatedPoem = poem!!.copy(content = poemContent)
             update(updatedPoem)
 
         } else {
@@ -107,6 +111,16 @@ class ComposeViewModel @Inject constructor(
         isOffline = true,
         isPublic = false
     )
+
+    fun updatePoem(selectedPoem: Poem?) {
+        this.poem = selectedPoem
+
+        if (selectedPoem != null) {
+            poemTitle = selectedPoem.title!!
+            poemContent = selectedPoem.content!!
+        }
+
+    }
 
     fun onBackClicked() {
         updateUi(ComposeEvent.NavigateToBackstack)

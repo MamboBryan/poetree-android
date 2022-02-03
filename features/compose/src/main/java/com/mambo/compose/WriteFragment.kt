@@ -30,7 +30,7 @@ class WriteFragment : Fragment(R.layout.fragment_write) {
         }
     }
 
-    private fun setUpWYSIWYGWebView() {
+    private fun setUpWYSIWYGWebView() =
 
         binding.apply {
 
@@ -63,7 +63,9 @@ class WriteFragment : Fragment(R.layout.fragment_write) {
             actionOutdent.setOnClickListener { wysiwygEditor.setOutdent() }
 
             actionAlignCenter.setOnClickListener { wysiwygEditor.setAlignCenter() }
+
             actionAlignLeft.setOnClickListener { wysiwygEditor.setAlignLeft() }
+
             actionAlignRight.setOnClickListener { wysiwygEditor.setAlignRight() }
 
             actionAlignJustify.setOnClickListener { wysiwygEditor.setAlignJustifyFull() }
@@ -81,8 +83,6 @@ class WriteFragment : Fragment(R.layout.fragment_write) {
             })
 
         }
-
-    }
 
 
 }
