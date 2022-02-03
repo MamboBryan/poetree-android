@@ -10,7 +10,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.snackbar.Snackbar
-import com.irozon.sneaker.Sneaker
 import com.mambo.compose.databinding.FragmentComposeBinding
 import com.mambo.core.adapters.ViewPagerAdapter
 import com.mambo.core.viewmodel.MainViewModel
@@ -38,16 +37,6 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.events.collect { event ->
                 when (event) {
-                    is ComposeViewModel.ComposeEvent.NavigateBackWithResult -> {
-                        binding.root.clearFocus()
-
-                        Sneaker.with(this@ComposeFragment)
-                            .setTitle("Success!")
-                            .setMessage("Poem Saved Successfully")
-                            .sneakSuccess()
-
-                        navigateBack()
-                    }
 
                     is ComposeViewModel.ComposeEvent.ShowInvalidInputMessage -> {
                         Snackbar.make(requireView(), event.message, Snackbar.LENGTH_LONG).show()

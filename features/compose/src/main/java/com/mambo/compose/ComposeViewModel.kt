@@ -155,7 +155,6 @@ class ComposeViewModel @Inject constructor(
 
     sealed class ComposeEvent {
         data class ShowInvalidInputMessage(val message: String) : ComposeEvent()
-        data class NavigateBackWithResult(val result: Int) : ComposeEvent()
         data class NavigateToPublish(val poem: Poem) : ComposeEvent()
         object NavigateToPreview : ComposeEvent()
         object NavigateToBackstack : ComposeEvent()
