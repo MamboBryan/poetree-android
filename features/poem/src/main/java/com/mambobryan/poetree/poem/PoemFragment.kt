@@ -38,13 +38,12 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
 
     private val binding by viewBinding(FragmentPoemBinding::bind)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.updatePoem(sharedViewModel.poem.value!!)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        sharedViewModel.poem.observe(viewLifecycleOwner){
+            viewModel.updatePoem(it!!)
+        }
 
         initViews()
         initEditor()

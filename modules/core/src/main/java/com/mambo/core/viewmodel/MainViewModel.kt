@@ -33,32 +33,30 @@ class MainViewModel @Inject constructor(
     private val _eventChannel = Channel<MainEvent>()
     val events = _eventChannel.receiveAsFlow()
 
-    var darkMode: Int
     var isOnBoarded: Boolean
     var isLoggedIn: Boolean
     var isUserSetup: Boolean
 
     val darkModeFlow = preferences.darkMode
 
-    val feeds = poemRepository.getLocalPoems("").cachedIn(viewModelScope)
-    val myPublicPoems = poemRepository.getLocalPoems("").cachedIn(viewModelScope)
+    val feedPoems = poemRepository.feedPoems().cachedIn(viewModelScope)
+    val publicPoems = poemRepository.publishedPoems().cachedIn(viewModelScope)
 
     private val searchTopic = MutableStateFlow<Topic?>(null)
     private val searchQuery = MutableStateFlow("")
     private val _searches = combine(searchTopic, searchQuery) { topic, query ->
         Triple(topic, query, null)
     }.flatMapLatest { (topic, query, _) -> poemRepository.searchPoems(topic, query) }
-    val searches = _searches.cachedIn(viewModelScope)
+    val searchedPoems = _searches.cachedIn(viewModelScope)
 
     private val bookmarksQuery = MutableStateFlow("")
     private val _bookmarks = bookmarksQuery.flatMapLatest { poemRepository.searchPoems(it) }
-    val bookmarks = _bookmarks.cachedIn(viewModelScope)
+    val bookmarkedPoems = _bookmarks.cachedIn(viewModelScope)
 
-    private val libraryQuery = MutableStateFlow("")
-    private val _publicPoems = libraryQuery.flatMapLatest { poemRepository.searchPoems(it) }
-    val publicPoems = _publicPoems.cachedIn(viewModelScope)
-    private val _privatePoems = libraryQuery.flatMapLatest { poemRepository.searchPoems(it) }
-    val privatePoems = _privatePoems.cachedIn(viewModelScope)
+    private val unpublishedQuery = MutableStateFlow("")
+    private val _unpublished =
+        unpublishedQuery.flatMapLatest { poemRepository.unpublishedPoems("1", it) }
+    val unpublishedPoems = _unpublished.cachedIn(viewModelScope)
 
     private val _poem = state.getLiveData<Poem?>("poem", null)
     val poem: LiveData<Poem?> get() = _poem
@@ -71,7 +69,6 @@ class MainViewModel @Inject constructor(
 
     init {
         runBlocking {
-            darkMode = preferences.darkMode.first()
             isOnBoarded = preferences.isOnBoarded.first()
             isLoggedIn = preferences.isLoggedIn.first()
             isUserSetup = preferences.isUserSetup.first()
@@ -99,7 +96,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun updateLibraryQuery(query: String) {
-        libraryQuery.value = query
+        unpublishedQuery.value = query
     }
 
     fun setupDailyInteractionReminder() = updateUi(MainEvent.SetupDailyInteractionReminder)

@@ -81,7 +81,6 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
         layoutComments.recyclerView.adapter = adapter
 
         layoutCommentsEdit.apply {
-//            layoutCommentRoot.isVisible = viewModel.isOnline
             edtComment.doAfterTextChanged { viewModel.onContentUpdated(it.toString()) }
             ivComment.setOnClickListener { viewModel.onCommentSendClicked() }
         }

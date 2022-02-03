@@ -64,7 +64,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
 
         lifecycleScope.launchWhenStarted {
-            sharedViewModel.myPublicPoems.collectLatest { adapter.submitData(it) }
+            sharedViewModel.publicPoems.collectLatest { adapter.submitData(it) }
         }
 
         lifecycleScope.launch {

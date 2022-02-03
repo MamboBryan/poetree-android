@@ -54,7 +54,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         }
 
         lifecycleScope.launchWhenStarted {
-            mainViewModel.feeds.collectLatest { adapter.submitData(it) }
+            mainViewModel.feedPoems.collectLatest { adapter.submitData(it) }
         }
 
         lifecycleScope.launchWhenStarted {

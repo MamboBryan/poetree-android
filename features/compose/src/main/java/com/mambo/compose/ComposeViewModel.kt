@@ -20,7 +20,7 @@ class ComposeViewModel @Inject constructor(
     private val state: SavedStateHandle
 ) : ViewModel() {
 
-    private var poem = state.get<Poem>("poem")
+    var poem = state.get<Poem>("poem")
         set(value) {
             field = value
             state.set("poem", value)

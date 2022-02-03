@@ -6,7 +6,7 @@ import com.mambo.data.requests.SignUpRequest
 import retrofit2.http.Body
 import retrofit2.http.POST
 
-interface ApiService {
+interface PoemsApi {
 
     @POST("auth/signin")
     suspend fun signIn(@Body signInRequest: SignInRequest)
