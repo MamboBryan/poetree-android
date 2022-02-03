@@ -36,6 +36,4 @@ class PublishViewModel @Inject constructor(
 
     fun onChooseClicked() = viewModelScope.launch {  }
 
-    fun onPublishClicked() = viewModelScope.launch {  }
-
 }

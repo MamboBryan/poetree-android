@@ -50,6 +50,7 @@
         <entry key="features/compose/src/main/res/layout/fragment_poem_preview.xml" value="0.3489583333333333" />
         <entry key="features/compose/src/main/res/layout/fragment_preview.xml" value="0.3489583333333333" />
         <entry key="features/compose/src/main/res/layout/fragment_write.xml" value="0.1" />
+        <entry key="features/compose/src/main/res/menu/menu_compose.xml" value="0.31979166666666664" />
         <entry key="features/compose/src/main/res/menu/menu_poem_edit.xml" value="0.3489583333333333" />
         <entry key="features/explore/src/main/res/layout/fragment_explore.xml" value="0.3489583333333333" />
         <entry key="features/explore/src/main/res/layout/item_topic.xml" value="0.3484375" />

@@ -88,19 +88,23 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
 
             when (item.itemId) {
 
-                R.id.menu_item_edit -> {
+                R.id.action_compose_edit -> {
                     viewModel.onEditClicked()
                     true
                 }
-                R.id.menu_item_preview -> {
+                R.id.action_compose_preview -> {
                     viewModel.onPreviewClicked()
                     true
                 }
-                R.id.menu_item_stash -> {
+                R.id.action_compose_stash -> {
                     viewModel.onStash()
                     true
                 }
-                R.id.menu_item_publish -> {
+                R.id.action_compose_publish -> {
+                    viewModel.onPublish()
+                    true
+                }
+                R.id.action_compose_choose_topic -> {
                     viewModel.onPublish()
                     true
                 }
@@ -129,8 +133,8 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
         val menu = toolbarCompose.menu
         val position = viewpagerCompose.currentItem
 
-        val previewAction = menu.findItem(R.id.menu_item_preview)
-        val editAction = menu.findItem(R.id.menu_item_edit)
+        val previewAction = menu.findItem(R.id.action_compose_preview)
+        val editAction = menu.findItem(R.id.action_compose_edit)
 
         editAction.isVisible = position == 1
         previewAction.isVisible = position != 1

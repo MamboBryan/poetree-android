@@ -3,31 +3,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_item_edit"
+        android:id="@+id/action_compose_edit"
         android:icon="@drawable/ic_baseline_create_24"
         android:title="Edit"
         android:visible="false"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/menu_item_preview"
+        android:id="@+id/action_compose_preview"
         android:icon="@drawable/ic_outline_remove_red_eye_24"
         android:title="Preview"
         android:visible="true"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/menu_item_stash"
+        android:id="@+id/action_compose_stash"
         android:icon="@drawable/ic_baseline_save_alt_24"
         android:title="Stash"
         android:visible="true"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/menu_item_publish"
+        android:id="@+id/action_compose_choose_topic"
+        android:icon="@drawable/ic_baseline_publish_24"
+        android:title="Choose Topic"
+        android:visible="true"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_compose_publish"
         android:icon="@drawable/ic_baseline_publish_24"
         android:title="Publish"
         android:visible="true"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
 
 </menu>

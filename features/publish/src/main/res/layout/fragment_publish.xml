@@ -6,29 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".PublishFragment">
 
-    <Button
-        android:id="@+id/btn_publish"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Publish"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btn_choose" />
-
-    <include
-        android:id="@+id/layout_publish"
-        layout="@layout/layout_complete_recycler_vertical"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_publish"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_publish" />
-
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_publish"
         android:layout_width="0dp"
@@ -38,15 +15,25 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_baseline_close_24" />
 
+    <include
+        android:id="@+id/layout_publish"
+        layout="@layout/layout_complete_recycler_vertical"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_choose"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_publish" />
+
     <Button
         android:id="@+id/btn_choose"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="choose"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_publish"
+        android:layout_margin="16dp"
+        android:text="Choose"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btn_publish" />
+        app:layout_constraintTop_toBottomOf="@+id/layout_publish" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

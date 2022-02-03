@@ -98,10 +98,7 @@ class PublishFragment : Fragment(R.layout.fragment_publish) {
 
         lifecycleScope.launchWhenStarted {
             viewModel.topic.collectLatest {
-                binding.apply {
-                    btnChoose.isEnabled = it.isNotNull()
-                    btnPublish.isEnabled = it.isNotNull()
-                }
+                binding.apply { btnChoose.isEnabled = it.isNotNull() }
             }
         }
 
@@ -110,7 +107,6 @@ class PublishFragment : Fragment(R.layout.fragment_publish) {
     private fun setupRecyclerview() = binding.apply {
 
         btnChoose.setOnClickListener { viewModel.onChooseClicked() }
-        btnPublish.setOnClickListener { viewModel.onPublishClicked() }
 
         layoutPublish.apply {
             tvEmpty.text = "No Topic Found"
