@@ -20,68 +20,71 @@ class WriteFragment : Fragment(R.layout.fragment_write) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.apply {
+        setupViews()
 
-            edtTitle.setText(viewModel.poemTitle)
-            edtTitle.doAfterTextChanged { title -> viewModel.poemTitle = title.toString() }
-
-            setUpWYSIWYGWebView()
-
-        }
     }
 
-    private fun setUpWYSIWYGWebView() =
+    override fun onResume() {
+        super.onResume()
 
-        binding.apply {
+        initViews()
 
-            val wysiwygEditor = editor
-            val textColor = ContextCompat.getColor(requireContext(), R.color.color_on_background)
-            val backgroundColor = ContextCompat.getColor(requireContext(), R.color.color_background)
+    }
 
-            wysiwygEditor.html = viewModel.poemContent
+    private fun initViews() = binding.apply {
+        edtTitle.setText(viewModel.poemTitle)
+        editor.html = viewModel.poemContent
+    }
 
-            wysiwygEditor.setEditorFontSize(16)
-            wysiwygEditor.setEditorFontColor(textColor)
-            wysiwygEditor.setEditorBackgroundColor(backgroundColor)
-            wysiwygEditor.setPadding(16, 16, 16, 16)
+    private fun setupViews() = binding.apply {
 
-            wysiwygEditor.setPlaceholder("Pen down thoughts here...")
+        edtTitle.doAfterTextChanged { title -> viewModel.poemTitle = title.toString() }
 
-            actionUndo.setOnClickListener { wysiwygEditor.undo() }
+        val textColor = ContextCompat.getColor(requireContext(), R.color.color_on_background)
+        val backgroundColor = ContextCompat.getColor(requireContext(), R.color.color_background)
 
-            actionRedo.setOnClickListener { wysiwygEditor.redo() }
 
-            actionBold.setOnClickListener { wysiwygEditor.setBold() }
+        editor.setEditorFontSize(16)
+        editor.setEditorFontColor(textColor)
+        editor.setEditorBackgroundColor(backgroundColor)
+        editor.setPadding(16, 16, 16, 16)
 
-            actionItalic.setOnClickListener { wysiwygEditor.setItalic() }
+        editor.setPlaceholder("Pen down thoughts here...")
 
-            actionUnderline.setOnClickListener { wysiwygEditor.setUnderline() }
+        actionUndo.setOnClickListener { editor.undo() }
 
-            actionIndent.setOnClickListener { wysiwygEditor.setIndent() }
+        actionRedo.setOnClickListener { editor.redo() }
 
-            actionOutdent.setOnClickListener { wysiwygEditor.setOutdent() }
+        actionBold.setOnClickListener { editor.setBold() }
 
-            actionAlignCenter.setOnClickListener { wysiwygEditor.setAlignCenter() }
+        actionItalic.setOnClickListener { editor.setItalic() }
 
-            actionAlignLeft.setOnClickListener { wysiwygEditor.setAlignLeft() }
+        actionUnderline.setOnClickListener { editor.setUnderline() }
 
-            actionAlignRight.setOnClickListener { wysiwygEditor.setAlignRight() }
+        actionIndent.setOnClickListener { editor.setIndent() }
 
-            actionAlignJustify.setOnClickListener { wysiwygEditor.setAlignJustifyFull() }
+        actionOutdent.setOnClickListener { editor.setOutdent() }
 
-            actionBlockquote.setOnClickListener { wysiwygEditor.setBlockquote() }
+        actionAlignCenter.setOnClickListener { editor.setAlignCenter() }
 
-            actionHeading.setOnClickListener { wysiwygEditor.setHeading(4) }
+        actionAlignLeft.setOnClickListener { editor.setAlignLeft() }
 
-            editor.setOnTextChangeListener(object :
-                WYSIWYG.OnTextChangeListener {
-                override fun onTextChange(text: String?) {
-                    viewModel.poemContent = text ?: ""
-                }
+        actionAlignRight.setOnClickListener { editor.setAlignRight() }
 
-            })
+        actionAlignJustify.setOnClickListener { editor.setAlignJustifyFull() }
 
-        }
+        actionBlockquote.setOnClickListener { editor.setBlockquote() }
 
+        actionHeading.setOnClickListener { editor.setHeading(4) }
+
+        editor.setOnTextChangeListener(object :
+            WYSIWYG.OnTextChangeListener {
+            override fun onTextChange(text: String?) {
+                viewModel.poemContent = text ?: ""
+            }
+
+        })
+
+    }
 
 }

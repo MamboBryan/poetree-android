@@ -41,5 +41,6 @@ object Versions {
     const val hiltWork = "1.0.0"
     const val workManager = "2.7.1"
     const val androidXStartup = "1.1.0"
+    const val motionToast = "1.4"
 
 }

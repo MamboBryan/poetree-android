@@ -5,11 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mambo.core.repository.PoemRepository
 import com.mambo.data.models.Poem
+import com.mambo.data.models.Topic
 import com.mambo.data.models.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.ocpsoft.prettytime.PrettyTime
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -29,6 +31,12 @@ class ComposeViewModel @Inject constructor(
             state.set("poem", value)
         }
 
+    var topic = state.get<Topic>("topic")
+        set(value) {
+            field = value
+            state.set("topic", value)
+        }
+
     var poemTitle = state.get<String>("poem_title") ?: ""
         set(value) {
             field = value
@@ -40,6 +48,23 @@ class ComposeViewModel @Inject constructor(
             field = value
             state.set("poem_content", value)
         }
+
+    fun getHtml(): String {
+        val html = StringBuilder()
+        val prettyTime = PrettyTime()
+
+        val topic = poem?.topic?.name ?: "Topicless"
+        val duration = prettyTime.formatDuration(poem?.createdAt).ifBlank { "A minute" }
+        val title = poemTitle.ifEmpty { "Untitled" }
+        val content = poemContent.ifEmpty { "No art has been penned down" }
+
+        html.append("$topic • $duration ago")
+        html.append("<h2><b>$title</b></h2>")
+        html.append("<i>$content</i>")
+        html.append("<br><br>")
+
+        return html.toString()
+    }
 
     fun onEditClicked() {
         updateUi(ComposeEvent.NavigateToComposeView)
@@ -107,6 +132,7 @@ class ComposeViewModel @Inject constructor(
     fun updatePoem(selectedPoem: Poem?) {
         if (selectedPoem != null) {
             poem = selectedPoem
+            topic = selectedPoem.topic
             poemTitle = selectedPoem.title!!
             poemContent = selectedPoem.content!!
         }

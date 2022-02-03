@@ -37,9 +37,11 @@ class PoemRepository @Inject constructor() {
 
     fun searchPoems(query: String) = Pager(PagingConfig(10)) { poemsDao.getPoems(query) }.flow
 
+    suspend fun get(id:Long) = poemsDao.get(id)
+
     suspend fun save(poem: Poem) = poemsDao.insert(poem)
 
-    suspend fun update(poem: Poem) = poemsDao.update(poem)
+    suspend fun update(poem: Poem): Int = poemsDao.update(poem)
 
     suspend fun delete(poem: Poem) = poemsDao.delete(poem)
 

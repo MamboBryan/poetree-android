@@ -73,6 +73,7 @@ dependencies {
     implementation(Dependencies.Libraries.paging)
     implementation(Dependencies.Libraries.hilt)
 
+    implementation(Dependencies.Libraries.motionToast)
     implementation(Dependencies.Libraries.delegate)
     implementation(Dependencies.Libraries.sneaker)
 

@@ -95,10 +95,6 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
                     viewModel.onStash()
                     true
                 }
-                R.id.action_compose_publish -> {
-                    viewModel.onPublish()
-                    true
-                }
                 R.id.action_compose_choose_topic -> {
                     viewModel.onPublish()
                     true

@@ -25,6 +25,8 @@ import com.mambobryan.features.publish.databinding.FragmentPublishBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import www.sanju.motiontoast.MotionToast
+import www.sanju.motiontoast.MotionToastStyle
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -54,6 +56,8 @@ class PublishFragment : Fragment(R.layout.fragment_publish) {
         super.onViewCreated(view, savedInstanceState)
 
         setHasOptionsMenu(true)
+
+        viewModel.updatePoem(sharedViewModel.poem.value!!)
 
         setupViews()
         setupRecyclerview()
@@ -99,6 +103,40 @@ class PublishFragment : Fragment(R.layout.fragment_publish) {
         lifecycleScope.launchWhenStarted {
             viewModel.topic.collectLatest {
                 binding.apply { btnChoose.isEnabled = it.isNotNull() }
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.events.collectLatest { event ->
+                when (event) {
+                    is PublishViewModel.TopicEvent.ShowErrorMessage -> {
+                        MotionToast.createToast(
+                            requireActivity(),
+                            "Error",
+                            event.message,
+                            MotionToastStyle.ERROR,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.SHORT_DURATION,
+                            null
+                        )
+                    }
+                    is PublishViewModel.TopicEvent.ShowSuccessMessage -> {
+                        MotionToast.createToast(
+                            requireActivity(),
+                            "Success",
+                            event.message,
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.SHORT_DURATION,
+                            null
+                        )
+                        findNavController().popBackStack()
+                    }
+                    is PublishViewModel.TopicEvent.UpdateSharedViewModelPoem -> {
+                        sharedViewModel.setPoem(event.poem)
+                    }
+                    null -> {}
+                }
             }
         }
 
