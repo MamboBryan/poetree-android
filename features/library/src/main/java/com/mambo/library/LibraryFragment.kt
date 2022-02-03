@@ -115,13 +115,14 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
             toolbarLibrary.title = "Library"
             (requireActivity() as AppCompatActivity).setSupportActionBar(toolbarLibrary)
 
+            fabCreatePoem.setOnClickListener { viewModel.onComposeButtonClicked() }
+
             layoutLibraryState.apply {
                 tvEmpty.text = "No Poem Found"
                 tvError.text = "Couldn't load Poems!"
 
                 recyclerView.adapter = adapter
                 buttonRetry.setOnClickListener { adapter.retry() }
-
             }
 
         }
