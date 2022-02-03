@@ -50,6 +50,7 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
                     }
 
                     is ComposeViewModel.ComposeEvent.NavigateToPublish -> {
+                        sharedViewModel.setPoem(event.poem)
                         navigateToPublish()
                     }
 
@@ -87,26 +88,22 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
 
             when (item.itemId) {
 
-                R.id.menu_item_publish -> {
-                    viewModel.onPublish()
-                    true
-                }
-
                 R.id.menu_item_edit -> {
                     viewModel.onEditClicked()
                     true
                 }
-
                 R.id.menu_item_preview -> {
                     viewModel.onPreviewClicked()
                     true
                 }
-
                 R.id.menu_item_stash -> {
                     viewModel.onStash()
                     true
                 }
-
+                R.id.menu_item_publish -> {
+                    viewModel.onPublish()
+                    true
+                }
                 else -> {
                     false
                 }

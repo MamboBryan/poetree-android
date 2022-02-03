@@ -21,7 +21,6 @@ import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FeedFragment : Fragment(R.layout.fragment_feed) {
@@ -37,7 +36,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
 
         initViews()
 
-        lifecycleScope.launchWhenCreated {
+        lifecycleScope.launchWhenStarted {
             viewModel.events.collect { event ->
                 when (event) {
                     FeedViewModel.FeedEvent.NavigateToProfile -> navigateToProfile()
@@ -51,11 +50,11 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             }
         }
 
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenStarted {
             mainViewModel.feeds.collectLatest { adapter.submitData(it) }
         }
 
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenStarted {
             adapter.loadStateFlow.collectLatest { loadState ->
                 binding.layoutFeedState.apply {
 

@@ -62,12 +62,12 @@ class ComposeViewModel @Inject constructor(
         if (poem != null) {
 
             val updatedPoem = poem!!.copy(title = poemTitle, content = poemContent)
-            updateSavedPoem(updatedPoem)
+            updateAndPublish(updatedPoem)
 
         } else {
 
             val newPoem = getNewPoem()
-            saveNewPoem(newPoem)
+            saveAndPublish(newPoem)
 
         }
     }
@@ -134,15 +134,14 @@ class ComposeViewModel @Inject constructor(
         updateUi(ComposeEvent.NavigateToComposeView)
     }
 
-    private fun saveNewPoem(poem: Poem) {
+    private fun saveAndPublish(poem: Poem) = viewModelScope.launch {
+        repository.save(poem)
         updateUi(ComposeEvent.NavigateToPublish(poem))
     }
 
-    private fun updateSavedPoem(poem: Poem) = viewModelScope.launch {
-
+    private fun updateAndPublish(poem: Poem) = viewModelScope.launch {
         repository.update(poem)
         updateUi(ComposeEvent.NavigateToPublish(poem))
-
     }
 
     private fun showInvalidInputMessage(message: String) {
