@@ -21,6 +21,7 @@ import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class FeedFragment : Fragment(R.layout.fragment_feed) {
@@ -29,7 +30,9 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
     private val viewModel: FeedViewModel by viewModels()
 
     private val binding by viewBinding(FragmentFeedBinding::bind)
-    private val adapter by lazy { PoemPagingAdapter() }
+
+    @Inject
+    lateinit var adapter: PoemPagingAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
