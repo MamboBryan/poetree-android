@@ -9,8 +9,9 @@ import com.mambo.core.OnTopicClickListener
 import com.mambo.data.models.Topic
 import com.mambo.data.utils.TOPIC_COMPARATOR
 import com.mambobryan.features.publish.databinding.ItemTopicChoiceBinding
+import javax.inject.Inject
 
-class TopicAdapter :
+class TopicAdapter @Inject constructor() :
     PagingDataAdapter<Topic, TopicAdapter.TopicViewHolder>(TOPIC_COMPARATOR) {
 
     private lateinit var onTopicClickListener: OnTopicClickListener
@@ -56,15 +57,11 @@ class TopicAdapter :
 
                 val textColor =
                     if (isSelected) R.color.color_on_primary else R.color.color_on_surface
-
-                val backgroundColor =
-                    if (isSelected) R.color.color_primary else R.color.color_surface
+                val bgColor = if (isSelected) R.color.color_primary else R.color.color_surface
 
                 tvTopicChoice.text = topic.name.replaceFirstChar { it.uppercase() }
 
-                layoutTopicChoice.setBackgroundColor(
-                    ContextCompat.getColor(context, backgroundColor)
-                )
+                layoutTopicChoice.setBackgroundColor(ContextCompat.getColor(context, bgColor))
                 tvTopicChoice.setTextColor(ContextCompat.getColor(context, textColor))
 
             }

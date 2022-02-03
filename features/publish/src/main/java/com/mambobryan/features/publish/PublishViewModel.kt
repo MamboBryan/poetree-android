@@ -9,6 +9,7 @@ import com.mambo.data.models.Topic
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,10 +19,11 @@ class PublishViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val query = MutableStateFlow("")
-    private val _topic = MutableStateFlow<Topic?>(null)
 
     private val topicsFlow = query.flatMapLatest { query -> topicsRepo.getTopics(query) }
     val topics = topicsFlow.cachedIn(viewModelScope)
+
+    private val _topic = MutableStateFlow<Topic?>(null)
     val topic get() = _topic
 
     fun onQueryUpdated(text: String) {
@@ -31,5 +33,9 @@ class PublishViewModel @Inject constructor(
     fun onTopicSelected(topic: Topic) {
         _topic.value = topic
     }
+
+    fun onChooseClicked() = viewModelScope.launch {  }
+
+    fun onPublishClicked() = viewModelScope.launch {  }
 
 }

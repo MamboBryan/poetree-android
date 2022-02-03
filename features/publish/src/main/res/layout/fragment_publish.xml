@@ -16,7 +16,7 @@
         android:text="Publish"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/btn_choose" />
 
     <include
         android:id="@+id/layout_publish"
@@ -37,5 +37,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_baseline_close_24" />
+
+    <Button
+        android:id="@+id/btn_choose"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="choose"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_publish"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btn_publish" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,8 +3,8 @@ package com.mambobryan.features.publish
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
@@ -25,7 +25,7 @@ import com.mambobryan.features.publish.databinding.FragmentPublishBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PublishFragment : Fragment(R.layout.fragment_publish) {
@@ -35,7 +35,8 @@ class PublishFragment : Fragment(R.layout.fragment_publish) {
     private val binding by viewBinding(FragmentPublishBinding::bind)
     private val viewModel: PublishViewModel by viewModels()
 
-    private val adapter by lazy { TopicAdapter() }
+    @Inject
+    lateinit var adapter: TopicAdapter
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_publish, menu)
@@ -49,19 +50,17 @@ class PublishFragment : Fragment(R.layout.fragment_publish) {
 
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return super.onOptionsItemSelected(item)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setHasOptionsMenu(true)
 
         setupViews()
         setupRecyclerview()
 
         lifecycleScope.launchWhenStarted { viewModel.topics.collectLatest { adapter.submitData(it) } }
 
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenStarted {
             adapter.loadStateFlow.collectLatest { loadState ->
                 binding.layoutPublish.apply {
 
@@ -98,18 +97,28 @@ class PublishFragment : Fragment(R.layout.fragment_publish) {
         }
 
         lifecycleScope.launchWhenStarted {
-            viewModel.topic.collectLatest { binding.btnPublish.isEnabled = it.isNotNull() }
+            viewModel.topic.collectLatest {
+                binding.apply {
+                    btnChoose.isEnabled = it.isNotNull()
+                    btnPublish.isEnabled = it.isNotNull()
+                }
+            }
         }
 
     }
 
     private fun setupRecyclerview() = binding.apply {
 
+        btnChoose.setOnClickListener { viewModel.onChooseClicked() }
+        btnPublish.setOnClickListener { viewModel.onPublishClicked() }
+
         layoutPublish.apply {
-            buttonRetry.setOnClickListener { adapter.retry() }
-            recyclerView.adapter = adapter
+            tvEmpty.text = "No Topic Found"
+            tvError.text = "Couldn't load Topics!"
+
             recyclerView.layoutManager = StaggeredGridLayoutManager(3, LinearLayoutCompat.VERTICAL)
-            recyclerView.setHasFixedSize(true)
+            recyclerView.adapter = adapter
+            buttonRetry.setOnClickListener { adapter.retry() }
         }
 
         adapter.withLoadStateHeaderAndFooter(
@@ -125,7 +134,8 @@ class PublishFragment : Fragment(R.layout.fragment_publish) {
     }
 
     private fun setupViews() = binding.apply {
-        toolbarPublish.title = "Choose Topic to Publish"
+        toolbarPublish.title = "Choose Topic"
+        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbarPublish)
         toolbarPublish.setNavigationOnClickListener { findNavController().popBackStack() }
     }
 
