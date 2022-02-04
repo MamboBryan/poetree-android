@@ -1,5 +1,10 @@
 object Versions {
 
+    const val androidGradlePlugin = "4.1.3"
+    const val kotlinGradlePlugin = "1.6.10"
+    const val googleServicesGradlePlugin = "4.3.10"
+    const val crashlyticsGradlePlugin = "2.8.1"
+
     const val hilt = "2.38.1"
     const val navigation = "2.3.5"
     const val gradlePlugin = "4.2.1"
@@ -43,4 +48,5 @@ object Versions {
     const val androidXStartup = "1.1.0"
     const val motionToast = "1.4"
 
+    const val firebaseBOM = "29.0.4"
 }
