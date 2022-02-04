@@ -14,12 +14,12 @@ class NotificationUtils @Inject constructor(
 
     companion object {
         const val ID_REMINDER = 1000
-        const val CHANNEL_ID_REMINDER = "Reminders"
+        const val CHANNEL_ID_REMINDER = "reminders"
         const val CHANNEL_NAME_REMINDER = "Reminders"
 
-        const val ID_UPDATES = 2000
-        const val CHANNEL_ID_UPDATES = "updates"
-        const val CHANNEL_NAME_UPDATES = "Updates"
+        const val ID_BOOKMARKS = 2000
+        const val CHANNEL_ID_BOOKMARKS = "updates"
+        const val CHANNEL_NAME_BOOKMARKS = "Updates"
 
         const val ID_EVENTS = 3000
         const val CHANNEL_ID_EVENTS = "events"
@@ -48,7 +48,7 @@ class NotificationUtils @Inject constructor(
                     CHANNEL_ID_REMINDER, CHANNEL_NAME_REMINDER, NotificationManager.IMPORTANCE_HIGH
                 ),
                 NotificationChannel(
-                    CHANNEL_ID_UPDATES, CHANNEL_NAME_UPDATES, NotificationManager.IMPORTANCE_DEFAULT
+                    CHANNEL_ID_BOOKMARKS, CHANNEL_NAME_BOOKMARKS, NotificationManager.IMPORTANCE_DEFAULT
                 ),
                 NotificationChannel(
                     CHANNEL_ID_EVENTS, CHANNEL_NAME_EVENTS, NotificationManager.IMPORTANCE_DEFAULT
