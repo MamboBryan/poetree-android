@@ -1,17 +1,12 @@
 package com.mambo.poetree.ui
 
-import android.app.Notification
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.app.NotificationCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -19,7 +14,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.mambo.core.utils.NotificationUtils
+import com.mambo.core.extensions.isNotNullOrEmpty
+import com.mambo.core.utils.IntentExtras
 import com.mambo.core.viewmodel.MainViewModel
 import com.mambo.core.work.InteractReminderWork
 import com.mambo.poetree.R
@@ -41,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -65,55 +62,46 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.darkModeFlow.collect { updateDarkMode(it) }
-        }
-
         setUpDestinationListener()
 
         initNavigation()
 
         handleNotificationData()
 
-        showNotification()
-    }
-
-    private fun showNotification() {
-
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse(getString(Destinations.PROFILE))
-
-        val notificationManager =
-            applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        val notification = NotificationCompat.Builder(this, NotificationUtils.CHANNEL_ID_REMINDER)
-            .setSmallIcon(R.drawable.ic_stat_name)
-            .setContentTitle("This is It!")
-            .setContentText("A small notification to show me what is true")
-            .setDefaults(Notification.DEFAULT_ALL)
-            .setAutoCancel(true)
-            .setContentIntent(
-                PendingIntent.getActivity(
-                    applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT
-                )
-            )
-
-        notificationManager.notify(NotificationUtils.ID_REMINDER, notification.build())
     }
 
     /**
      * method to handle the data content on clicking of notification if both notification and data payload are sent
      */
     private fun handleNotificationData() {
-        val data = intent.data
-        if(data != null){
-            navController.navigate(data)
-        }
-    }
 
-    private fun updateDarkMode(mode: Int) {
-        AppCompatDelegate.setDefaultNightMode(mode)
-        delegate.applyDayNight()
+        val extras = intent.extras
+
+        if (extras != null) {
+
+            val type = extras.getString(IntentExtras.TYPE)
+            val poem = extras.getString(IntentExtras.POEM)
+
+            Log.i("SomeThing", "TYPE: $type ")
+            Log.i("SomeThing", "POEM: $poem ")
+
+            val uri: String? =
+                if (type != null)
+                    when (type) {
+                        "comment" -> {
+                            getString(Destinations.COMMENTS)
+                        }
+                        else -> {
+                            getString(Destinations.POEM)
+                        }
+                    }
+                else null
+
+            if (viewModel.isValidPoem(poem) && uri.isNotNullOrEmpty())
+                navController.navigate(Uri.parse(uri))
+
+        }
+
     }
 
     private fun initNavigation() {

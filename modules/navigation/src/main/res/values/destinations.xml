@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="main">app://com.mambo.poetree/</string>
     <string name="poem">app://com.mambo.poetree/poem</string>
     <string name="artist">app://com.mambo.poetree/artist</string>
     <string name="search">app://com.mambo.poetree/search</string>

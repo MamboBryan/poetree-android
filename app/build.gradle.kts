@@ -125,6 +125,7 @@ dependencies {
     implementation(Dependencies.Libraries.okHttpLogging)
     implementation(Dependencies.Libraries.okHttp)
     implementation(Dependencies.Libraries.androidXStartup)
+    implementation ("androidx.core:core-splashscreen:1.0.0-beta01")
 
     testImplementation(Dependencies.Libraries.junit)
 

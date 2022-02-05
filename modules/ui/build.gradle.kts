@@ -52,6 +52,7 @@ dependencies {
     implementation(Dependencies.Libraries.constraintLayout)
     implementation(Dependencies.Libraries.legacySupport)
     implementation(Dependencies.Libraries.circularImage)
+    implementation ("androidx.core:core-splashscreen:1.0.0-beta01")
 
 }
 
