@@ -12,12 +12,12 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.work.*
 import com.mambo.core.extensions.isNotNullOrEmpty
 import com.mambo.core.utils.IntentExtras
 import com.mambo.core.viewmodel.MainViewModel
 import com.mambo.core.work.InteractReminderWork
+import com.mambo.core.work.UploadTokenWork
 import com.mambo.poetree.R
 import com.mambo.poetree.databinding.ActivityMainBinding
 import com.mambobryan.navigation.Destinations
@@ -58,6 +58,7 @@ class MainActivity : AppCompatActivity() {
             viewModel.events.collect { event ->
                 when (event) {
                     MainViewModel.MainEvent.SetupDailyInteractionReminder -> setupDailyInteractionReminder()
+                    MainViewModel.MainEvent.StartUploadTokenWork -> startUploadTokenWork()
                 }
             }
         }
@@ -68,6 +69,7 @@ class MainActivity : AppCompatActivity() {
 
         handleNotificationData()
 
+        startUploadTokenWork()
     }
 
     /**
@@ -212,5 +214,21 @@ class MainActivity : AppCompatActivity() {
 
         WorkManager.getInstance(this).enqueue(work)
 
+    }
+
+    private fun startUploadTokenWork() {
+
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .setRequiresBatteryNotLow(true)
+            .build()
+
+        val work =
+            OneTimeWorkRequestBuilder<UploadTokenWork>()
+                .addTag(UploadTokenWork.TAG)
+                .setConstraints(constraints)
+                .build()
+
+        WorkManager.getInstance(this).enqueue(work)
     }
 }

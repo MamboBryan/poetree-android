@@ -6,6 +6,7 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.google.firebase.messaging.FirebaseMessaging
+import com.mambo.core.extensions.isNotNullOrEmpty
 import com.mambo.core.repository.UserRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -25,21 +26,28 @@ class UploadTokenWork @AssistedInject constructor(
 
         return try {
 
-            val task = FirebaseMessaging.getInstance().token
+            var token = ""
 
-            if (!task.isSuccessful) {
-                Log.i(TAG, "doWork: ${task.exception?.message}")
-                Result.retry()
+            FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                    Result.retry()
+                }
+
+                // Get new FCM registration token
+                token = task.result
+
             }
 
-            val token = task.result!!
-
-            repository.updateToken(token)
+            if (token.isNotNullOrEmpty())
+                repository.updateToken(token)
+            else
+                Result.retry()
 
             Result.success()
 
         } catch (exception: Exception) {
-            Log.i(TAG, "doWork: ${exception.message}")
+            Log.i(TAG, "Task Failed : ${exception.localizedMessage}")
             Result.failure()
         }
     }

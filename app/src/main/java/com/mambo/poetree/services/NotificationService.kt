@@ -89,8 +89,8 @@ class NotificationService : FirebaseMessagingService() {
                     notificationID = NotificationUtils.ID_LIKES
                 }
                 Type.POEM -> {
-                    channelID = NotificationUtils.CHANNEL_ID_EVENTS
-                    notificationID = NotificationUtils.ID_EVENTS
+                    channelID = NotificationUtils.CHANNEL_ID_UPDATES
+                    notificationID = NotificationUtils.ID_UPDATES
                 }
                 else -> {
                     channelID = NotificationUtils.CHANNEL_ID_REMINDER
@@ -98,8 +98,8 @@ class NotificationService : FirebaseMessagingService() {
                 }
             }
         } else {
-            channelID = NotificationUtils.CHANNEL_ID_REMINDER
-            notificationID = NotificationUtils.ID_REMINDER
+            channelID = NotificationUtils.CHANNEL_ID_EVENTS
+            notificationID = NotificationUtils.ID_EVENTS
         }
 
         intent.putExtra(IntentExtras.POEM, poem)

@@ -36,7 +36,7 @@ class App : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
-        Firebase.messaging.subscribeToTopic("all")
+        Firebase.messaging.subscribeToTopic("featured")
         setupNotificationChannels()
         initTheme()
     }

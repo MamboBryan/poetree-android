@@ -131,6 +131,7 @@ class MainViewModel @Inject constructor(
 
     sealed class MainEvent {
         object SetupDailyInteractionReminder : MainEvent()
+        object StartUploadTokenWork : MainEvent()
     }
 
 }
