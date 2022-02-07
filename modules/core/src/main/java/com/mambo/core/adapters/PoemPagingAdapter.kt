@@ -1,7 +1,6 @@
 package com.mambo.core.adapters
 
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
@@ -43,8 +42,6 @@ class PoemPagingAdapter @Inject constructor() :
 
         fun bind(poem: Poem) {
             binding.apply {
-
-                Log.i("FEEDS", "poem bind called :: ${poem.title}")
 
                 val duration = prettyTime.formatDuration(poem.createdAt)
                 val message = " \u2022 $duration "

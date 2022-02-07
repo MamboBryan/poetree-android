@@ -5,6 +5,8 @@ plugins {
     id(Plugins.parcelize)
     id(Plugins.hilt)
     id(Plugins.navigation)
+    id(Plugins.googleServices)
+    id(Plugins.crashlytics)
 }
 
 android {
@@ -76,6 +78,15 @@ dependencies {
     implementation(project(Modules.Features.publish))
     implementation(project(Modules.Features.settings))
 
+    implementation(platform(Dependencies.BOM.okHttp))
+    implementation(platform(Dependencies.BOM.firebase))
+
+    // firebase
+    implementation(Dependencies.Firebase.analytics)
+    implementation(Dependencies.Firebase.crashlytics)
+    implementation(Dependencies.Firebase.performance)
+    implementation(Dependencies.Firebase.messaging)
+
     implementation(Dependencies.Libraries.core)
     implementation(Dependencies.Libraries.kotlin)
     implementation(Dependencies.Libraries.appCompat)
@@ -111,10 +122,10 @@ dependencies {
 
     implementation(Dependencies.Libraries.retrofitConverter)
     implementation(Dependencies.Libraries.retrofit)
-    implementation(platform(Dependencies.Libraries.okHttpBOM))
     implementation(Dependencies.Libraries.okHttpLogging)
     implementation(Dependencies.Libraries.okHttp)
     implementation(Dependencies.Libraries.androidXStartup)
+    implementation ("androidx.core:core-splashscreen:1.0.0-beta01")
 
     testImplementation(Dependencies.Libraries.junit)
 

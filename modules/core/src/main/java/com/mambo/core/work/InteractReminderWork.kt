@@ -9,6 +9,7 @@ import android.net.Uri
 import androidx.core.app.NotificationCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.mambo.core.R
 import com.mambo.core.utils.NotificationUtils
 
 class InteractReminderWork(private val context: Context, workerParams: WorkerParameters) :
@@ -46,6 +47,7 @@ class InteractReminderWork(private val context: Context, workerParams: WorkerPar
         val subtitleNotification = "How about reading one poem for today ?"
 
         val notification = NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL)
+            .setSmallIcon(R.drawable.ic_stat_name)
             .setContentTitle(titleNotification)
             .setContentText(subtitleNotification)
             .setDefaults(Notification.DEFAULT_ALL)

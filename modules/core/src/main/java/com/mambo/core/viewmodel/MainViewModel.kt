@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.google.gson.Gson
 import com.mambo.core.repository.PoemRepository
 import com.mambo.core.utils.ConnectionLiveData
 import com.mambo.data.models.Poem
@@ -14,6 +15,7 @@ import com.mambo.data.models.User
 import com.mambo.data.preferences.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -33,6 +35,7 @@ class MainViewModel @Inject constructor(
     private val _eventChannel = Channel<MainEvent>()
     val events = _eventChannel.receiveAsFlow()
 
+    var dataLoaded = false
     var isOnBoarded: Boolean
     var isLoggedIn: Boolean
     var isUserSetup: Boolean
@@ -75,6 +78,27 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun mockDataLoading(): Boolean {
+        viewModelScope.launch {
+            delay(1000)
+            dataLoaded = true
+        }
+        return dataLoaded
+    }
+
+    fun isValidPoem(json: String?): Boolean {
+
+        if (json.isNullOrEmpty()) return false
+
+        return try {
+            val poemUpdate = Gson().fromJson(json, Poem::class.java)
+            setPoem(poemUpdate)
+            poemUpdate != null
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     fun setPoem(poem: Poem?) {
         _poem.value = poem
     }
@@ -107,6 +131,7 @@ class MainViewModel @Inject constructor(
 
     sealed class MainEvent {
         object SetupDailyInteractionReminder : MainEvent()
+        object StartUploadTokenWork : MainEvent()
     }
 
 }

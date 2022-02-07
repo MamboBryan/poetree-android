@@ -4,6 +4,8 @@ plugins {
     id(Plugins.kapt)
     id(Plugins.parcelize)
     id(Plugins.hilt)
+    id(Plugins.googleServices)
+    id(Plugins.crashlytics)
 }
 
 android {
@@ -51,6 +53,9 @@ dependencies {
     implementation(project(Modules.Commons.local))
     implementation(project(Modules.Commons.remote))
 
+    implementation(platform(Dependencies.BOM.okHttp))
+    implementation(platform(Dependencies.BOM.firebase))
+
     implementation(Dependencies.Libraries.core)
     implementation(Dependencies.Libraries.kotlin)
     implementation(Dependencies.Libraries.appCompat)
@@ -65,13 +70,16 @@ dependencies {
     implementation(Dependencies.Libraries.paging)
     implementation(Dependencies.Libraries.hilt)
 
-    implementation(Dependencies.Libraries.retrofitConverter)
-    implementation(Dependencies.Libraries.retrofit)
-    implementation(platform(Dependencies.Libraries.okHttpBOM))
-    implementation(Dependencies.Libraries.okHttpLogging)
-    implementation(Dependencies.Libraries.okHttp)
+    implementation(Dependencies.Firebase.analytics)
+    implementation(Dependencies.Firebase.crashlytics)
+    implementation(Dependencies.Firebase.performance)
+    implementation(Dependencies.Firebase.messaging)
 
+    implementation(Dependencies.Libraries.retrofitConverter)
+    implementation(Dependencies.Libraries.okHttpLogging)
     implementation(Dependencies.Libraries.prettyTime)
+    implementation(Dependencies.Libraries.retrofit)
+    implementation(Dependencies.Libraries.okHttp)
 
     kapt(Dependencies.Libraries.hiltCompiler)
     kapt(Dependencies.Libraries.hiltWorkCompiler)

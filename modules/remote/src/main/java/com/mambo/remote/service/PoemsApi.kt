@@ -17,4 +17,7 @@ interface PoemsApi {
     @POST("user/setup")
     suspend fun setup(@Body request: SetupRequest)
 
+    @POST("user/update-token")
+    suspend fun updateToken(@Body token: String)
+
 }

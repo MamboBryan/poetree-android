@@ -6,11 +6,12 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:4.1.3")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
-        classpath("com.google.dagger:hilt-android-gradle-plugin:${Versions.hilt}")
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.navigation}")
-
+        classpath(Dependencies.BuildPlugins.androidGradle)
+        classpath(Dependencies.BuildPlugins.kotlinGradle)
+        classpath(Dependencies.BuildPlugins.hiltGradle)
+        classpath(Dependencies.BuildPlugins.crashlyticsGradle)
+        classpath(Dependencies.BuildPlugins.googleServicesGradle)
+        classpath(Dependencies.BuildPlugins.navigationSafeArgsGradle)
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }

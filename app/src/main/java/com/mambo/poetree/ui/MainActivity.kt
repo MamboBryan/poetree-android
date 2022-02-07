@@ -1,19 +1,23 @@
 package com.mambo.poetree.ui
 
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.work.*
+import com.mambo.core.extensions.isNotNullOrEmpty
+import com.mambo.core.utils.IntentExtras
 import com.mambo.core.viewmodel.MainViewModel
 import com.mambo.core.work.InteractReminderWork
+import com.mambo.core.work.UploadTokenWork
 import com.mambo.poetree.R
 import com.mambo.poetree.databinding.ActivityMainBinding
 import com.mambobryan.navigation.Destinations
@@ -24,6 +28,7 @@ import kotlinx.coroutines.flow.collect
 import java.util.*
 import java.util.concurrent.TimeUnit
 
+
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -32,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -52,23 +58,52 @@ class MainActivity : AppCompatActivity() {
             viewModel.events.collect { event ->
                 when (event) {
                     MainViewModel.MainEvent.SetupDailyInteractionReminder -> setupDailyInteractionReminder()
+                    MainViewModel.MainEvent.StartUploadTokenWork -> startUploadTokenWork()
                 }
             }
-        }
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.darkModeFlow.collect { updateDarkMode(it) }
         }
 
         setUpDestinationListener()
 
         initNavigation()
 
+        handleNotificationData()
+
+        startUploadTokenWork()
     }
 
-    private fun updateDarkMode(mode: Int) {
-        AppCompatDelegate.setDefaultNightMode(mode)
-        delegate.applyDayNight()
+    /**
+     * method to handle the data content on clicking of notification if both notification and data payload are sent
+     */
+    private fun handleNotificationData() {
+
+        val extras = intent.extras
+
+        if (extras != null) {
+
+            val type = extras.getString(IntentExtras.TYPE)
+            val poem = extras.getString(IntentExtras.POEM)
+
+            Log.i("SomeThing", "TYPE: $type ")
+            Log.i("SomeThing", "POEM: $poem ")
+
+            val uri: String? =
+                if (type != null)
+                    when (type) {
+                        "comment" -> {
+                            getString(Destinations.COMMENTS)
+                        }
+                        else -> {
+                            getString(Destinations.POEM)
+                        }
+                    }
+                else null
+
+            if (viewModel.isValidPoem(poem) && uri.isNotNullOrEmpty())
+                navController.navigate(Uri.parse(uri))
+
+        }
+
     }
 
     private fun initNavigation() {
@@ -179,5 +214,21 @@ class MainActivity : AppCompatActivity() {
 
         WorkManager.getInstance(this).enqueue(work)
 
+    }
+
+    private fun startUploadTokenWork() {
+
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .setRequiresBatteryNotLow(true)
+            .build()
+
+        val work =
+            OneTimeWorkRequestBuilder<UploadTokenWork>()
+                .addTag(UploadTokenWork.TAG)
+                .setConstraints(constraints)
+                .build()
+
+        WorkManager.getInstance(this).enqueue(work)
     }
 }

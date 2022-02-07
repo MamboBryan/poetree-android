@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="poem">app://com.mambobryan.poetree/poem</string>
-    <string name="artist">app://com.mambobryan.poetree/artist</string>
-    <string name="search">app://com.mambobryan.poetree/search</string>
-    <string name="profile">app://com.mambobryan.poetree/profile</string>
-    <string name="compose">app://com.mambobryan.poetree/compose</string>
-    <string name="comments">app://com.mambobryan.poetree/comments</string>
-    <string name="edit_account">app://com.mambobryan.poetree/account/edit</string>
-    <string name="update_password">app://com.mambobryan.poetree/account/update_password</string>
-    <string name="on_boarding">app://com.mambobryan.poetree/account/on_boarding</string>
-    <string name="feed">app://com.mambobryan.poetree/feed</string>
-    <string name="setup">app://com.mambobryan.poetree/account/setup</string>
-    <string name="auth">app://com.mambobryan.poetree/account/auth</string>
-    <string name="landing">app://com.mambobryan.poetree/landing</string>
-    <string name="publish">app://com.mambobryan.poetree/publish</string>
-    <string name="settings">app://com.mambobryan.poetree/settings</string>
+    <string name="main">app://com.mambo.poetree/</string>
+    <string name="poem">app://com.mambo.poetree/poem</string>
+    <string name="artist">app://com.mambo.poetree/artist</string>
+    <string name="search">app://com.mambo.poetree/search</string>
+    <string name="profile">app://com.mambo.poetree/profile</string>
+    <string name="compose">app://com.mambo.poetree/compose</string>
+    <string name="comments">app://com.mambo.poetree/comments</string>
+    <string name="edit_account">app://com.mambo.poetree/account/edit</string>
+    <string name="update_password">app://com.mambo.poetree/account/update_password</string>
+    <string name="on_boarding">app://com.mambo.poetree/account/on_boarding</string>
+    <string name="feed">app://com.mambo.poetree/feed</string>
+    <string name="setup">app://com.mambo.poetree/account/setup</string>
+    <string name="auth">app://com.mambo.poetree/account/auth</string>
+    <string name="landing">app://com.mambo.poetree/landing</string>
+    <string name="publish">app://com.mambo.poetree/publish</string>
+    <string name="settings">app://com.mambo.poetree/settings</string>
 
 </resources>

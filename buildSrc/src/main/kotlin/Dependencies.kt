@@ -4,8 +4,12 @@ object Dependencies {
      * To define plugins
      */
     object BuildPlugins {
-        val android by lazy { "com.android.tools.build:gradle:${Versions.gradlePlugin}" }
-        val kotlin by lazy { "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}" }
+        val androidGradle by lazy { "com.android.tools.build:gradle:${Versions.androidGradlePlugin}" }
+        val kotlinGradle by lazy { "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlinGradlePlugin}" }
+        val googleServicesGradle by lazy { "com.google.gms:google-services:${Versions.googleServicesGradlePlugin}" }
+        val hiltGradle by lazy { "com.google.dagger:hilt-android-gradle-plugin:${Versions.hilt}" }
+        val navigationSafeArgsGradle by lazy { "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.navigation}" }
+        val crashlyticsGradle by lazy {"com.google.firebase:firebase-crashlytics-gradle:${Versions.crashlyticsGradlePlugin}"}
     }
 
     /**
@@ -75,4 +79,15 @@ object Dependencies {
 
     }
 
+    object BOM{
+        val okHttp by lazy { "com.squareup.okhttp3:okhttp-bom:${Versions.okHttp}" }
+        val firebase by lazy { "com.google.firebase:firebase-bom:${Versions.firebaseBOM}" }
+    }
+
+    object Firebase{
+        val analytics by lazy { "com.google.firebase:firebase-analytics-ktx" }
+        val messaging by lazy { "com.google.firebase:firebase-messaging-ktx" }
+        val crashlytics by lazy { "com.google.firebase:firebase-crashlytics-ktx" }
+        val performance by lazy { "com.google.firebase:firebase-perf-ktx" }
+    }
 }

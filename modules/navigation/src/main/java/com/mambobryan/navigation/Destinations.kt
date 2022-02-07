@@ -2,6 +2,7 @@ package com.mambobryan.navigation
 
 object Destinations {
 
+    val MAIN = R.string.main
     val PROFILE = R.string.profile
     val COMPOSE = R.string.compose
     val POEM = R.string.poem
