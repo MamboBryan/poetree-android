@@ -58,7 +58,7 @@ Poetree provides the following features for users
 Your contributions are especially welcome.
 Whether it comes in the form of code patches, ideas, discussion, bug reports, encouragement or criticism, your input is needed.
 
-Visit [wiki](https://github.com/GothenburgBitFactory/taskwarrior) to get started.
+Visit [wiki](https://github.com/MamboBryan/poetree/wiki) to get started.
 
 ## Sponsor
 
