@@ -3,13 +3,15 @@ package com.mambo.remote.service
 import com.mambo.data.requests.SetupRequest
 import com.mambo.data.requests.SignInRequest
 import com.mambo.data.requests.SignUpRequest
+import com.mambo.data.responses.Response
+import com.mambo.data.responses.auth.SignInData
 import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface PoemsApi {
 
     @POST("auth/signin")
-    suspend fun signIn(@Body signInRequest: SignInRequest)
+    suspend fun signIn(@Body signInRequest: SignInRequest) : Response<SignInData>
 
     @POST("auth/signup")
     suspend fun signUp(@Body request: SignUpRequest)

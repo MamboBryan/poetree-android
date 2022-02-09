@@ -7,18 +7,20 @@ import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
 
-class AuthInterceptor() : Interceptor {
+class AuthInterceptor @Inject constructor(preferences: UserPreferences) : Interceptor {
+    
+    private var token = ""
 
-    @Inject
-    lateinit var preferences: UserPreferences
+    init {
+        runBlocking { preferences.accessToken.first() }
+    }
 
     override fun intercept(chain: Interceptor.Chain): Response = runBlocking {
-        val accessToken = preferences.accessToken.first()
 
         val request = chain
             .request()
             .newBuilder()
-            .addHeader("Authorization", "Bearer $accessToken")
+            .addHeader("Authorization", "Bearer $token")
             .addHeader("Content-Type", "application/json")
             .build()
 

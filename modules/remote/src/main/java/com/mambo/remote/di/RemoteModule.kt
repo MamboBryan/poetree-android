@@ -1,6 +1,7 @@
 package com.mambo.remote.di
 
 import android.content.Context
+import com.mambo.data.preferences.UserPreferences
 import com.mambo.remote.interceptors.AuthInterceptor
 import com.mambo.remote.service.PoemsApi
 import com.readystatesoftware.chuck.ChuckInterceptor
@@ -24,12 +25,11 @@ object RemoteModule {
     @Singleton
     @Provides
     fun providesHttpLoggingInterceptor() =
-        HttpLoggingInterceptor()
-        .apply { level = HttpLoggingInterceptor.Level.BODY }
+        HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
 
     @Singleton
     @Provides
-    fun providesAuthInterceptor() = AuthInterceptor()
+    fun providesAuthInterceptor(preferences: UserPreferences) = AuthInterceptor(preferences)
 
     @Singleton
     @Provides
@@ -38,9 +38,9 @@ object RemoteModule {
     @Singleton
     @Provides
     fun providesOkHttpClient(
-        httpLoggingInterceptor: HttpLoggingInterceptor,
         authInterceptor: AuthInterceptor,
-        chuckInterceptor: ChuckInterceptor
+        chuckInterceptor: ChuckInterceptor,
+        httpLoggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient =
         OkHttpClient
             .Builder()
