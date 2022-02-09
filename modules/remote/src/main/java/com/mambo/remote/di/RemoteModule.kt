@@ -1,10 +1,13 @@
 package com.mambo.remote.di
 
+import android.content.Context
 import com.mambo.remote.interceptors.AuthInterceptor
 import com.mambo.remote.service.PoemsApi
+import com.readystatesoftware.chuck.ChuckInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -16,11 +19,12 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object RemoteModule {
 
-    private const val BASE_URL = "https://restcountries.eu/rest/v2/"
+    private const val BASE_URL = "http://104.248.2.138:4000/api/"
 
     @Singleton
     @Provides
-    fun providesHttpLoggingInterceptor() = HttpLoggingInterceptor()
+    fun providesHttpLoggingInterceptor() =
+        HttpLoggingInterceptor()
         .apply { level = HttpLoggingInterceptor.Level.BODY }
 
     @Singleton
@@ -29,13 +33,19 @@ object RemoteModule {
 
     @Singleton
     @Provides
+    fun providesChuckInterceptor(@ApplicationContext context: Context) = ChuckInterceptor(context)
+
+    @Singleton
+    @Provides
     fun providesOkHttpClient(
         httpLoggingInterceptor: HttpLoggingInterceptor,
-        authInterceptor: AuthInterceptor
+        authInterceptor: AuthInterceptor,
+        chuckInterceptor: ChuckInterceptor
     ): OkHttpClient =
         OkHttpClient
             .Builder()
             .addInterceptor(authInterceptor)
+            .addInterceptor(chuckInterceptor)
             .addInterceptor(httpLoggingInterceptor)
             .build()
 

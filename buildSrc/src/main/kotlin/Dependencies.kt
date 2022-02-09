@@ -73,9 +73,10 @@ object Dependencies {
         val timber by lazy { "com.jakewharton.timber:timber:${Versions.timber}" }
         val retrofit by lazy { "com.squareup.retrofit2:retrofit:${Versions.retrofit}" }
         val retrofitConverter by lazy { "com.squareup.retrofit2:converter-gson:${Versions.retrofit}" }
-        val okHttpBOM by lazy { "com.squareup.okhttp3:okhttp-bom:${Versions.okHttp}" }
         val okHttp by lazy { "com.squareup.okhttp3:okhttp" }
         val okHttpLogging by lazy { "com.squareup.okhttp3:logging-interceptor" }
+        val chuckDebug by lazy { "com.readystatesoftware.chuck:library:${Versions.chuck}" }
+        val chuckRelease by lazy { "com.readystatesoftware.chuck:library-no-op:${Versions.chuck}" }
 
     }
 

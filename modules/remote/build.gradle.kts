@@ -43,6 +43,7 @@ android {
 dependencies {
 
     implementation(project(Modules.Commons.data))
+    implementation(platform(Dependencies.BOM.okHttp))
 
     implementation(Dependencies.Libraries.core)
     implementation(Dependencies.Libraries.kotlin)
@@ -52,11 +53,13 @@ dependencies {
 
     implementation(Dependencies.Libraries.retrofitConverter)
     implementation(Dependencies.Libraries.retrofit)
-    implementation(platform(Dependencies.Libraries.okHttpBOM))
     implementation(Dependencies.Libraries.okHttpLogging)
     implementation(Dependencies.Libraries.okHttp)
     implementation(Dependencies.Libraries.timber)
     implementation(Dependencies.Libraries.gson)
+
+    debugImplementation(Dependencies.Libraries.chuckDebug)
+    releaseImplementation(Dependencies.Libraries.chuckRelease)
 
     kapt(Dependencies.Libraries.hiltCompiler)
 }
