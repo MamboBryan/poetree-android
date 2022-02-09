@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/flow_compose"
+    app:startDestination="@id/composeFragment">
+
+    <fragment
+        android:id="@+id/composeFragment"
+        android:name="com.mambo.compose.ComposeFragment"
+        android:label="ComposeFragment">
+        <deepLink app:uri="@string/compose" />
+    </fragment>
+</navigation>

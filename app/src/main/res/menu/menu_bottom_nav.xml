@@ -2,24 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/dashboardFragment"
+        android:id="@+id/flow_feeds"
         android:icon="@drawable/ic_baseline_home_24"
-        android:title="Home" />
+        android:title="Feed" />
 
     <item
-        android:id="@+id/discoverFragment"
-        android:icon="@drawable/ic_baseline_explore_24"
-        android:title="Discover" />
+        android:id="@+id/flow_explore"
+        android:icon="@drawable/ic_round_offline_bolt_24"
+        android:title="Explore" />
 
     <item
-        android:id="@+id/libraryFragment"
+        android:id="@+id/flow_bookmarks"
         android:icon="@drawable/ic_baseline_bookmark_24"
-        android:title="Library" />
+        android:title="Bookmarks" />
 
     <item
-        android:id="@+id/accountFragment"
-        android:icon="@drawable/ic_baseline_person_24"
-        android:title="Account" />
-
+        android:id="@+id/flow_library"
+        android:icon="@drawable/ic_baseline_book_24"
+        android:title="Library" />
 
 </menu>

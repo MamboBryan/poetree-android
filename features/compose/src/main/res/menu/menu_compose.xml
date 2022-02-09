@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_compose_edit"
+        android:icon="@drawable/ic_baseline_create_24"
+        android:title="Edit"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_compose_preview"
+        android:icon="@drawable/ic_outline_remove_red_eye_24"
+        android:title="Preview"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_compose_stash"
+        android:icon="@drawable/ic_baseline_save_alt_24"
+        android:title="Stash"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_compose_choose_topic"
+        android:title="Choose Topic"
+        android:visible="true"
+        app:showAsAction="never" />
+
+</menu>

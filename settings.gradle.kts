@@ -1,0 +1,31 @@
+rootProject.name = "Poetree"
+include(
+    ":app",
+    ":modules:core",
+    ":features:home"
+)
+include(":modules:ui")
+include(":modules:local")
+include(":modules:remote")
+include(":modules:data")
+include(":features:explore")
+include(":features:bookmarks")
+include(":features:library")
+include(":features:compose")
+include(":libraries:editor")
+include(":features:poem")
+include(":features:comments")
+include(":features:onboarding")
+include(":features:profile")
+include(":features:account")
+include(":features:update-password")
+include(":features:search")
+include(":libraries:searchbar")
+include(":features:artist")
+include(":features:landing")
+include(":features:auth")
+include(":modules:navigation")
+include(":features:loading")
+include(":features:setup")
+include(":features:publish")
+include(":features:settings")

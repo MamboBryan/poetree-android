@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MultiSearch">
+        <!-- drawable shape resource to use for selection indicator -->
+        <attr name="searchSelectionIndicator" format="reference" />
+
+        <!-- Search text appearance as a style resource -->
+        <attr name="searchTextAppearance" format="reference" />
+
+        <!-- Search icon, the default that will be used is a 24dp vector image-->
+        <attr name="searchIcon" format="reference" />
+
+        <!-- Search term remove icon, the default is a 10dp vector image -->
+        <attr name="searchRemoveIcon" format="reference" />
+
+        <!-- Search animation effect duration, the default is 500ms -->
+        <attr name="searchAnimationDuration" format="integer" />
+    </declare-styleable>
+</resources>

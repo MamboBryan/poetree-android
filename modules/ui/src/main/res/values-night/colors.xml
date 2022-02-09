@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--DARK THEME COLORS-->
+    <color name="splash_background">@color/color_primary</color>
+
+    <color name="error">#e66666</color>
+    <color name="loading">#ffe666</color>
+    <color name="success">#93e75d</color>
+
+    <color name="color_background">#111524</color>
+    <color name="color_on_background">#FFFFFFFF</color>
+    <color name="color_surface">#212842</color>
+    <color name="color_on_surface">#FFFFFFFF</color>
+
+    <color name="color_primary">#527bf3</color>
+    <color name="color_on_primary">#ffffff</color>
+
+    <color name="nav_item_active">#ffffff</color>
+    <color name="nav_item_inactive">#50ffffff</color>
+
+    <color name="color_divider">#212842</color>
+
+</resources>

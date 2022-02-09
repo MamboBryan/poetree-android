@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/flow_poem"
+    app:startDestination="@id/poemFragment">
+
+    <fragment
+        android:id="@+id/poemFragment"
+        android:name="com.mambobryan.poetree.poem.PoemFragment"
+        android:label="PoemFragment">
+        <deepLink app:uri="@string/poem" />
+    </fragment>
+</navigation>

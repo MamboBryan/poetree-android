@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--Shadow Layer-->
+
+
+    <item android:right="10dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="100dp" />
+            <padding
+                android:bottom="1px"
+                android:left="1px"
+                android:right="1px" />
+            <solid android:color="#01000000" />
+        </shape>
+    </item>
+
+    <!--===============-->
+
+
+    <item android:right="10dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="100dp" />
+            <padding android:bottom="1px" />
+            <solid android:color="#09000000" />
+        </shape>
+    </item>
+
+    <!--===============-->
+
+
+    <item android:right="10dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="100dp" />
+            <padding
+                android:bottom="1px"
+                android:left="1px"
+                android:right="1px" />
+            <solid android:color="#10000000" />
+        </shape>
+    </item>
+
+    <!--===============-->
+
+
+    <!--ForeGround-->
+
+
+    <item android:right="10dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/primary_100" />
+            <corners android:topLeftRadius="5dp" android:radius="25dp" />
+        </shape>
+    </item>
+
+</layer-list>
