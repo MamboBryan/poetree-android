@@ -1,13 +1,14 @@
 object Versions {
 
+    // Gradle plugins
     const val androidGradlePlugin = "4.1.3"
     const val kotlinGradlePlugin = "1.6.10"
     const val googleServicesGradlePlugin = "4.3.10"
     const val crashlyticsGradlePlugin = "2.8.1"
 
+    // Normal Dependencies
     const val hilt = "2.38.1"
     const val navigation = "2.3.5"
-    const val gradlePlugin = "4.2.1"
     const val kotlin = "1.5.10"
     const val timber = "4.7.1"
     const val appCompat = "1.3.0"
@@ -34,7 +35,6 @@ object Versions {
     const val playServicesAuth = "19.0.0"
     const val paging = "3.1.0"
     const val retrofit = "2.9.0"
-    const val okHttp = "4.7.2"
     const val recyclerview = "1.2.1"
     const val recyclerviewSelection = "1.0.0"
     const val sneaker = "2.0.0"
@@ -47,6 +47,9 @@ object Versions {
     const val workManager = "2.7.1"
     const val androidXStartup = "1.1.0"
     const val motionToast = "1.4"
+    const val chuck = "1.1.0"
 
+    // Bill Of Materials
+    const val okHttp = "4.7.2"
     const val firebaseBOM = "29.0.4"
 }
