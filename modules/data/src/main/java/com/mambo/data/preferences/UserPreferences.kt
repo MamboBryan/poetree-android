@@ -101,6 +101,13 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
         }
     }
 
+    suspend fun updateUserData(){
+        val json = Gson().toJson(user)
+        dataStore.edit { prefs->
+            prefs[PreferencesKeys.USER_DETAILS] = json
+        }
+    }
+
     suspend fun setup(user: User){
         val json = Gson().toJson(user)
         dataStore.edit { prefs->

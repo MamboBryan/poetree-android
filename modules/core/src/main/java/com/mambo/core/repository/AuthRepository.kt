@@ -1,19 +1,26 @@
 package com.mambo.core.repository
 
 import com.mambo.data.requests.SignInRequest
-import com.mambo.data.requests.SignUpRequest
+import com.mambo.data.responses.Response
+import com.mambo.data.responses.auth.SignInData
 import com.mambo.remote.service.PoemsApi
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
-class AuthRepository @Inject constructor() {
+interface AuthRepository{
+    suspend fun signIn(email:String, password:String): Response<SignInData>
+}
+
+class AuthRepositoryImpl @Inject constructor(): AuthRepository {
 
     @Inject
     lateinit var service: PoemsApi
 
-    suspend fun signIn(email: String, password: String) =
-        service.signIn(SignInRequest(email, password))
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 
-    suspend fun signUp(email: String, password: String, confirmPass: String)=
-        service.signUp(SignUpRequest(email, password, confirmPass))
+    override suspend fun signIn(email: String, password: String): Response<SignInData> {
+        return service.signIn(SignInRequest(email, password))
+    }
 
 }

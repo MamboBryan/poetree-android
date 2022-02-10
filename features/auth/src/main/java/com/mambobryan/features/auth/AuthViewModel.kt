@@ -2,6 +2,7 @@ package com.mambobryan.features.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mambo.core.repository.AuthRepositoryImpl
 import com.mambo.data.preferences.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -12,7 +13,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val preferences: UserPreferences
+    private val preferences: UserPreferences,
+    private val repository: AuthRepositoryImpl
 ) : ViewModel() {
 
     private val _eventChannel = Channel<AuthEvent>()
@@ -21,13 +23,11 @@ class AuthViewModel @Inject constructor(
     fun onSignInClicked(email: String, password: String) = viewModelScope.launch {
         showLoading()
         try {
-            //TODO network sign in call
-            delay(2000)
-            preferences.signedIn("")
+            val response = repository.signIn(email, password)
+            preferences.signedIn(response.data.token)
+            showSuccess("Signed In Successfully")
+//            getUserData()
             hideLoading()
-            showSuccess("Logged In Successfully")
-            setupDailyInteractionReminder()
-            updateUi(AuthEvent.NavigateToFeeds)
         } catch (e: Exception) {
             hideLoading()
             showError(e.localizedMessage!!)
@@ -66,4 +66,18 @@ class AuthViewModel @Inject constructor(
 
     private fun setupDailyInteractionReminder() = updateUi(AuthEvent.SetupDailyNotificationReminder)
 
+    private fun getUserData() = viewModelScope.launch {
+        try {
+            // TODO network call for user data
+//            preferences.signedIn(response.data.token)
+//            preferences.setup()
+            showSuccess("You're ready to go!")
+            setupDailyInteractionReminder()
+            hideLoading()
+            updateUi(AuthEvent.NavigateToFeeds)
+        } catch (e: Exception) {
+            hideLoading()
+            showError(e.localizedMessage!!)
+        }
+    }
 }
