@@ -8,17 +8,17 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.google.gson.Gson
-import com.mambo.data.BuildConfig
 import com.mambo.data.models.User
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private val Context.dataStore by preferencesDataStore(BuildConfig.LIBRARY_PACKAGE_NAME)
 
 @Singleton
 class UserPreferences @Inject constructor(@ApplicationContext context: Context) {
+
+    private val Context.dataStore by preferencesDataStore(context.applicationContext.packageName)
 
     private val dataStore = context.dataStore
 
