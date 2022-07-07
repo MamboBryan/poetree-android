@@ -45,22 +45,6 @@ android {
     }
 }
 
-//val props = Properties().apply {
-//    load(java.io.FileInputStream(File(rootProject.rootDir, "github.properties")))
-//}
-//val githubUserId: String? = props.getProperty("gpr.user")
-//val githubApiKey: String? = props.getProperty("gpr.key")
-//
-//repositories {
-//    maven(url = uri("https://maven.pkg.github.com/Cuberto/liquid-swipe-android")) {
-//        name = "GitHubPackages"
-//        credentials {
-//            username = githubUserId ?: System.getenv("GPR_USER")
-//            password = githubApiKey ?: System.getenv("GPR_API_KEY")
-//        }
-//    }
-//}
-
 dependencies {
 
     implementation(project(Modules.Commons.ui))
