@@ -35,8 +35,8 @@ class SetupViewModel @Inject constructor(
 
     private val _bio = MutableLiveData<String?>(null)
 
-
     fun onImageUploadClicked() = updateUi(SetupEvent.OpenImagePicker)
+
     fun onImageSelected(uri: Uri) {
         _imageUri.value = uri
     }
@@ -50,6 +50,7 @@ class SetupViewModel @Inject constructor(
     }
 
     fun onDateClicked() = updateUi(SetupEvent.OpenDatePicker)
+
     fun onDateSelected(calendar: Calendar) {
         _dob.value = calendar
     }
@@ -98,8 +99,18 @@ class SetupViewModel @Inject constructor(
         updateUi(SetupEvent.ShowLoadingDialog)
         try {
             //TODO network call to setup user
+            // TODO network call for user data
+            // TODO save user data in preferences
+            // TODO navigate to feed
             delay(2000)
-            preferences.setup(User("this","ThisThat", "that'sit"))
+            preferences.setup(User(
+                "1",
+                "MamboBryan",
+                "https://images.unsplash.com/photo-1558945657-484aa38065ec?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=633&q=80",
+                Date(),
+                "This is my moment",
+                "male"
+            ))
             updateUi(SetupEvent.HideLoadingDialog)
             updateUi(SetupEvent.ShowSetupSuccess("Setup Successfully!"))
             updateUi(SetupEvent.NavigateToFeeds)

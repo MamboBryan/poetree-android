@@ -1,7 +1,3 @@
-
-import org.jetbrains.kotlin.konan.properties.Properties
-import java.io.FileInputStream
-
 plugins {
     id(Plugins.library)
     id(Plugins.android)
@@ -10,6 +6,7 @@ plugins {
     id(Plugins.hilt)
     id(Plugins.navigation)
 }
+
 android {
     compileSdkVersion(Configs.compileSdkVersion)
 
@@ -48,21 +45,21 @@ android {
     }
 }
 
-val props = Properties().apply {
-    load(FileInputStream(File(rootProject.rootDir, "github.properties")))
-}
-val githubUserId: String? = props.getProperty("gpr.user")
-val githubApiKey:String? = props.getProperty("gpr.key")
-
-repositories {
-    maven(url = uri("https://maven.pkg.github.com/Cuberto/liquid-swipe-android")) {
-        name = "GitHubPackages"
-        credentials {
-            username = githubUserId ?: System.getenv("GPR_USER")
-            password = githubApiKey ?: System.getenv("GPR_API_KEY")
-        }
-    }
-}
+//val props = Properties().apply {
+//    load(java.io.FileInputStream(File(rootProject.rootDir, "github.properties")))
+//}
+//val githubUserId: String? = props.getProperty("gpr.user")
+//val githubApiKey: String? = props.getProperty("gpr.key")
+//
+//repositories {
+//    maven(url = uri("https://maven.pkg.github.com/Cuberto/liquid-swipe-android")) {
+//        name = "GitHubPackages"
+//        credentials {
+//            username = githubUserId ?: System.getenv("GPR_USER")
+//            password = githubApiKey ?: System.getenv("GPR_API_KEY")
+//        }
+//    }
+//}
 
 dependencies {
 

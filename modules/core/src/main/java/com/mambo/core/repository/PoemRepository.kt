@@ -6,6 +6,7 @@ import com.mambo.data.models.Poem
 import com.mambo.data.models.Topic
 import com.mambo.local.PoemsDao
 import com.mambo.remote.service.PoemsApi
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

@@ -7,11 +7,12 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mambo.data.models.Poem
 import com.mambo.data.models.Topic
 import com.mambo.data.models.User
+import com.mambo.data.utils.TopicUtils
 import com.mambo.data.utils.getLocalPoem
 import com.mambo.local.di.ApplicationScope
-import com.mambo.data.utils.TopicUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -65,7 +66,10 @@ abstract class PoetreeDatabase : RoomDatabase() {
                         user = User(
                             "poetree",
                             "Poetree",
-                            "https://images.unsplash.com/photo-1558945657-484aa38065ec?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=633&q=80"
+                            "https://images.unsplash.com/photo-1558945657-484aa38065ec?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=633&q=80",
+                            dateOfBirth = Date(),
+                            bio = "Just believe in the most impossible aspect of yourself",
+                            gender = "male"
                         )
 
                     )

@@ -1,4 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+import org.jetbrains.kotlin.konan.properties.Properties
+import java.io.FileInputStream
+
 buildscript {
 
     repositories {
@@ -17,13 +20,26 @@ buildscript {
     }
 }
 
+val props = Properties().apply {
+    load(FileInputStream(File(rootProject.rootDir, "github.properties")))
+}
+val githubUserId: String? = props.getProperty("gpr.user")
+val githubApiKey: String? = props.getProperty("gpr.key")
+
+
 allprojects {
     repositories {
         google()
         jcenter()
         mavenCentral()
         maven { setUrl("https://jitpack.io") }
-        maven { setUrl("https://maven.pkg.github.com/Cuberto/liquid-swipe-android") }
+        maven(url = uri("https://maven.pkg.github.com/Cuberto/liquid-swipe-android")) {
+            name = "GitHubPackages"
+            credentials {
+                username = githubUserId ?: System.getenv("GPR_USER")
+                password = githubApiKey ?: System.getenv("GPR_API_KEY")
+            }
+        }
     }
 }
 

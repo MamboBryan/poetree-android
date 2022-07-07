@@ -108,20 +108,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun initNavigation() {
 
-        if (!viewModel.isOnBoarded) {
-            navigateToOnBoarding()
-            return
-        }
-
-        if (!viewModel.isLoggedIn) {
-            navigateToAuth()
-            return
-        }
-
-        if (!viewModel.isUserSetup) {
-            navigateToSetup()
-            return
-        }
+//        if (!viewModel.isOnBoarded) {
+//            navigateToOnBoarding()
+//            return
+//        }
+//
+//        if (!viewModel.isLoggedIn) {
+//            navigateToAuth()
+//            return
+//        }
+//
+//        if (!viewModel.isUserSetup) {
+//            navigateToSetup()
+//            return
+//        }
 
         navigateToFeeds()
 
@@ -231,4 +231,5 @@ class MainActivity : AppCompatActivity() {
 
         WorkManager.getInstance(this).enqueue(work)
     }
+
 }

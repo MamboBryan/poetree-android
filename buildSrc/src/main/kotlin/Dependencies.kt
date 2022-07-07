@@ -27,6 +27,7 @@ object Dependencies {
         val recyclerview by lazy { "androidx.recyclerview:recyclerview:${Versions.recyclerview}" }
         val legacySupport by lazy { "androidx.legacy:legacy-support-v4:${Versions.legacy}" }
         val playServicesAuth by lazy { "com.google.android.gms:play-services-auth:${Versions.playServicesAuth}" }
+        val playCoroutines by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:${Versions.playCoroutines}" }
         val support by lazy { "com.android.support:design:${Versions.support}" }
 
         val junit by lazy { "junit:junit:${Versions.jUnit}" }
@@ -88,6 +89,7 @@ object Dependencies {
     object Firebase{
         val analytics by lazy { "com.google.firebase:firebase-analytics-ktx" }
         val messaging by lazy { "com.google.firebase:firebase-messaging-ktx" }
+        val storage by lazy { "com.google.firebase:firebase-storage-ktx" }
         val crashlytics by lazy { "com.google.firebase:firebase-crashlytics-ktx" }
         val performance by lazy { "com.google.firebase:firebase-perf-ktx" }
     }

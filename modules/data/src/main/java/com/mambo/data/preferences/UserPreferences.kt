@@ -30,7 +30,9 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
         val IS_LOGGED_IN = booleanPreferencesKey("is_logged_in")
         val IS_SETUP = booleanPreferencesKey("is_set_up")
         val ACCESS_TOKEN = stringPreferencesKey("access_token")
+        val MESSAGE_TOKEN = stringPreferencesKey("message_token")
         val USER_DETAILS = stringPreferencesKey("user_details")
+        val IMAGE_URL = stringPreferencesKey("image_url")
     }
 
     val darkMode = dataStore.data.map { prefs ->
@@ -46,17 +48,25 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
     }
 
     val isUserSetup = dataStore.data.map { prefs ->
-        prefs[PreferencesKeys.IS_SETUP] ?: true
+        prefs[PreferencesKeys.IS_SETUP] ?: false
     }
 
     val accessToken = dataStore.data.map { prefs ->
         prefs[PreferencesKeys.ACCESS_TOKEN]
     }
 
+    val imageUrl = dataStore.data.map { prefs ->
+        prefs[PreferencesKeys.IMAGE_URL]
+    }
+
     val user = dataStore.data.map { prefs ->
         val json = prefs[PreferencesKeys.USER_DETAILS]
         val user = Gson().fromJson(json, User::class.java) ?: null
         user
+    }
+
+    suspend fun updateImageUrl(url: String) {
+        dataStore.edit { prefs -> prefs[PreferencesKeys.IMAGE_URL] = url }
     }
 
     suspend fun updateDarkMode(mode: Int) {

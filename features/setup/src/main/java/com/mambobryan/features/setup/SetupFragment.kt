@@ -146,13 +146,13 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
 
         val dialog = DatePickerDialog(
             requireContext(),
-            { _: DatePicker, year: Int, month: Int, day: Int ->
+            { _: DatePicker, mYear: Int, mMonth: Int, mDay: Int ->
 
                 val selectedDate = Calendar.getInstance()
 
-                selectedDate.set(Calendar.YEAR, year)
-                selectedDate.set(Calendar.MONTH, month)
-                selectedDate.set(Calendar.DAY_OF_MONTH, day)
+                selectedDate.set(Calendar.YEAR, mYear)
+                selectedDate.set(Calendar.MONTH, mMonth)
+                selectedDate.set(Calendar.DAY_OF_MONTH, mDay)
 
                 binding.inputUserDob.error = null
 

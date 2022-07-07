@@ -37,9 +37,14 @@ class AuthViewModel @Inject constructor(
     fun onSignUpClicked(email: String, password: String) = viewModelScope.launch {
         showLoading()
         try {
-            //TODO network sign up call
-            delay(2000)
-            preferences.signedUp("")
+            val response = repository.signUp(email, password)
+
+            if (!response.isSuccessful) {
+                showError(response.message)
+                return@launch
+            }
+
+            preferences.signedUp(response.token)
             hideLoading()
             showSuccess("Signed Up Successfully")
             setupDailyInteractionReminder()
@@ -58,7 +63,7 @@ class AuthViewModel @Inject constructor(
 
     private fun showError(message: String) = updateUi(AuthEvent.ShowErrorMessage(message))
 
-    private fun showSuccess(message: String) = updateUi(AuthEvent.ShowErrorMessage(message))
+    private fun showSuccess(message: String) = updateUi(AuthEvent.ShowSuccessMessage(message))
 
     private fun showLoading() = updateUi(AuthEvent.ShowLoadingDialog)
 

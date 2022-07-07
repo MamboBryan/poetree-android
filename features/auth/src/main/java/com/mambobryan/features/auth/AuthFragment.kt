@@ -36,22 +36,22 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                 when (event) {
                     AuthEvent.NavigateToFeeds -> navigateToFeeds()
                     AuthEvent.NavigateToSetup -> navigateToSetup()
-                    AuthEvent.NavigateToSignIn -> binding.vpAuth.setCurrentItem(0, true)
-                    AuthEvent.NavigateToSignUp -> binding.vpAuth.setCurrentItem(1, true)
+                    AuthEvent.NavigateToSignIn -> setViewPagerPosition(0)
+                    AuthEvent.NavigateToSignUp -> setViewPagerPosition(1)
                     AuthEvent.HideLoadingDialog -> LoadingDialog.dismiss()
                     AuthEvent.ShowLoadingDialog -> LoadingDialog.show(requireContext())
                     is AuthEvent.ShowErrorMessage -> {
                         Alerter.create(requireActivity())
                             .setText(event.message)
-                            .setIcon(R.drawable.ic_baseline_check_circle_24)
-                            .setBackgroundColorRes(R.color.success)
+                            .setIcon(R.drawable.ic_baseline_error_24)
+                            .setBackgroundColorRes(R.color.error)
                             .show()
                     }
                     is AuthEvent.ShowSuccessMessage -> {
                         Alerter.create(requireActivity())
                             .setText(event.message)
-                            .setIcon(R.drawable.ic_baseline_error_24)
-                            .setBackgroundColorRes(R.color.error)
+                            .setIcon(R.drawable.ic_baseline_check_circle_24)
+                            .setBackgroundColorRes(R.color.success)
                             .show()
                     }
                     AuthEvent.SetupDailyNotificationReminder -> sharedViewModel.setupDailyInteractionReminder()
@@ -59,6 +59,10 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
             }
         }
 
+    }
+
+    private fun setViewPagerPosition(position: Int) {
+        binding.vpAuth.setCurrentItem(position, true)
     }
 
     private fun setUpViewPager() {

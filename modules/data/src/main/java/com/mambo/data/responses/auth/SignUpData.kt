@@ -1,10 +1,11 @@
-package com.mambo.data.responses
+package com.mambo.data.responses.auth
 
 import com.google.gson.annotations.SerializedName
 
-data class Response<out T>(
+data class SignUpData(
+    val message: String,
     @SerializedName("success")
     val isSuccessful: Boolean,
-    val message: String,
-    val data: T
-)
+    val token: String
+) {
+}

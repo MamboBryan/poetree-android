@@ -10,7 +10,7 @@ data class SignInRequest(
 data class SignUpRequest(
     val email: String,
     val password: String,
-    @SerializedName("confirm_password")
+    @SerializedName("password_confirmation")
     val confirmPassword: String
 )
 

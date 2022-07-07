@@ -33,6 +33,7 @@ object Versions {
     const val circularImageView = "4.2.0"
     const val liquidSwipe = "1.0.0"
     const val playServicesAuth = "19.0.0"
+    const val playCoroutines = "1.3.7"
     const val paging = "3.1.0"
     const val retrofit = "2.9.0"
     const val recyclerview = "1.2.1"

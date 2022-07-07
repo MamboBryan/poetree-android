@@ -63,6 +63,7 @@ dependencies {
     implementation(Dependencies.Libraries.materialDesign)
     implementation(Dependencies.Libraries.constraintLayout)
 
+    implementation(Dependencies.Libraries.playCoroutines)
     implementation(Dependencies.Libraries.workManager)
     implementation(Dependencies.Libraries.coroutines)
     implementation(Dependencies.Libraries.datastore)
@@ -74,6 +75,7 @@ dependencies {
     implementation(Dependencies.Firebase.crashlytics)
     implementation(Dependencies.Firebase.performance)
     implementation(Dependencies.Firebase.messaging)
+    implementation(Dependencies.Firebase.storage)
 
     implementation(Dependencies.Libraries.retrofitConverter)
     implementation(Dependencies.Libraries.okHttpLogging)

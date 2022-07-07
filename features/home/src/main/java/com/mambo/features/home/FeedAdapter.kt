@@ -97,8 +97,8 @@ class FeedAdapter : ListAdapter<String, FeedAdapter.FeedViewHolder>(FEED_COMPARA
         init {
 
             binding.layoutPoem.setOnClickListener {
-                if(adapterPosition != RecyclerView.NO_POSITION){
-                    listener.onPoemClicked(getItem(adapterPosition))
+                if(absoluteAdapterPosition != RecyclerView.NO_POSITION){
+                    listener.onPoemClicked(getItem(absoluteAdapterPosition))
                 }
             }
 
@@ -107,17 +107,17 @@ class FeedAdapter : ListAdapter<String, FeedAdapter.FeedViewHolder>(FEED_COMPARA
         fun bind(haiku: String) {
             binding.apply {
 
-                val duration = times[adapterPosition]
+                val duration = times[absoluteAdapterPosition]
                 val comments = Random.nextInt(100, 10000)
 
                 val message =
                     "  \u2022  $duration"
 
-                tvPoemUser.text = names[adapterPosition]
-                tvPoemTitle.text = titles[adapterPosition]
+                tvPoemUser.text = names[absoluteAdapterPosition]
+                tvPoemTitle.text = titles[absoluteAdapterPosition]
                 tvPoemDuration.text = message
 
-                layoutPoem.setBackgroundColor(Color.parseColor(colors[adapterPosition]))
+                layoutPoem.setBackgroundColor(Color.parseColor(colors[absoluteAdapterPosition]))
 
             }
         }
