@@ -67,14 +67,15 @@ dependencies {
     implementation(Dependencies.Libraries.navigationFragment)
     implementation(Dependencies.Libraries.navigationUi)
     implementation(Dependencies.Libraries.coroutines)
-    implementation(Dependencies.Libraries.hilt)
     implementation(Dependencies.Libraries.paging)
 
     implementation(Dependencies.Libraries.delegate)
     implementation(Dependencies.Libraries.circularImage)
     implementation(Dependencies.Libraries.prettyTime)
     implementation(Dependencies.Libraries.coil)
+    implementation(Dependencies.Libraries.cascade)
 
+    implementation(Dependencies.Libraries.hilt)
     kapt(Dependencies.Libraries.hiltCompiler)
 
 }

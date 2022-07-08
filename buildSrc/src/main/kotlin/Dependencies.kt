@@ -70,6 +70,7 @@ object Dependencies {
         val likeButton by lazy {"com.github.jd-alexander:LikeButton:${Versions.likeButton}"}
         val scrollLayout by lazy {"com.github.w446108264:ScrollableLayout:${Versions.scrollLayout}"}
         val motionToast by lazy {"com.github.Spikeysanju:MotionToast:${Versions.motionToast}"}
+        val cascade by lazy {"me.saket.cascade:cascade:1.3.0"}
 
         val timber by lazy { "com.jakewharton.timber:timber:${Versions.timber}" }
         val retrofit by lazy { "com.squareup.retrofit2:retrofit:${Versions.retrofit}" }

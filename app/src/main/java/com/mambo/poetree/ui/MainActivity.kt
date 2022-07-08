@@ -7,6 +7,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -50,9 +51,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.navBottomMain.setupWithNavController(navController)
 
-//        viewModel.connection.observe(this) { isNetworkAvailable ->
-//            binding.layoutConnection.constraintLayoutNetworkStatus.isVisible = !isNetworkAvailable
-//        }
+        viewModel.connection.observe(this) { isNetworkAvailable ->
+            binding.layoutConnection.constraintLayoutNetworkStatus.isVisible = !isNetworkAvailable
+        }
 
         lifecycleScope.launchWhenStarted {
             viewModel.events.collect { event ->
@@ -69,7 +70,6 @@ class MainActivity : AppCompatActivity() {
 
         handleNotificationData()
 
-        startUploadTokenWork()
     }
 
     /**
@@ -108,10 +108,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun initNavigation() {
 
-//        if (!viewModel.isOnBoarded) {
-//            navigateToOnBoarding()
-//            return
-//        }
+        if (!viewModel.isOnBoarded) {
+            navigateToOnBoarding()
+            return
+        }
 //
 //        if (!viewModel.isLoggedIn) {
 //            navigateToAuth()
