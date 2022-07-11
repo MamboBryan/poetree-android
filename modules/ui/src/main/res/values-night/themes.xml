@@ -12,7 +12,7 @@
         <item name="colorOnSecondary">@color/black</item>
 
         <!-- Status bar. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorSurface</item>
+        <item name="android:statusBarColor" >?attr/colorSurface</item>
         <item name="android:windowLightStatusBar">false</item>
 
         <!-- Navigation bar. -->

@@ -13,7 +13,7 @@
         <item name="colorOnSecondary">@color/white</item>
 
         <!-- Status bar. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorSurface</item>
+        <item name="android:statusBarColor" >?attr/colorSurface</item>
         <item name="android:windowLightStatusBar">true</item>
 
         <!-- Navigation bar. -->
@@ -38,7 +38,7 @@
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         // Set the splash screen background, animated icon, and animation duration.
-        <item name="windowSplashScreenBackground">@color/primary_500</item>
+        <item name="windowSplashScreenBackground">@color/color_background</item>
 
         // Use windowSplashScreenAnimatedIcon to add either a drawable or an
         // animated drawable. One of these is required.
