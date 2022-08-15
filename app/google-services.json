@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "786281389038",
+    "project_id": "poetree-254",
+    "storage_bucket": "poetree-254.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:786281389038:android:45aee513d558fd3141ccff",
+        "android_client_info": {
+          "package_name": "com.mambo.poetree"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "786281389038-f52ejb7gof4654b848a0aes6op8uibv8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mambo.poetree",
+            "certificate_hash": "762b05e6daaa807cb74369cee5c1371bd290e1c5"
+          }
+        },
+        {
+          "client_id": "786281389038-v53id3qdemkk2c7pp43amqtgfisdh0hc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZwwzrhhnLHQ3GUZLEdxIC2pdCuYbH4dM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "786281389038-v53id3qdemkk2c7pp43amqtgfisdh0hc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
