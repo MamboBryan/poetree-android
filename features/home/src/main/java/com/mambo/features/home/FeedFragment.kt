@@ -7,10 +7,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
+import coil.load
+import coil.size.Scale
+import coil.transform.CircleCropTransformation
 import com.mambo.core.OnPoemClickListener
 import com.mambo.core.adapters.GenericStateAdapter
 import com.mambo.core.adapters.PoemPagingAdapter
+import com.mambo.core.utils.showContent
+import com.mambo.core.utils.showEmpty
+import com.mambo.core.utils.showError
+import com.mambo.core.utils.showLoading
 import com.mambo.core.viewmodel.MainViewModel
 import com.mambo.data.models.Poem
 import com.mambo.features.home.databinding.FragmentFeedBinding
@@ -58,40 +66,29 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         }
 
         lifecycleScope.launchWhenStarted {
-            adapter.loadStateFlow.collectLatest { loadState ->
-                binding.layoutFeedState.apply {
+            adapter.loadStateFlow.collectLatest { state: CombinedLoadStates ->
+                when (state.source.refresh) {
+                    is LoadState.Loading -> binding.layoutFeedState.showLoading()
+                    is LoadState.Error -> binding.layoutFeedState.showError()
+                    is LoadState.NotLoading -> {
+                        if (state.append.endOfPaginationReached && adapter.itemCount < 1)
+                            binding.layoutFeedState.showEmpty()
+                        else
+                            binding.layoutFeedState.showContent()
 
-                    stateContent.isVisible = false
-                    stateEmpty.isVisible = false
-                    stateError.isVisible = false
-                    stateLoading.isVisible = false
-
-                    when (loadState.source.refresh) {
-                        is LoadState.Loading -> {
-                            stateLoading.isVisible = true
-                        }
-
-                        is LoadState.Error -> {
-                            stateError.isVisible = true
-                            stateContent.isRefreshing = false
-                        }
-
-                        is LoadState.NotLoading -> {
-
-                            if (loadState.append.endOfPaginationReached) {
-                                if (adapter.itemCount < 1)
-                                    stateEmpty.isVisible = true
-                                else {
-                                    stateContent.isVisible = true
-                                }
-                            } else {
-                                stateContent.isVisible = true
-                            }
-
-                            stateContent.isRefreshing = false
-
-                        }
                     }
+                }
+            }
+        }
+
+        lifecycleScope.launchWhenResumed {
+            viewModel.imageUrl.collectLatest {
+                binding.imageUser.load(it) {
+                    transformations(CircleCropTransformation())
+                    scale(Scale.FILL)
+                    crossfade(true)
+                    placeholder(R.drawable.ic_baseline_account_circle_24)
+                    error(R.drawable.ic_baseline_account_circle_24)
                 }
             }
         }

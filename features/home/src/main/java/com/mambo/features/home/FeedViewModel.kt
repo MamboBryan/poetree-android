@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mambo.core.repository.PoemRepository
 import com.mambo.data.models.Poem
+import com.mambo.data.preferences.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -12,10 +13,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FeedViewModel @Inject constructor(
+    preferences: UserPreferences
 ) : ViewModel() {
 
     private val _eventChannel = Channel<FeedEvent>()
     val events = _eventChannel.receiveAsFlow()
+
+    val imageUrl = preferences.imageUrl
 
     fun onUserImageClicked() = updateUi(FeedEvent.NavigateToProfile)
 
