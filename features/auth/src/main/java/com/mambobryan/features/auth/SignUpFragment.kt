@@ -5,7 +5,7 @@ import android.view.View
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.mambo.core.utils.isEmailValid
+import com.mambo.core.utils.isValidEmail
 import com.mambo.core.utils.isValidPassword
 import com.mambobryan.features.auth.databinding.FragmentSignUpBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
@@ -42,7 +42,7 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
 
             var isValid = true
 
-            if (!email.isEmailValid()) {
+            if (!email.isValidEmail()) {
                 inputSignupEmail.error = "Invalid Email"
                 isValid = false
             }
@@ -60,8 +60,7 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
                 isValid = false
             }
 
-            if (isValid)
-                viewModel.onSignUpClicked(email, password)
+            if (isValid) viewModel.onSignUpClicked(email, password)
 
         }
     }

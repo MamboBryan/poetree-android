@@ -3,6 +3,7 @@ plugins {
     id(Plugins.android)
     id(Plugins.kapt)
     id(Plugins.parcelize)
+    id(Plugins.serialize)
     id(Plugins.hilt)
 }
 
@@ -51,11 +52,14 @@ dependencies {
     implementation(Dependencies.Libraries.coroutines)
     implementation(Dependencies.Libraries.roomRuntime)
     implementation(Dependencies.Libraries.room)
-    implementation(Dependencies.Libraries.hilt)
 
     implementation(Dependencies.Libraries.gson)
 
-    kapt(Dependencies.Libraries.hiltCompiler)
+    ktor()
+
+    kotlinx()
+
+    hilt()
 
 }
 

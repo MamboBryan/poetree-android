@@ -8,7 +8,7 @@ import okhttp3.Response
 import javax.inject.Inject
 
 class AuthInterceptor @Inject constructor(preferences: UserPreferences) : Interceptor {
-    
+
     private var token = ""
 
     init {

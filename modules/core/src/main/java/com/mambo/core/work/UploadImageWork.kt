@@ -8,7 +8,7 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.*
 import com.mambo.core.R
 import com.mambo.core.repository.ImageRepository
-import com.mambo.core.repository.UserRepositoryUseCase
+import com.mambo.core.repository.UserRepository
 import com.mambo.core.utils.Constants
 import com.mambo.core.utils.NotificationUtils
 import com.mambo.data.preferences.UserPreferences
@@ -27,7 +27,7 @@ class UploadImageWork @AssistedInject constructor(
     @Assisted val appContext: Context,
     @Assisted workerParams: WorkerParameters,
     private val repository: ImageRepository,
-    private val userUseCase: UserRepositoryUseCase,
+    private val userUseCase: UserRepository,
     private val preferences: UserPreferences
 ) : CoroutineWorker(appContext, workerParams) {
 

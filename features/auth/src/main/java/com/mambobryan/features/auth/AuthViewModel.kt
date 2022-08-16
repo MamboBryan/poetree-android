@@ -2,11 +2,12 @@ package com.mambobryan.features.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mambo.core.repository.AuthRepositoryImpl
+import com.mambo.core.repository.AuthRepository
+import com.mambo.core.repository.UserRepository
+import com.mambo.core.utils.isValidEmail
 import com.mambo.data.preferences.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -14,44 +15,99 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val preferences: UserPreferences,
-    private val repository: AuthRepositoryImpl
 ) : ViewModel() {
+
+    @Inject
+    lateinit var authRepository: AuthRepository
+
+    @Inject
+    lateinit var userRepository: UserRepository
 
     private val _eventChannel = Channel<AuthEvent>()
     val events = _eventChannel.receiveAsFlow()
 
-    fun onSignInClicked(email: String, password: String) = viewModelScope.launch {
-        showLoading()
+    private fun getUserDetails() = viewModelScope.launch {
         try {
-            val response = repository.signIn(email, password)
-            preferences.signedIn(response.data.token)
-            showSuccess("Signed In Successfully")
-//            getUserData()
+
+            val response = userRepository.getUserDetails()
+
+            if (!response.isSuccessful) {
+                showError(response.message)
+                hideLoading()
+                return@launch
+            }
+
+            val data = response.data!!
+
+            preferences.saveUserDetails(data)
+            if (data.image.isNullOrBlank().not()) preferences.updateImageUrl(data.image!!)
+            showSuccess("You're ready to go!")
+            setupDailyInteractionReminder()
             hideLoading()
+            updateUi(AuthEvent.NavigateToFeeds)
         } catch (e: Exception) {
             hideLoading()
             showError(e.localizedMessage!!)
         }
     }
 
-    fun onSignUpClicked(email: String, password: String) = viewModelScope.launch {
+    fun onSignInClicked(email: String, password: String) = viewModelScope.launch {
         showLoading()
         try {
-            val response = repository.signUp(email, password)
+            val response = authRepository.signIn(email, password)
 
             if (!response.isSuccessful) {
                 showError(response.message)
+                hideLoading()
                 return@launch
             }
 
-            preferences.signedUp(response.token)
-            hideLoading()
-            showSuccess("Signed Up Successfully")
-            setupDailyInteractionReminder()
-            updateUi(AuthEvent.NavigateToSetup)
+            showSuccess(response.message)
+
+            val (user, token) = response.data!!.let { Pair(it.user, it.token) }
+
+            preferences.updateAccessToken(token = token)
+            preferences.updateIsUserSetup(isSetup = user.isSetup)
+            preferences.signedIn()
+
+            if (user.isSetup.not()) {
+                hideLoading()
+                updateUi(AuthEvent.NavigateToSetup)
+                return@launch
+            }
+
+            getUserDetails()
+
         } catch (e: Exception) {
             hideLoading()
-            showError(e.localizedMessage!!)
+            showError(e.localizedMessage ?: "Error while signing in")
+        }
+    }
+
+    fun onSignUpClicked(email: String, password: String) = viewModelScope.launch {
+        showLoading()
+        try {
+            val response = authRepository.signUp(email, password)
+
+            if (response.isSuccessful.not()) {
+                showError(response.message)
+                hideLoading()
+                return@launch
+            }
+
+            val token = response.data!!.token
+
+            preferences.updateAccessToken(token = token)
+            preferences.signedIn()
+
+            showSuccess("Let's set you up!")
+            hideLoading()
+
+            updateUi(AuthEvent.NavigateToSetup)
+
+        } catch (e: Exception) {
+            hideLoading()
+            showError(e.localizedMessage ?: "Error while signing up")
         }
     }
 
@@ -71,18 +127,4 @@ class AuthViewModel @Inject constructor(
 
     private fun setupDailyInteractionReminder() = updateUi(AuthEvent.SetupDailyNotificationReminder)
 
-    private fun getUserData() = viewModelScope.launch {
-        try {
-            // TODO network call for user data
-//            preferences.signedIn(response.data.token)
-//            preferences.setup()
-            showSuccess("You're ready to go!")
-            setupDailyInteractionReminder()
-            hideLoading()
-            updateUi(AuthEvent.NavigateToFeeds)
-        } catch (e: Exception) {
-            hideLoading()
-            showError(e.localizedMessage!!)
-        }
-    }
 }

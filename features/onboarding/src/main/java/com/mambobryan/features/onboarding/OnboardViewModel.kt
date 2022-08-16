@@ -18,7 +18,7 @@ class OnboardViewModel @Inject constructor(
     val onBoardEvent = _onBoardEventChannel.receiveAsFlow()
 
     fun onFinishOnBoardingClicked() = viewModelScope.launch {
-        preferences.updateOnBoarded()
+        preferences.onBoarded()
         _onBoardEventChannel.send(OnboardEvent.NavigateToAuthentication)
     }
 

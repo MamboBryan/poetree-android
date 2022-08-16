@@ -2,64 +2,66 @@ package com.mambo.remote.di
 
 import android.content.Context
 import com.mambo.data.preferences.UserPreferences
+import com.mambo.remote.BuildConfig
 import com.mambo.remote.interceptors.AuthInterceptor
+import com.mambo.remote.interceptors.NetworkInterceptor
 import com.mambo.remote.service.PoemsApi
-import com.readystatesoftware.chuck.ChuckInterceptor
+import com.mambo.remote.service.PoemsClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import okhttp3.OkHttpClient
+import io.ktor.client.*
+import io.ktor.client.plugins.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.logging.*
+import io.ktor.client.plugins.observer.*
+import io.ktor.client.request.*
+import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import timber.log.Timber
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object RemoteModule {
 
-    private const val BASE_URL = "http://104.248.2.138:4000/api/"
-
     @Singleton
     @Provides
     fun providesHttpLoggingInterceptor() =
-        HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
+        HttpLoggingInterceptor().apply {
+            if (BuildConfig.DEBUG) level = HttpLoggingInterceptor.Level.BODY
+        }
 
     @Singleton
     @Provides
-    fun providesAuthInterceptor(preferences: UserPreferences) = AuthInterceptor(preferences)
+    fun providesAuthInterceptor(preferences: UserPreferences) =
+        AuthInterceptor(preferences)
 
     @Singleton
     @Provides
-    fun providesChuckInterceptor(@ApplicationContext context: Context) = ChuckInterceptor(context)
+    fun providesNetworkInterceptor(@ApplicationContext context: Context) =
+        NetworkInterceptor(context)
 
     @Singleton
     @Provides
-    fun providesOkHttpClient(
+    fun providesPoemsClient(
         authInterceptor: AuthInterceptor,
-        chuckInterceptor: ChuckInterceptor,
-        httpLoggingInterceptor: HttpLoggingInterceptor
-    ): OkHttpClient =
-        OkHttpClient
-            .Builder()
-            .addInterceptor(authInterceptor)
-            .addInterceptor(chuckInterceptor)
-            .addInterceptor(httpLoggingInterceptor)
-            .build()
+        networkInterceptor: NetworkInterceptor,
+        loggingInterceptor: HttpLoggingInterceptor
+    ) = PoemsClient(
+        authInterceptor = authInterceptor,
+        networkInterceptor = networkInterceptor,
+        loggingInterceptor = loggingInterceptor
+    )
 
     @Singleton
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =
-        Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(BASE_URL)
-            .client(okHttpClient)
-            .build()
-
-    @Singleton
-    @Provides
-    fun provideApiService(retrofit: Retrofit): PoemsApi = retrofit.create(PoemsApi::class.java)
+    fun providesPoemsApi(
+        preferences: UserPreferences,
+        client: PoemsClient
+    ) = PoemsApi(preferences, client)
 
 }

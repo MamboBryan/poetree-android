@@ -108,6 +108,8 @@ dependencies {
     implementation(Dependencies.Libraries.room)
     implementation(Dependencies.Libraries.roomRuntime)
     implementation(Dependencies.Libraries.paging)
+
+    implementation(Dependencies.Libraries.timber)
     implementation(Dependencies.Libraries.gson)
     implementation(Dependencies.Libraries.coil)
     implementation(Dependencies.Libraries.wysiwyg)
@@ -126,7 +128,7 @@ dependencies {
     implementation(Dependencies.Libraries.okHttp)
     implementation(Dependencies.Libraries.androidXStartup)
     implementation ("androidx.core:core-splashscreen:1.0.0-beta01")
-    
+
     debugImplementation(Dependencies.Libraries.chuckDebug)
     releaseImplementation(Dependencies.Libraries.chuckRelease)
 

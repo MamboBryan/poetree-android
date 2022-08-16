@@ -12,6 +12,7 @@ buildscript {
         classpath(Dependencies.BuildPlugins.androidGradle)
         classpath(Dependencies.BuildPlugins.kotlinGradle)
         classpath(Dependencies.BuildPlugins.hiltGradle)
+        classpath(Dependencies.BuildPlugins.kotlinxSerialization)
         classpath(Dependencies.BuildPlugins.crashlyticsGradle)
         classpath(Dependencies.BuildPlugins.googleServicesGradle)
         classpath(Dependencies.BuildPlugins.navigationSafeArgsGradle)

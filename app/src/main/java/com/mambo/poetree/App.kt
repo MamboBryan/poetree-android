@@ -14,6 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -39,6 +40,7 @@ class App : Application(), Configuration.Provider {
         Firebase.messaging.subscribeToTopic("featured")
         setupNotificationChannels()
         initTheme()
+        plantTimber()
     }
 
     private fun setupNotificationChannels() {
@@ -53,6 +55,10 @@ class App : Application(), Configuration.Provider {
             appTheme.collectLatest { ThemeHelper.applyTheme(it) }
 
         }
+    }
+
+    private fun plantTimber() {
+        Timber.plant(Timber.DebugTree())
     }
 
 }

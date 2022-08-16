@@ -7,6 +7,7 @@ object Plugins {
     const val parcelize = "kotlin-parcelize"
     const val android = "kotlin-android"
     const val kapt = "kotlin-kapt"
+    const val serialize = "kotlinx-serialization"
     const val extensions = "kotlin-android-extensions"
     const val googleServices = "com.google.gms.google-services"
     const val crashlytics = "com.google.firebase.crashlytics"

@@ -26,6 +26,7 @@ import com.mambobryan.navigation.extensions.getDeeplink
 import com.mambobryan.navigation.extensions.getNavOptionsPopUpTo
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -68,8 +69,6 @@ class MainActivity : AppCompatActivity() {
 
         initNavigation()
 
-        handleNotificationData()
-
     }
 
     /**
@@ -84,24 +83,22 @@ class MainActivity : AppCompatActivity() {
             val type = extras.getString(IntentExtras.TYPE)
             val poem = extras.getString(IntentExtras.POEM)
 
-            Log.i("SomeThing", "TYPE: $type ")
-            Log.i("SomeThing", "POEM: $poem ")
+            Timber.i("TYPE: $type ")
+            Timber.i("POEM: $poem ")
 
             val uri: String? =
                 if (type != null)
                     when (type) {
-                        "comment" -> {
-                            getString(Destinations.COMMENTS)
-                        }
-                        else -> {
-                            getString(Destinations.POEM)
-                        }
+                        "comment" -> getString(Destinations.COMMENTS)
+                        else -> getString(Destinations.POEM)
                     }
                 else null
 
             if (viewModel.isValidPoem(poem) && uri.isNotNullOrEmpty())
                 navController.navigate(Uri.parse(uri))
 
+        } else {
+            navigateToFeeds()
         }
 
     }
@@ -112,18 +109,19 @@ class MainActivity : AppCompatActivity() {
             navigateToOnBoarding()
             return
         }
-//
-//        if (!viewModel.isLoggedIn) {
-//            navigateToAuth()
-//            return
-//        }
-//
-//        if (!viewModel.isUserSetup) {
-//            navigateToSetup()
-//            return
-//        }
 
-        navigateToFeeds()
+        if (!viewModel.isLoggedIn) {
+            navigateToAuth()
+            return
+        }
+
+        Timber.i("IS SET UP -> ${viewModel.isUserSetup}")
+        if (!viewModel.isUserSetup) {
+            navigateToSetup()
+            return
+        }
+
+        handleNotificationData()
 
     }
 
@@ -148,7 +146,9 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         when (getDestinationId()) {
 
-            R.id.feedFragment, R.id.landingFragment, R.id.setupFragment -> {
+            R.id.feedFragment,
+            R.id.landingFragment,
+            R.id.setupFragment -> {
                 finish()
             }
 

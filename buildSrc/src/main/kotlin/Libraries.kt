@@ -10,6 +10,7 @@ object Dependencies {
         val hiltGradle by lazy { "com.google.dagger:hilt-android-gradle-plugin:${Versions.hilt}" }
         val navigationSafeArgsGradle by lazy { "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.navigation}" }
         val crashlyticsGradle by lazy {"com.google.firebase:firebase-crashlytics-gradle:${Versions.crashlyticsGradlePlugin}"}
+        val kotlinxSerialization by lazy {"org.jetbrains.kotlin:kotlin-serialization:${Versions.kotlin}"}
     }
 
     /**

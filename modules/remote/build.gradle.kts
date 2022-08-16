@@ -3,6 +3,7 @@ plugins {
     id(Plugins.android)
     id(Plugins.kapt)
     id(Plugins.parcelize)
+    id(Plugins.serialize)
     id(Plugins.hilt)
 }
 
@@ -43,25 +44,21 @@ android {
 dependencies {
 
     implementation(project(Modules.Commons.data))
-    implementation(platform(Dependencies.BOM.okHttp))
 
     implementation(Dependencies.Libraries.core)
     implementation(Dependencies.Libraries.kotlin)
-
     implementation(Dependencies.Libraries.coroutines)
-    implementation(Dependencies.Libraries.hilt)
 
-    implementation(Dependencies.Libraries.retrofitConverter)
-    implementation(Dependencies.Libraries.retrofit)
-    implementation(Dependencies.Libraries.okHttpLogging)
-    implementation(Dependencies.Libraries.okHttp)
     implementation(Dependencies.Libraries.timber)
-    implementation(Dependencies.Libraries.gson)
 
-    debugImplementation(Dependencies.Libraries.chuckDebug)
-    releaseImplementation(Dependencies.Libraries.chuckRelease)
+    hilt()
 
-    kapt(Dependencies.Libraries.hiltCompiler)
+    kotlinx()
+
+    ktor()
+
+    okHttp()
+
 }
 
 kapt {

@@ -9,11 +9,11 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.google.gson.Gson
 import com.mambo.data.models.User
+import com.mambo.data.responses.UserDetails
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
-
 
 @Singleton
 class UserPreferences @Inject constructor(@ApplicationContext context: Context) {
@@ -73,57 +73,29 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
         dataStore.edit { prefs -> prefs[PreferencesKeys.DARK_MODE] = mode }
     }
 
-    suspend fun updateOnBoarded() {
+    suspend fun onBoarded() {
         dataStore.edit { prefs -> prefs[PreferencesKeys.IS_ON_BOARDED] = true }
     }
 
-    suspend fun updateLoggedIn(isLoggedIn: Boolean) {
+    suspend fun signedIn() {
         dataStore.edit { prefs -> prefs[PreferencesKeys.IS_LOGGED_IN] = true }
     }
 
-    suspend fun updateSetupStatus(isSetup: Boolean) {
+    suspend fun userSetup() {
         dataStore.edit { prefs -> prefs[PreferencesKeys.IS_SETUP] = true }
+    }
+
+    suspend fun updateIsUserSetup(isSetup: Boolean) {
+        dataStore.edit { prefs -> prefs[PreferencesKeys.IS_SETUP] = isSetup }
     }
 
     suspend fun updateAccessToken(token: String) {
         dataStore.edit { prefs -> prefs[PreferencesKeys.ACCESS_TOKEN] = token }
     }
 
-    suspend fun updateUserDetails(user: User) {
-        val json = Gson().toJson(user)
-        dataStore.edit { prefs ->
-            prefs[PreferencesKeys.USER_DETAILS] = json
-        }
-    }
-
-    suspend fun signedIn(token: String) {
-        dataStore.edit { prefs ->
-            prefs[PreferencesKeys.IS_SETUP] = true
-            prefs[PreferencesKeys.IS_LOGGED_IN] = true
-            prefs[PreferencesKeys.ACCESS_TOKEN] = token
-        }
-    }
-
-    suspend fun signedUp(token: String) {
-        dataStore.edit { prefs ->
-            prefs[PreferencesKeys.IS_LOGGED_IN] = true
-            prefs[PreferencesKeys.ACCESS_TOKEN] = token
-        }
-    }
-
-    suspend fun updateUserData(){
-        val json = Gson().toJson(user)
-        dataStore.edit { prefs->
-            prefs[PreferencesKeys.USER_DETAILS] = json
-        }
-    }
-
-    suspend fun setup(user: User){
-        val json = Gson().toJson(user)
-        dataStore.edit { prefs->
-            prefs[PreferencesKeys.IS_SETUP] = true
-            prefs[PreferencesKeys.USER_DETAILS] = json
-        }
+    suspend fun saveUserDetails(details: UserDetails) {
+        val json = Gson().toJson(details)
+        dataStore.edit { prefs -> prefs[PreferencesKeys.USER_DETAILS] = json }
     }
 
     suspend fun signOut() {

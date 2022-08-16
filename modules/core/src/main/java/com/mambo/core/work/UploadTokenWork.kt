@@ -8,7 +8,7 @@ import androidx.work.WorkerParameters
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
 import com.mambo.core.extensions.isNotNullOrEmpty
-import com.mambo.core.repository.UserRepositoryUseCase
+import com.mambo.core.repository.UserRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.tasks.await
@@ -17,7 +17,7 @@ import kotlinx.coroutines.tasks.await
 class UploadTokenWork @AssistedInject constructor(
     @Assisted val appContext: Context,
     @Assisted workerParams: WorkerParameters,
-    private val repository: UserRepositoryUseCase
+    private val repository: UserRepository
 ) : CoroutineWorker(appContext, workerParams) {
 
     companion object {

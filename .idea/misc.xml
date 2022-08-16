@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../../layout/custom_preview.xml" value="0.14418465227817745" />
+        <entry key="features/auth/src/main/res/layout/fragment_sign_in.xml" value="0.2928205128205128" />
         <entry key="modules/ui/src/main/res/drawable-night/ic_launcher_foreground.xml" value="0.2405" />
         <entry key="modules/ui/src/main/res/drawable-night/splash.xml" value="0.2405" />
       </map>
