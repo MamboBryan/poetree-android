@@ -61,7 +61,7 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
 
     val user = dataStore.data.map { prefs ->
         val json = prefs[PreferencesKeys.USER_DETAILS]
-        val user = Gson().fromJson(json, User::class.java) ?: null
+        val user = Gson().fromJson(json, UserDetails::class.java)
         user
     }
 
@@ -81,7 +81,7 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
         dataStore.edit { prefs -> prefs[PreferencesKeys.IS_LOGGED_IN] = true }
     }
 
-    suspend fun userSetup() {
+    suspend fun userHasSetup() {
         dataStore.edit { prefs -> prefs[PreferencesKeys.IS_SETUP] = true }
     }
 

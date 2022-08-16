@@ -10,15 +10,15 @@ import androidx.core.app.NotificationCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.mambo.core.R
-import com.mambo.core.utils.NotificationUtils
+import com.mambo.core.utils.NotificationsHelper
 
 class InteractReminderWork(private val context: Context, workerParams: WorkerParameters) :
     Worker(context, workerParams) {
 
     companion object {
         const val TAG = "Interact Reminder Work"
-        private const val NOTIFICATION_ID = NotificationUtils.ID_REMINDER
-        private const val NOTIFICATION_CHANNEL = NotificationUtils.CHANNEL_NAME_REMINDER
+        private const val NOTIFICATION_ID = NotificationsHelper.ID_REMINDER
+        private const val NOTIFICATION_CHANNEL = NotificationsHelper.CHANNEL_NAME_REMINDER
     }
 
     override fun doWork(): Result {

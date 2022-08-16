@@ -18,9 +18,9 @@
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
-                android:padding="16dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -52,8 +52,10 @@
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_marginTop="16dp"
+                android:scaleType="centerCrop"
                 android:src="@drawable/ic_baseline_account_circle_24"
                 app:civ_border="false"
+                app:civ_border_width="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -131,21 +133,29 @@
                     android:paddingBottom="8dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
-                android:id="@+id/edt_user_bio"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_user_bio"
                 android:layout_width="0dp"
-                android:layout_height="150dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:background="?attr/colorSurface"
-                android:ems="10"
-                android:gravity="start|top"
-                android:hint="Bio goes here ..."
-                android:inputType="textMultiLine|textCapSentences"
-                android:padding="16dp"
+                app:counterMaxLength="140"
+                app:hintAnimationEnabled="false"
                 app:layout_constraintEnd_toEndOf="@+id/input_user_gender"
                 app:layout_constraintHorizontal_bias="0.5"
+                app:counterEnabled="true"
                 app:layout_constraintStart_toStartOf="@+id/input_user_dob"
-                app:layout_constraintTop_toBottomOf="@+id/input_user_dob" />
+                app:layout_constraintTop_toBottomOf="@+id/input_user_dob">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_user_bio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|top"
+                    android:hint="Add About"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:maxLines="3" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/btn_save_details"
@@ -155,13 +165,12 @@
                 android:layout_marginBottom="16dp"
                 android:text="save"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/edt_user_bio"
-                app:layout_constraintStart_toStartOf="@+id/edt_user_bio"
-                app:layout_constraintTop_toBottomOf="@+id/edt_user_bio" />
+                app:layout_constraintEnd_toEndOf="@+id/input_user_bio"
+                app:layout_constraintStart_toStartOf="@+id/input_user_bio"
+                app:layout_constraintTop_toBottomOf="@+id/input_user_bio" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

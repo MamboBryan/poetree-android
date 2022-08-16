@@ -5,15 +5,11 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
-import androidx.work.Constraints
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.mambo.core.extensions.isNotNull
 import com.mambo.core.utils.IntentExtras
-import com.mambo.core.utils.NotificationUtils
+import com.mambo.core.utils.NotificationsHelper
 import com.mambo.core.utils.Type
 import com.mambo.core.work.UploadTokenWork
 import com.mambo.poetree.R
@@ -21,33 +17,12 @@ import com.mambo.poetree.ui.MainActivity
 
 class NotificationService : FirebaseMessagingService() {
 
-    companion object {
-        const val TAG = "NotificationService"
-    }
-
     override fun onNewToken(p0: String) {
         super.onNewToken(p0)
 
-        startUpdateTokenWork()
+        UploadTokenWork.scheduleWork(applicationContext)
 
     }
-
-    private fun startUpdateTokenWork() {
-
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .setRequiresBatteryNotLow(true)
-            .build()
-
-        val work =
-            OneTimeWorkRequestBuilder<UploadTokenWork>()
-                .addTag(UploadTokenWork.TAG)
-                .setConstraints(constraints)
-                .build()
-
-        WorkManager.getInstance(this).enqueue(work)
-    }
-
 
     override fun onMessageReceived(p0: RemoteMessage) {
         super.onMessageReceived(p0)
@@ -77,29 +52,29 @@ class NotificationService : FirebaseMessagingService() {
         if (type.isNotNull()) {
             when (type) {
                 Type.COMMENT -> {
-                    channelID = NotificationUtils.CHANNEL_ID_COMMENTS
-                    notificationID = NotificationUtils.ID_COMMENTS
+                    channelID = NotificationsHelper.CHANNEL_ID_COMMENTS
+                    notificationID = NotificationsHelper.ID_COMMENTS
                 }
                 Type.BOOKMARK -> {
-                    channelID = NotificationUtils.CHANNEL_ID_BOOKMARKS
-                    notificationID = NotificationUtils.ID_BOOKMARKS
+                    channelID = NotificationsHelper.CHANNEL_ID_BOOKMARKS
+                    notificationID = NotificationsHelper.ID_BOOKMARKS
                 }
                 Type.LIKE -> {
-                    channelID = NotificationUtils.CHANNEL_ID_LIKES
-                    notificationID = NotificationUtils.ID_LIKES
+                    channelID = NotificationsHelper.CHANNEL_ID_LIKES
+                    notificationID = NotificationsHelper.ID_LIKES
                 }
                 Type.POEM -> {
-                    channelID = NotificationUtils.CHANNEL_ID_UPDATES
-                    notificationID = NotificationUtils.ID_UPDATES
+                    channelID = NotificationsHelper.CHANNEL_ID_UPDATES
+                    notificationID = NotificationsHelper.ID_UPDATES
                 }
                 else -> {
-                    channelID = NotificationUtils.CHANNEL_ID_REMINDER
-                    notificationID = NotificationUtils.ID_REMINDER
+                    channelID = NotificationsHelper.CHANNEL_ID_REMINDER
+                    notificationID = NotificationsHelper.ID_REMINDER
                 }
             }
         } else {
-            channelID = NotificationUtils.CHANNEL_ID_EVENTS
-            notificationID = NotificationUtils.ID_EVENTS
+            channelID = NotificationsHelper.CHANNEL_ID_EVENTS
+            notificationID = NotificationsHelper.ID_EVENTS
         }
 
         intent.putExtra(IntentExtras.POEM, poem)

@@ -10,10 +10,11 @@ import com.mambo.core.R
 import com.mambo.core.repository.ImageRepository
 import com.mambo.core.repository.UserRepository
 import com.mambo.core.utils.Constants
-import com.mambo.core.utils.NotificationUtils
+import com.mambo.core.utils.NotificationsHelper
 import com.mambo.data.preferences.UserPreferences
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.tasks.await
 
 /**
@@ -26,17 +27,16 @@ import kotlinx.coroutines.tasks.await
 class UploadImageWork @AssistedInject constructor(
     @Assisted val appContext: Context,
     @Assisted workerParams: WorkerParameters,
-    private val repository: ImageRepository,
-    private val userUseCase: UserRepository,
-    private val preferences: UserPreferences
+    private val imageRepository: ImageRepository,
+    private val userRepository: UserRepository,
+    private val preferences: UserPreferences,
+    private val notificationsHelper: NotificationsHelper
 ) : CoroutineWorker(appContext, workerParams) {
 
     companion object {
         private const val WORK_TAG = "Upload Image Work"
-        private const val NOTIFICATION_ID = NotificationUtils.ID_UPDATES
-        private const val NOTIFICATION_CHANNEL = NotificationUtils.CHANNEL_ID_UPDATES
 
-        fun scheduleWork(context: Context) {
+        fun scheduleWork(context: Context, data: Data) {
 
             val constraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -44,6 +44,7 @@ class UploadImageWork @AssistedInject constructor(
 
             val updateWorker = OneTimeWorkRequestBuilder<UploadImageWork>()
                 .setConstraints(constraints)
+                .setInputData(data)
                 .build()
 
             WorkManager
@@ -57,47 +58,34 @@ class UploadImageWork @AssistedInject constructor(
 
         try {
 
-            val userId = inputData.getInt(Constants.KEY_MEDIA_ID, -1)
+            val user = preferences.user.firstOrNull() ?: return Result.failure()
+
+            val userId = user.id
             val imageString = inputData.getString(Constants.KEY_MEDIA_URI)
 
-            if (userId == -1 || imageString.isNullOrEmpty() ) return Result.failure()
+            if (userId.isNullOrBlank() || imageString.isNullOrEmpty()) return Result.failure()
 
             val imageUri = imageString.toUri()
 
-            showUploadNotification()
+            notificationsHelper.showProgressNotification("Uploading profile image", "")
 
-            val task =
-                repository.upload(userId.toString(), imageUri).metadata?.reference
-                    ?: return Result.failure()
+            val task = imageRepository.upload(userId.toString(), imageUri).metadata?.reference
+                ?: return Result.failure().also { notificationsHelper.cancelProgressNotification() }
 
             val url = task.downloadUrl.await()
 
             preferences.updateImageUrl(url.toString())
 
-            val response = userUseCase.updateImageUrl(url.toString())
+            val response = userRepository.updateImageUrl(url.toString())
 
-            if (false) return Result.failure()
+            if (response.isSuccessful.not()) return Result.retry()
+                .also { notificationsHelper.cancelProgressNotification() }
 
-            return Result.success()
+            return Result.success().also { notificationsHelper.cancelProgressNotification() }
 
         } catch (exception: Exception) {
             return Result.failure()
         }
-    }
-
-    private fun showUploadNotification() {
-        val notificationManager =
-            applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        //Build a notification
-        val notification = NotificationCompat.Builder(appContext, NOTIFICATION_CHANNEL)
-            .setContentTitle("Uploading image ...")
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setOngoing(true)
-            .build()
-
-        //A notification HAS to be passed for the foreground service to be started.
-        notificationManager.notify(NOTIFICATION_ID, notification)
     }
 
 }

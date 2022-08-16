@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mambo.core.repository.AuthRepository
 import com.mambo.core.repository.UserRepository
-import com.mambo.core.utils.isValidEmail
 import com.mambo.data.preferences.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -29,7 +28,7 @@ class AuthViewModel @Inject constructor(
     private fun getUserDetails() = viewModelScope.launch {
         try {
 
-            val response = userRepository.getUserDetails()
+            val response = userRepository.getUser()
 
             if (!response.isSuccessful) {
                 showError(response.message)

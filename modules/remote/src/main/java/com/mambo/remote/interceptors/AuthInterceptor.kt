@@ -9,10 +9,10 @@ import javax.inject.Inject
 
 class AuthInterceptor @Inject constructor(preferences: UserPreferences) : Interceptor {
 
-    private var token = ""
+    private var token: String?
 
     init {
-        runBlocking { preferences.accessToken.first() }
+        runBlocking { token = preferences.accessToken.first() ?: "" }
     }
 
     override fun intercept(chain: Interceptor.Chain): Response = runBlocking {
@@ -21,7 +21,6 @@ class AuthInterceptor @Inject constructor(preferences: UserPreferences) : Interc
             .request()
             .newBuilder()
             .addHeader("Authorization", "Bearer $token")
-            .addHeader("Content-Type", "application/json")
             .build()
 
         chain.proceed(request)

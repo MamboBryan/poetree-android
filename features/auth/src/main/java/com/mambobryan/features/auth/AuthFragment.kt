@@ -78,8 +78,11 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
     }
 
     private fun navigateToFeeds() {
-        val deeplink = getDeeplink(Destinations.FEED)
-        navigate(deeplink, getNavOptionsPopUpToCurrent())
+        val intent = requireActivity().intent
+
+        requireActivity().finishAffinity().also {
+            startActivity(intent)
+        }
     }
 
     private fun navigateToSetup() {

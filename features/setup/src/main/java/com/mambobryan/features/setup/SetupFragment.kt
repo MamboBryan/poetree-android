@@ -3,6 +3,7 @@ package com.mambobryan.features.setup
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
@@ -13,10 +14,14 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.work.Data
 import coil.load
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.mambo.core.utils.Constants
 import com.mambo.core.utils.LoadingDialog
 import com.mambo.core.utils.fromDateToString
+import com.mambo.core.work.UploadImageWork
 import com.mambobryan.features.setup.databinding.FragmentSetupBinding
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
@@ -25,7 +30,8 @@ import com.mambobryan.navigation.extensions.navigate
 import com.tapadoo.alerter.Alerter
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import timber.log.Timber
 import java.util.*
 
 @AndroidEntryPoint
@@ -62,10 +68,8 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
                     SetupViewModel.SetupEvent.HideLoadingDialog -> LoadingDialog.dismiss()
                     SetupViewModel.SetupEvent.ShowLoadingDialog -> LoadingDialog.show(requireContext())
                     SetupViewModel.SetupEvent.NavigateToFeeds -> navigateToFeeds()
-                    SetupViewModel.SetupEvent.OpenDatePicker -> openDateDialog()
-                    SetupViewModel.SetupEvent.OpenImagePicker -> openGalleryForImage()
                     SetupViewModel.SetupEvent.ShowBioError -> {
-                        binding.edtUserBio.error = "Bio cannot be empty"
+                        binding.inputUserBio.error = "Bio cannot be empty"
                     }
                     SetupViewModel.SetupEvent.ShowDOBError -> {
                         binding.inputUserDob.error = "Select Date of Birth"
@@ -77,9 +81,7 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
                         binding.inputUserName.error = "Username cannot be empty"
                     }
                     is SetupViewModel.SetupEvent.ShowSetupError -> {
-                        Snackbar.make(requireView(), event.message, Snackbar.LENGTH_SHORT)
-                            .setAction("retry") { viewModel.onRetryClicked() }
-                            .show()
+                        showErrorMessage(message = event.message) { viewModel.onRetryClicked() }
                     }
                     is SetupViewModel.SetupEvent.ShowSetupSuccess -> {
                         Alerter.create(requireActivity())
@@ -88,25 +90,24 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
                             .setBackgroundColorRes(R.color.success)
                             .show()
                     }
+                    is SetupViewModel.SetupEvent.StartImageUpload -> startUploadImage(event.uri)
                 }
             }
         }
 
         viewModel.imageUri.observe(viewLifecycleOwner) { uri ->
-            if (uri != null)
-                binding.ivUserImage.load(uri)
+            if (uri != null) binding.ivUserImage.load(uri)
         }
 
         viewModel.dob.observe(viewLifecycleOwner) { date ->
-            if (date != null)
-                binding.edtUserDob.setText(fromDateToString(date))
+            if (date != null) binding.edtUserDob.setText(fromDateToString(date))
         }
     }
 
     private fun initViews() = binding.apply {
-        fabUploadImage.setOnClickListener { viewModel.onImageUploadClicked() }
+        fabUploadImage.setOnClickListener { openGalleryForImage() }
         btnSaveDetails.setOnClickListener { viewModel.onSaveClicked() }
-        edtUserDob.setOnClickListener { viewModel.onDateClicked() }
+        edtUserDob.setOnClickListener { openDateDialog() }
 
         edtUserName.doAfterTextChanged { username ->
             viewModel.updateUsername(username.toString())
@@ -114,7 +115,7 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
         }
         edtUserBio.doAfterTextChanged { bio ->
             viewModel.updateBio(bio.toString())
-            edtUserDob.error = null
+            inputUserBio.error = null
         }
 
         val adapter =
@@ -165,13 +166,32 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
     }
 
     private fun showErrorMessage(message: String, retryMethod: () -> Unit) {
-        Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT)
-            .setAction("retry") { retryMethod.invoke() }
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Error")
+            .setMessage(message)
+            .setNegativeButton("retry") { _, _ ->
+                retryMethod.invoke()
+            }
+            .setPositiveButton("dismiss", null)
             .show()
+
+    }
+
+    private fun startUploadImage(uri: Uri) {
+        val data = Data.Builder()
+        data.putString(Constants.KEY_MEDIA_URI, uri.toString())
+        UploadImageWork.scheduleWork(requireContext(), data.build())
     }
 
     private fun navigateToFeeds() {
-        navigate(getDeeplink(Destinations.FEED), getNavOptionsPopUpToCurrent())
+
+        val intent = requireActivity().intent
+
+        requireActivity().finishAffinity().also {
+            startActivity(intent)
+        }
+
     }
 
 }

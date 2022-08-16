@@ -2,14 +2,18 @@ package com.mambo.core.utils
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
+import androidx.core.app.NotificationCompat
+import com.mambo.core.R
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class NotificationUtils @Inject constructor(
+class NotificationsHelper @Inject constructor(
     @ApplicationContext val context: Context
 ) {
 
@@ -38,6 +42,9 @@ class NotificationUtils @Inject constructor(
         const val CHANNEL_ID_UPDATES = "updates"
         const val CHANNEL_NAME_UPDATES = "Updates"
     }
+
+    private val notificationManager =
+        context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
     fun createNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -68,27 +75,27 @@ class NotificationUtils @Inject constructor(
         }
     }
 
-    fun showNotification(title: String, content: String) {
+    fun showNotification(title: String, content: String, id: Int, channel: String) {
 
-        val intent = Intent()
+        val intent = Intent(context, context::class.java)
+
         intent.data = Uri.parse(context.applicationContext.packageName)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
 
-        val notification = NotificationCompat.Builder(context, CHANNEL_ID_GENERAL)
-            .setSmallIcon(R.drawable.ic_baseline_notifications_24)
+        val notification = NotificationCompat.Builder(context, channel)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(title)
             .setContentText(content)
-            .setDefaults(Notification.DEFAULT_ALL)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
 
-        notificationManager.notify(ID_GENERAL, notification.build())
+        notificationManager.notify(id, notification.build())
     }
 
     fun cancelProgressNotification() {
-        notificationManager.cancel(ID_SYNC)
+        notificationManager.cancel(ID_UPDATES)
     }
 
     fun showProgressNotification(title: String, content: String) {
@@ -99,16 +106,15 @@ class NotificationUtils @Inject constructor(
 
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
 
-        val notification = NotificationCompat.Builder(context, CHANNEL_ID_SYNC)
-            .setSmallIcon(R.drawable.ic_baseline_sync_24)
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID_UPDATES)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(title)
             .setContentText(content)
-            .setDefaults(Notification.DEFAULT_ALL)
             .setProgress(0, 0, true)
             .setContentIntent(pendingIntent)
             .setAutoCancel(false)
 
-        notificationManager.notify(ID_SYNC, notification.build())
+        notificationManager.notify(ID_UPDATES, notification.build())
     }
 
 }

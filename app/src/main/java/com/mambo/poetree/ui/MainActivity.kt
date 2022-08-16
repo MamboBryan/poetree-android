@@ -56,15 +56,6 @@ class MainActivity : AppCompatActivity() {
             binding.layoutConnection.constraintLayoutNetworkStatus.isVisible = !isNetworkAvailable
         }
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.events.collect { event ->
-                when (event) {
-                    MainViewModel.MainEvent.SetupDailyInteractionReminder -> setupDailyInteractionReminder()
-                    MainViewModel.MainEvent.StartUploadTokenWork -> startUploadTokenWork()
-                }
-            }
-        }
-
         setUpDestinationListener()
 
         initNavigation()
@@ -115,7 +106,6 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        Timber.i("IS SET UP -> ${viewModel.isUserSetup}")
         if (!viewModel.isUserSetup) {
             navigateToSetup()
             return
@@ -193,43 +183,6 @@ class MainActivity : AppCompatActivity() {
         binding.apply {
             navBottomMain.visibility = View.VISIBLE
         }
-    }
-
-    private fun setupDailyInteractionReminder() {
-
-        val then = Calendar.getInstance()
-        val now = Calendar.getInstance()
-
-        then.set(Calendar.HOUR_OF_DAY, 17)         // set hour
-        then.set(Calendar.MINUTE, 15)             // set minute
-        then.set(Calendar.SECOND, 0)             // set seconds
-
-        val time = then.timeInMillis - now.timeInMillis
-
-        val work =
-            PeriodicWorkRequestBuilder<InteractReminderWork>(24, TimeUnit.HOURS)
-                .setInitialDelay(time, TimeUnit.MILLISECONDS)
-                .addTag(InteractReminderWork.TAG)
-                .build()
-
-        WorkManager.getInstance(this).enqueue(work)
-
-    }
-
-    private fun startUploadTokenWork() {
-
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .setRequiresBatteryNotLow(true)
-            .build()
-
-        val work =
-            OneTimeWorkRequestBuilder<UploadTokenWork>()
-                .addTag(UploadTokenWork.TAG)
-                .setConstraints(constraints)
-                .build()
-
-        WorkManager.getInstance(this).enqueue(work)
     }
 
 }

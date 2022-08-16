@@ -61,6 +61,7 @@ dependencies {
     implementation(Dependencies.Libraries.navigationFragment)
     implementation(Dependencies.Libraries.lifecycleExtensions)
     implementation(Dependencies.Libraries.navigationUi)
+    implementation(Dependencies.Libraries.workManager)
     implementation(Dependencies.Libraries.coroutines)
     implementation(Dependencies.Libraries.savedState)
     implementation(Dependencies.Libraries.viewModel)
@@ -72,6 +73,7 @@ dependencies {
     implementation(Dependencies.Libraries.circularImage)
     implementation(Dependencies.Libraries.delegate)
     implementation(Dependencies.Libraries.alerter)
+    implementation(Dependencies.Libraries.timber)
     implementation(Dependencies.Libraries.coil)
 
     kapt(Dependencies.Libraries.hiltCompiler)

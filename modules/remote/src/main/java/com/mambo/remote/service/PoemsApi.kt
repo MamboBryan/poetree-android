@@ -2,6 +2,7 @@ package com.mambo.remote.service
 
 import com.mambo.data.preferences.UserPreferences
 import com.mambo.data.requests.AuthRequest
+import com.mambo.data.requests.SetupRequest
 import com.mambo.data.responses.AuthResponse
 import com.mambo.data.responses.ServerResponse
 import com.mambo.data.responses.UserDetails
@@ -31,7 +32,9 @@ class PoemsApi @Inject constructor(
         SIGN_IN,
         SIGN_UP,
         RESET,
-        USERS_ME_DETAILS;
+        USERS_ME_DETAILS,
+        USER_SETUP,
+        USER_UPDATE;
 
         private val BASE_URL = "https://mambo-poetree.herokuapp.com/v1/"
 
@@ -41,6 +44,8 @@ class PoemsApi @Inject constructor(
                 SIGN_UP -> "auth/signup"
                 RESET -> "auth/reset"
                 USERS_ME_DETAILS -> "users/me"
+                USER_SETUP -> "users/me/setup"
+                USER_UPDATE -> "users/me/update"
             }
 
     }
@@ -57,7 +62,6 @@ class PoemsApi @Inject constructor(
     /**
      * AUTH
      */
-
     suspend fun signIn(request: AuthRequest) = safeApiCall<AuthResponse> {
         val response = client.post(Endpoints.SIGN_IN.url) { setBody(request) }
         response.body()
@@ -69,10 +73,30 @@ class PoemsApi @Inject constructor(
     }
 
     /**
-     * USERS
+     * CURRENT USER
      */
     suspend fun getCurrentUserDetails() = safeApiCall<UserDetails> {
         val response = client.get(Endpoints.USERS_ME_DETAILS.url)
         response.body()
     }
+
+    suspend fun userSetup(request: SetupRequest) = safeApiCall<UserDetails> {
+        val response = client.post(Endpoints.USER_SETUP.url) { setBody(request) }
+        response.body()
+    }
+
+    suspend fun uploadMessagingToken(token: String) = safeApiCall<UserDetails> {
+        val response = client.put(Endpoints.USER_UPDATE.url) { setBody(mapOf("token" to token)) }
+        response.body()
+    }
+
+    suspend fun uploadImageUrl(url: String) = safeApiCall<UserDetails> {
+        val response = client.put(Endpoints.USER_UPDATE.url) { setBody(mapOf("imageUrl" to url)) }
+        response.body()
+    }
+
+    /**
+     * USERS
+     */
+
 }

@@ -4,11 +4,13 @@ import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mambo.data.models.User
+import com.mambo.core.repository.UserRepository
+import com.mambo.core.utils.toDate
+import com.mambo.core.utils.toDateString
 import com.mambo.data.preferences.UserPreferences
+import com.mambo.data.requests.SetupRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.util.*
@@ -18,6 +20,9 @@ import javax.inject.Inject
 class SetupViewModel @Inject constructor(
     private val preferences: UserPreferences
 ) : ViewModel() {
+
+    @Inject
+    lateinit var userRepository: UserRepository
 
     private val _eventChannel = Channel<SetupEvent>()
     val events = _eventChannel.receiveAsFlow()
@@ -35,8 +40,6 @@ class SetupViewModel @Inject constructor(
 
     private val _bio = MutableLiveData<String?>(null)
 
-    fun onImageUploadClicked() = updateUi(SetupEvent.OpenImagePicker)
-
     fun onImageSelected(uri: Uri) {
         _imageUri.value = uri
     }
@@ -49,8 +52,6 @@ class SetupViewModel @Inject constructor(
         _bio.value = bio
     }
 
-    fun onDateClicked() = updateUi(SetupEvent.OpenDatePicker)
-
     fun onDateSelected(calendar: Calendar) {
         _dob.value = calendar
     }
@@ -62,7 +63,7 @@ class SetupViewModel @Inject constructor(
     private fun isValidDetails(): Boolean {
         var isValid = true
 
-        if (_username.value.isNullOrEmpty()) {
+        if (_username.value.isNullOrBlank()) {
             updateUi(SetupEvent.ShowUsernameError)
             isValid = false
         }
@@ -77,7 +78,7 @@ class SetupViewModel @Inject constructor(
             isValid = false
         }
 
-        if (_bio.value.isNullOrEmpty()) {
+        if (_bio.value.isNullOrBlank() || _bio.value.toString().length > 140) {
             updateUi(SetupEvent.ShowBioError)
             isValid = false
         }
@@ -97,12 +98,55 @@ class SetupViewModel @Inject constructor(
     private fun saveUserDetails() = viewModelScope.launch {
         updateUi(SetupEvent.ShowLoadingDialog)
         try {
+
+            val request = SetupRequest(
+                username = _username.value!!,
+                gender = if (_gender.value.equals("male", true)) 1 else 0,
+                bio = _bio.value!!,
+                dateOfBirth = _dob.value.toDate().toDateString()!!
+            )
+
+            val response = userRepository.setup(request)
+
+            if (response.isSuccessful.not()) {
+                updateUi(SetupEvent.HideLoadingDialog)
+                updateUi(SetupEvent.ShowSetupError(response.message))
+                return@launch
+            }
+
+            preferences.userHasSetup()
+            getUserDetails()
+
+        } catch (e: Exception) {
             updateUi(SetupEvent.HideLoadingDialog)
-            updateUi(SetupEvent.ShowSetupSuccess("Setup Successfully!"))
+            updateUi(SetupEvent.ShowSetupError(e.localizedMessage ?: "Error saving details"))
+        }
+    }
+
+    private fun getUserDetails() = viewModelScope.launch {
+        try {
+
+            val response = userRepository.getUser()
+
+            if (!response.isSuccessful) {
+                updateUi(SetupEvent.ShowSetupError(response.message))
+                updateUi(SetupEvent.HideLoadingDialog)
+                return@launch
+            }
+
+            val data = response.data!!
+
+            preferences.saveUserDetails(data)
+
+            _imageUri.value?.let { updateUi(event = SetupEvent.StartImageUpload(it)) }
+
+            updateUi(SetupEvent.ShowSetupSuccess("You're ready to go!"))
+            updateUi(SetupEvent.HideLoadingDialog)
             updateUi(SetupEvent.NavigateToFeeds)
-        } catch (e: Exception){
+
+        } catch (e: Exception) {
             updateUi(SetupEvent.HideLoadingDialog)
-            updateUi(SetupEvent.ShowSetupError(e.localizedMessage!!))
+            updateUi(SetupEvent.ShowSetupError(e.localizedMessage ?: "Failed getting details"))
         }
     }
 
@@ -111,8 +155,6 @@ class SetupViewModel @Inject constructor(
     }
 
     sealed class SetupEvent {
-        object OpenImagePicker : SetupEvent()
-        object OpenDatePicker : SetupEvent()
         object NavigateToFeeds : SetupEvent()
         object ShowUsernameError : SetupEvent()
         object ShowDOBError : SetupEvent()
@@ -120,6 +162,7 @@ class SetupViewModel @Inject constructor(
         object ShowBioError : SetupEvent()
         object ShowLoadingDialog : SetupEvent()
         object HideLoadingDialog : SetupEvent()
+        data class StartImageUpload(val uri: Uri) : SetupEvent()
         data class ShowSetupError(val message: String) : SetupEvent()
         data class ShowSetupSuccess(val message: String) : SetupEvent()
     }

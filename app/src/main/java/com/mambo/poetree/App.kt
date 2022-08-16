@@ -5,7 +5,7 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
-import com.mambo.core.utils.NotificationUtils
+import com.mambo.core.utils.NotificationsHelper
 import com.mambo.core.utils.ThemeHelper
 import com.mambo.data.preferences.UserPreferences
 import dagger.hilt.android.HiltAndroidApp
@@ -21,7 +21,7 @@ import javax.inject.Inject
 class App : Application(), Configuration.Provider {
 
     @Inject
-    lateinit var notificationUtils: NotificationUtils
+    lateinit var notificationsHelper: NotificationsHelper
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
@@ -44,7 +44,7 @@ class App : Application(), Configuration.Provider {
     }
 
     private fun setupNotificationChannels() {
-        notificationUtils.createNotificationChannels()
+        notificationsHelper.createNotificationChannels()
     }
 
     private fun initTheme() {
