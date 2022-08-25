@@ -13,12 +13,9 @@ import com.irozon.alertview.AlertView
 import com.irozon.alertview.objects.AlertAction
 import com.mambo.core.adapters.ViewPagerAdapter
 import com.mambo.core.utils.LoadingDialog
+import com.mambo.core.utils.toObliviousHumanLanguage
 import com.mambo.core.viewmodel.MainViewModel
 import com.mambobryan.features.auth.databinding.FragmentAuthBinding
-import com.mambobryan.navigation.Destinations
-import com.mambobryan.navigation.extensions.getDeeplink
-import com.mambobryan.navigation.extensions.getNavOptionsPopUpToCurrent
-import com.mambobryan.navigation.extensions.navigate
 import com.tapadoo.alerter.Alerter
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,7 +51,11 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
     }
 
     private fun showError(message: String) {
-        val alert = AlertView("Error", "\n$message\n", AlertStyle.DIALOG)
+        val alert = AlertView(
+            title = "Error",
+            message = "\n${message.toObliviousHumanLanguage()}\n",
+            style = AlertStyle.DIALOG
+        )
         alert.addAction(AlertAction("dismiss", AlertActionStyle.DEFAULT) {})
         alert.show(requireActivity() as AppCompatActivity)
     }
@@ -92,8 +93,11 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
     }
 
     private fun navigateToSetup() {
-        val deeplink = getDeeplink(Destinations.SETUP)
-        navigate(deeplink, getNavOptionsPopUpToCurrent())
+        val intent = requireActivity().intent
+
+        requireActivity().finishAffinity().also {
+            startActivity(intent)
+        }
     }
 
 }

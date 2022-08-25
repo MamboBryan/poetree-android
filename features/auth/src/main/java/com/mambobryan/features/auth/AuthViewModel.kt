@@ -25,31 +25,6 @@ class AuthViewModel @Inject constructor(
     private val _eventChannel = Channel<AuthEvent>()
     val events = _eventChannel.receiveAsFlow()
 
-    private fun getUserDetails() = viewModelScope.launch {
-        try {
-
-            val response = userRepository.getUser()
-
-            if (!response.isSuccessful) {
-                showError(response.message)
-                hideLoading()
-                return@launch
-            }
-
-            val data = response.data!!
-
-            preferences.saveUserDetails(data)
-            if (data.image.isNullOrBlank().not()) preferences.updateImageUrl(data.image!!)
-            showSuccess("You're ready to go!")
-            setupDailyInteractionReminder()
-            hideLoading()
-            updateUi(AuthEvent.NavigateToFeeds)
-        } catch (e: Exception) {
-            hideLoading()
-            showError(e.localizedMessage!!)
-        }
-    }
-
     fun onSignInClicked(email: String, password: String) = viewModelScope.launch {
         showLoading()
         try {
@@ -75,7 +50,12 @@ class AuthViewModel @Inject constructor(
                 return@launch
             }
 
-            getUserDetails()
+            preferences.saveUserDetails(user)
+            if (user.image.isNullOrBlank().not()) preferences.updateImageUrl(user.image!!)
+            showSuccess("You're ready to go!")
+            setupDailyInteractionReminder()
+            hideLoading()
+            updateUi(AuthEvent.NavigateToFeeds)
 
         } catch (e: Exception) {
             hideLoading()
@@ -86,6 +66,7 @@ class AuthViewModel @Inject constructor(
     fun onSignUpClicked(email: String, password: String) = viewModelScope.launch {
         showLoading()
         try {
+
             val response = authRepository.signUp(email, password)
 
             if (response.isSuccessful.not()) {

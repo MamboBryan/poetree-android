@@ -2,7 +2,6 @@ package com.mambo.features.home
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -27,7 +26,6 @@ import com.mambobryan.navigation.extensions.getDeeplink
 import com.mambobryan.navigation.extensions.navigate
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
@@ -84,11 +82,11 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         lifecycleScope.launchWhenResumed {
             viewModel.imageUrl.collectLatest {
                 binding.imageUser.load(it) {
-                    transformations(CircleCropTransformation())
                     scale(Scale.FILL)
                     crossfade(true)
-                    placeholder(R.drawable.ic_baseline_account_circle_24)
+//                    placeholder(R.drawable.ic_baseline_account_circle_24)
                     error(R.drawable.ic_baseline_account_circle_24)
+                    transformations(CircleCropTransformation())
                 }
             }
         }

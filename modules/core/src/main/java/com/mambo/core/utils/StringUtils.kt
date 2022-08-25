@@ -27,3 +27,11 @@ fun String?.isValidHexColor(): Boolean {
     val hexRegex = "^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})\$"
     return hexRegex.toRegex().matches(this)
 }
+
+fun String?.toObliviousHumanLanguage(): String {
+    return when {
+        this.isNullOrBlank() -> "error"
+        this.contains("timeout", false) -> "Request timed out, try again."
+        else -> this
+    }
+}
