@@ -19,11 +19,9 @@ import com.mambo.core.utils.LoadingDialog
 import com.mambobryan.features.settings.databinding.FragmentSettingsBinding
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
-import com.mambobryan.navigation.extensions.getNavOptionsPopUpToCurrent
 import com.mambobryan.navigation.extensions.navigate
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -76,7 +74,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                 requireActivity().packageManager?.getPackageInfo(requireActivity().packageName, 0)
             val versionName = info?.versionName
             val versionCode = info?.versionCode
-            tvSettingsVersion.text = "Poetree for Android v$versionName ($versionCode)"
+            tvSettingsVersion.text = "Poetree for Android v$versionName ( $versionCode )"
 
         } catch (e: PackageManager.NameNotFoundException) {
             Timber.e("Version Name: ${e.localizedMessage}")

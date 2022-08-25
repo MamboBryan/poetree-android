@@ -114,31 +114,10 @@ class SetupViewModel @Inject constructor(
                 return@launch
             }
 
-            preferences.userHasSetup()
-            getUserDetails()
-
-        } catch (e: Exception) {
-            updateUi(SetupEvent.HideLoadingDialog)
-            updateUi(SetupEvent.ShowSetupError(e.localizedMessage ?: "Error saving details"))
-        }
-    }
-
-    private fun getUserDetails() = viewModelScope.launch {
-        try {
-
-            val response = userRepository.getUser()
-
-            if (!response.isSuccessful) {
-                updateUi(SetupEvent.ShowSetupError(response.message))
-                updateUi(SetupEvent.HideLoadingDialog)
-                return@launch
-            }
-
             val data = response.data!!
 
+            preferences.userHasSetup()
             preferences.saveUserDetails(data)
-
-            _imageUri.value?.let { updateUi(event = SetupEvent.StartImageUpload(it)) }
 
             updateUi(SetupEvent.ShowSetupSuccess("You're ready to go!"))
             updateUi(SetupEvent.HideLoadingDialog)
@@ -146,7 +125,7 @@ class SetupViewModel @Inject constructor(
 
         } catch (e: Exception) {
             updateUi(SetupEvent.HideLoadingDialog)
-            updateUi(SetupEvent.ShowSetupError(e.localizedMessage ?: "Failed getting details"))
+            updateUi(SetupEvent.ShowSetupError(e.localizedMessage ?: "Error saving details"))
         }
     }
 

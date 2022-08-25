@@ -1,12 +1,9 @@
 package com.mambo.core.work
 
-import android.app.NotificationManager
 import android.content.Context
-import androidx.core.app.NotificationCompat
 import androidx.core.net.toUri
 import androidx.hilt.work.HiltWorker
 import androidx.work.*
-import com.mambo.core.R
 import com.mambo.core.repository.ImageRepository
 import com.mambo.core.repository.UserRepository
 import com.mambo.core.utils.Constants
@@ -70,7 +67,11 @@ class UploadImageWork @AssistedInject constructor(
             notificationsHelper.showProgressNotification("Uploading profile image", "")
 
             val task = imageRepository.upload(userId.toString(), imageUri).metadata?.reference
-                ?: return Result.failure().also { notificationsHelper.cancelProgressNotification() }
+
+            if (task == null) {
+                cancelNotification()
+                return Result.retry()
+            }
 
             val url = task.downloadUrl.await()
 
@@ -78,14 +79,20 @@ class UploadImageWork @AssistedInject constructor(
 
             val response = userRepository.updateImageUrl(url.toString())
 
-            if (response.isSuccessful.not()) return Result.retry()
-                .also { notificationsHelper.cancelProgressNotification() }
+            if (response.isSuccessful.not()) {
+                cancelNotification()
+                return Result.retry()
+            }
 
             return Result.success().also { notificationsHelper.cancelProgressNotification() }
 
         } catch (exception: Exception) {
             return Result.failure()
         }
+    }
+
+    private fun cancelNotification() {
+        notificationsHelper.cancelProgressNotification()
     }
 
 }

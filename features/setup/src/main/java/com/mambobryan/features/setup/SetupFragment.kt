@@ -187,7 +187,6 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
     private fun navigateToFeeds() {
 
         val intent = requireActivity().intent
-
         requireActivity().finishAffinity().also {
             startActivity(intent)
         }

@@ -42,13 +42,15 @@ class AccountViewModel @Inject constructor(
     private val _dob = MutableLiveData<Calendar?>(null)
     val dob get() = _dob
 
+    val userDetails = preferences.user
+
     init {
 
         val user = runBlocking { preferences.user.first() }
 
         if (user != null) {
             mUsername = user.name
-//            mEmail = user.email
+            mEmail = user.email
             mDateOfBirth = user.dateOfBirth
             mGender = user.gender
             mAbout = user.bio

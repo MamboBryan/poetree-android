@@ -1,6 +1,7 @@
 package com.mambo.features.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -81,6 +82,8 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
 
         lifecycleScope.launchWhenResumed {
             viewModel.imageUrl.collectLatest {
+                Log.i("Cowa", "IMAGE URL -> $it ")
+
                 binding.imageUser.load(it) {
                     scale(Scale.FILL)
                     crossfade(true)
