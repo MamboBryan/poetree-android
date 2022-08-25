@@ -9,3 +9,12 @@ data class SetupRequest(
     val gender: Int,
     val bio: String
 )
+
+@Serializable
+data class UserUpdateRequest(
+    val username: String?,
+    val email: String?,
+    val dateOfBirth: String?,
+    val gender: Int?,
+    val bio: String?
+)

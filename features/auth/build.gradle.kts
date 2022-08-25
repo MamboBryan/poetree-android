@@ -71,6 +71,7 @@ dependencies {
 
     implementation(Dependencies.Libraries.delegate)
     implementation(Dependencies.Libraries.alerter)
+    implementation(Dependencies.Libraries.alert)
 
     kapt(Dependencies.Libraries.hiltCompiler)
 

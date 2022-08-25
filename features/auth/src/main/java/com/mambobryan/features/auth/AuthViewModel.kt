@@ -65,7 +65,7 @@ class AuthViewModel @Inject constructor(
 
             val (user, token) = response.data!!.let { Pair(it.user, it.token) }
 
-            preferences.updateAccessToken(token = token)
+            preferences.updateTokens(access = token.accessToken, refresh = token.refreshToken)
             preferences.updateIsUserSetup(isSetup = user.isSetup)
             preferences.signedIn()
 
@@ -96,7 +96,7 @@ class AuthViewModel @Inject constructor(
 
             val token = response.data!!.token
 
-            preferences.updateAccessToken(token = token)
+            preferences.updateTokens(access = token.accessToken, refresh = token.refreshToken)
             preferences.signedIn()
 
             showSuccess("Let's set you up!")

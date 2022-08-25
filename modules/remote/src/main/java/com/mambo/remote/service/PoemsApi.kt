@@ -3,6 +3,7 @@ package com.mambo.remote.service
 import com.mambo.data.preferences.UserPreferences
 import com.mambo.data.requests.AuthRequest
 import com.mambo.data.requests.SetupRequest
+import com.mambo.data.requests.UserUpdateRequest
 import com.mambo.data.responses.AuthResponse
 import com.mambo.data.responses.ServerResponse
 import com.mambo.data.responses.UserDetails
@@ -82,6 +83,11 @@ class PoemsApi @Inject constructor(
 
     suspend fun userSetup(request: SetupRequest) = safeApiCall<UserDetails> {
         val response = client.post(Endpoints.USER_SETUP.url) { setBody(request) }
+        response.body()
+    }
+
+    suspend fun updateUser(request: UserUpdateRequest) = safeApiCall<UserDetails> {
+        val response = client.put(Endpoints.USER_UPDATE.url) { setBody(request) }
         response.body()
     }
 

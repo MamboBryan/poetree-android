@@ -8,7 +8,6 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.google.gson.Gson
-import com.mambo.data.models.User
 import com.mambo.data.responses.UserDetails
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.map
@@ -30,7 +29,7 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
         val IS_LOGGED_IN = booleanPreferencesKey("is_logged_in")
         val IS_SETUP = booleanPreferencesKey("is_set_up")
         val ACCESS_TOKEN = stringPreferencesKey("access_token")
-        val MESSAGE_TOKEN = stringPreferencesKey("message_token")
+        val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
         val USER_DETAILS = stringPreferencesKey("user_details")
         val IMAGE_URL = stringPreferencesKey("image_url")
     }
@@ -53,6 +52,10 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
 
     val accessToken = dataStore.data.map { prefs ->
         prefs[PreferencesKeys.ACCESS_TOKEN]
+    }
+
+    val refreshToken = dataStore.data.map { prefs ->
+        prefs[PreferencesKeys.REFRESH_TOKEN]
     }
 
     val imageUrl = dataStore.data.map { prefs ->
@@ -89,8 +92,9 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
         dataStore.edit { prefs -> prefs[PreferencesKeys.IS_SETUP] = isSetup }
     }
 
-    suspend fun updateAccessToken(token: String) {
-        dataStore.edit { prefs -> prefs[PreferencesKeys.ACCESS_TOKEN] = token }
+    suspend fun updateTokens(access: String, refresh: String){
+        dataStore.edit { prefs -> prefs[PreferencesKeys.ACCESS_TOKEN] = access }
+        dataStore.edit { prefs -> prefs[PreferencesKeys.REFRESH_TOKEN] = refresh }
     }
 
     suspend fun saveUserDetails(details: UserDetails) {

@@ -13,11 +13,11 @@
 
         <!-- Status bar. -->
         <item name="android:statusBarColor" >?attr/colorSurface</item>
-        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
 
         <!-- Navigation bar. -->
         <item name="android:navigationBarColor">?attr/colorSurface</item>
-        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
 
         <!-- Customize your theme here. -->
         <item name="fontFamily">@font/google_sans</item>
@@ -32,7 +32,4 @@
         <item name="colorOnError">@color/black</item>
     </style>
 
-    <style name="Theme.SplashTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="android:windowBackground">@drawable/splash</item>
-    </style>
 </resources>

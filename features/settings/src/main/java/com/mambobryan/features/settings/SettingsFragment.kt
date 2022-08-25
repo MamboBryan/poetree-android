@@ -75,7 +75,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             val info =
                 requireActivity().packageManager?.getPackageInfo(requireActivity().packageName, 0)
             val versionName = info?.versionName
-            tvSettingsVersion.text = "Poetree for Android v$versionName"
+            val versionCode = info?.versionCode
+            tvSettingsVersion.text = "Poetree for Android v$versionName ($versionCode)"
 
         } catch (e: PackageManager.NameNotFoundException) {
             Timber.e("Version Name: ${e.localizedMessage}")
@@ -119,7 +120,12 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     }
 
     private fun navigateToLanding() {
-        navigate(getDeeplink(Destinations.LANDING), getNavOptionsPopUpToCurrent())
+
+        val intent = requireActivity().intent
+        requireActivity().finishAffinity().also {
+            startActivity(intent)
+        }
+
     }
 
     private fun openRepoViaLink() {
