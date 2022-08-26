@@ -10,28 +10,26 @@ import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.work.Data
 import coil.load
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
+import com.irozon.alertview.AlertActionStyle
+import com.irozon.alertview.AlertStyle
+import com.irozon.alertview.AlertView
+import com.irozon.alertview.objects.AlertAction
 import com.mambo.core.utils.Constants
 import com.mambo.core.utils.LoadingDialog
 import com.mambo.core.utils.fromDateToString
+import com.mambo.core.utils.toObliviousHumanLanguage
 import com.mambo.core.work.UploadImageWork
 import com.mambobryan.features.setup.databinding.FragmentSetupBinding
-import com.mambobryan.navigation.Destinations
-import com.mambobryan.navigation.extensions.getDeeplink
-import com.mambobryan.navigation.extensions.getNavOptionsPopUpToCurrent
-import com.mambobryan.navigation.extensions.navigate
 import com.tapadoo.alerter.Alerter
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import timber.log.Timber
 import java.util.*
 
 @AndroidEntryPoint
@@ -167,14 +165,16 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
 
     private fun showErrorMessage(message: String, retryMethod: () -> Unit) {
 
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Error")
-            .setMessage(message)
-            .setNegativeButton("retry") { _, _ ->
-                retryMethod.invoke()
-            }
-            .setPositiveButton("dismiss", null)
-            .show()
+        val alert = AlertView(
+            title = "Error",
+            message = "\n${message.toObliviousHumanLanguage()}\n",
+            style = AlertStyle.DIALOG
+        )
+        alert.addAction(AlertAction("retry", AlertActionStyle.POSITIVE) {
+            retryMethod.invoke()
+        })
+        alert.addAction(AlertAction("dismiss", AlertActionStyle.NEGATIVE) {})
+        alert.show(requireActivity() as AppCompatActivity)
 
     }
 

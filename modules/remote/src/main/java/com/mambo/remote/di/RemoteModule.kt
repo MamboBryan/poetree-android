@@ -12,16 +12,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import io.ktor.client.*
-import io.ktor.client.plugins.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.logging.*
-import io.ktor.client.plugins.observer.*
-import io.ktor.client.request.*
-import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
 import okhttp3.logging.HttpLoggingInterceptor
-import timber.log.Timber
 import javax.inject.Singleton
 
 @Module
@@ -37,8 +28,7 @@ object RemoteModule {
 
     @Singleton
     @Provides
-    fun providesAuthInterceptor(preferences: UserPreferences) =
-        AuthInterceptor(preferences)
+    fun providesAuthInterceptor(preferences: UserPreferences) = AuthInterceptor(preferences)
 
     @Singleton
     @Provides

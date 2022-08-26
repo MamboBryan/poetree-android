@@ -85,7 +85,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         val alert = AlertView(
             "Logging Out",
             "We're going to miss you! \n Are you sure you want to logout?",
-            AlertStyle.BOTTOM_SHEET
+            AlertStyle.DIALOG
         )
         alert.addAction(
             AlertAction("Yes", AlertActionStyle.NEGATIVE) {
@@ -99,7 +99,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         val alert = AlertView(
             "Delete Account",
             "You're about to delete your account! \n This process cannot be reversed.",
-            AlertStyle.IOS
+            AlertStyle.DIALOG
         )
         alert.addAction(
             AlertAction("Confirm", AlertActionStyle.NEGATIVE) {
@@ -132,6 +132,5 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         intent.data = Uri.parse(url)
         startActivity(intent)
     }
-
 
 }

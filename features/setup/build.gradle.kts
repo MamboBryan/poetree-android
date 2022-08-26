@@ -74,6 +74,7 @@ dependencies {
     implementation(Dependencies.Libraries.delegate)
     implementation(Dependencies.Libraries.alerter)
     implementation(Dependencies.Libraries.timber)
+    implementation(Dependencies.Libraries.alert)
     implementation(Dependencies.Libraries.coil)
 
     kapt(Dependencies.Libraries.hiltCompiler)

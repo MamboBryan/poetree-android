@@ -12,6 +12,7 @@ import io.ktor.client.plugins.observer.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.json.Json
 import okhttp3.logging.HttpLoggingInterceptor
 import timber.log.Timber
 import javax.inject.Inject
@@ -31,7 +32,10 @@ class PoemsClient @Inject constructor(
         }
 
         install(ContentNegotiation) {
-            json()
+            json(json = Json {
+                encodeDefaults = false
+                explicitNulls = false
+            })
         }
 
         install(Logging) {

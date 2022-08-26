@@ -62,6 +62,7 @@ dependencies {
     implementation(Dependencies.Libraries.liveData)
     implementation(Dependencies.Libraries.lifecycle)
     implementation(Dependencies.Libraries.lifecycleExtensions)
+    implementation(Dependencies.Libraries.workManager)
     implementation(Dependencies.Libraries.savedState)
     implementation(Dependencies.Libraries.fragment)
     implementation(Dependencies.Libraries.navigationFragment)
@@ -69,11 +70,14 @@ dependencies {
     implementation(Dependencies.Libraries.coroutines)
     implementation(Dependencies.Libraries.hilt)
 
-    implementation(Dependencies.Libraries.delegate)
     implementation(Dependencies.Libraries.circularImage)
+    implementation(Dependencies.Libraries.delegate)
+    implementation(Dependencies.Libraries.alert)
     implementation(Dependencies.Libraries.coil)
 
     kapt(Dependencies.Libraries.hiltCompiler)
+
+
 
 }
 

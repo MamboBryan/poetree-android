@@ -31,6 +31,7 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
         val ACCESS_TOKEN = stringPreferencesKey("access_token")
         val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
         val USER_DETAILS = stringPreferencesKey("user_details")
+        val FORCED_SIGN_OUT = booleanPreferencesKey("logged_out")
         val IMAGE_URL = stringPreferencesKey("image_url")
     }
 
@@ -62,6 +63,10 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
         prefs[PreferencesKeys.IMAGE_URL]
     }
 
+    val forcedLogOut = dataStore.data.map { prefs ->
+        prefs[PreferencesKeys.FORCED_SIGN_OUT]
+    }
+
     val user = dataStore.data.map { prefs ->
         val json = prefs[PreferencesKeys.USER_DETAILS]
         val user = Gson().fromJson(json, UserDetails::class.java)
@@ -88,11 +93,15 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
         dataStore.edit { prefs -> prefs[PreferencesKeys.IS_SETUP] = true }
     }
 
+    suspend fun forcedSignOut() {
+        dataStore.edit { prefs -> prefs[PreferencesKeys.FORCED_SIGN_OUT] = true }
+    }
+
     suspend fun updateIsUserSetup(isSetup: Boolean) {
         dataStore.edit { prefs -> prefs[PreferencesKeys.IS_SETUP] = isSetup }
     }
 
-    suspend fun updateTokens(access: String, refresh: String){
+    suspend fun updateTokens(access: String, refresh: String) {
         dataStore.edit { prefs -> prefs[PreferencesKeys.ACCESS_TOKEN] = access }
         dataStore.edit { prefs -> prefs[PreferencesKeys.REFRESH_TOKEN] = refresh }
     }
@@ -106,9 +115,12 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
         dataStore.edit { prefs ->
             prefs[PreferencesKeys.IS_SETUP] = false
             prefs[PreferencesKeys.IS_LOGGED_IN] = false
+            prefs[PreferencesKeys.FORCED_SIGN_OUT] = false
             prefs[PreferencesKeys.ACCESS_TOKEN] = ""
+            prefs[PreferencesKeys.REFRESH_TOKEN] = ""
+            prefs[PreferencesKeys.USER_DETAILS] = ""
+            prefs[PreferencesKeys.IMAGE_URL] = ""
         }
     }
-
 
 }

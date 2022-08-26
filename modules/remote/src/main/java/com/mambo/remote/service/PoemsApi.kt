@@ -6,12 +6,11 @@ import com.mambo.data.requests.SetupRequest
 import com.mambo.data.requests.UserUpdateRequest
 import com.mambo.data.responses.AuthResponse
 import com.mambo.data.responses.ServerResponse
+import com.mambo.data.responses.TokenResponse
 import com.mambo.data.responses.UserDetails
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -20,18 +19,13 @@ class PoemsApi @Inject constructor(
     private val poemsClient: PoemsClient
 ) {
 
-    private var token: String?
-    private val client: HttpClient
+    private val client: HttpClient = poemsClient.client()
 
-    init {
-        runBlocking { token = preferences.accessToken.firstOrNull() }
-        client = poemsClient.client()
-    }
-
-    private enum class Endpoints {
+    enum class Endpoints {
 
         SIGN_IN,
         SIGN_UP,
+        REFRESH_TOKEN,
         RESET,
         USERS_ME_DETAILS,
         USER_SETUP,
@@ -43,6 +37,7 @@ class PoemsApi @Inject constructor(
             get() = BASE_URL + when (this) {
                 SIGN_IN -> "auth/signin"
                 SIGN_UP -> "auth/signup"
+                REFRESH_TOKEN -> "auth/refresh"
                 RESET -> "auth/reset"
                 USERS_ME_DETAILS -> "users/me"
                 USER_SETUP -> "users/me/setup"
@@ -59,7 +54,7 @@ class PoemsApi @Inject constructor(
             ServerResponse(isSuccessful = false, message = e.localizedMessage ?: "error")
         }
     }
-
+    
     /**
      * AUTH
      */
@@ -70,6 +65,13 @@ class PoemsApi @Inject constructor(
 
     suspend fun signUp(request: AuthRequest) = safeApiCall<AuthResponse> {
         val response = client.post(Endpoints.SIGN_UP.url) { setBody(request) }
+        response.body()
+    }
+
+    suspend fun refreshToken(token: String) = safeApiCall<TokenResponse> {
+        val response = client.post(Endpoints.REFRESH_TOKEN.url) {
+            setBody(mapOf("refreshToken" to token))
+        }
         response.body()
     }
 
