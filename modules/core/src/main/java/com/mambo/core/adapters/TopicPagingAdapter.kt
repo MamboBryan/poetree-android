@@ -5,18 +5,22 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.mambo.core.OnTopicClickListener
-import com.mambo.core.utils.lighten
 import com.mambo.data.models.Topic
 import com.mambo.ui.databinding.ItemTopicBinding
+import me.saket.cascade.CascadePopupMenu
 
 class TopicPagingAdapter :
     PagingDataAdapter<Topic, TopicPagingAdapter.TopicViewHolder>(Topic.COMPARATOR) {
 
-    private lateinit var onTopicClickListener: OnTopicClickListener
+    private var mListener: ((topic: Topic) -> Unit)? = null
+    private var mUpdateClicked: ((topic: Topic) -> Unit)? = null
 
-    fun setListener(listener: OnTopicClickListener) {
-        onTopicClickListener = listener
+    fun setOnTopicClicked(listener: (topic: Topic) -> Unit) {
+        mListener = listener
+    }
+
+    fun setOnUpdateClicked(listener: (topic: Topic) -> Unit) {
+        mUpdateClicked = listener
     }
 
     inner class TopicViewHolder(private val binding: ItemTopicBinding) :
@@ -28,8 +32,7 @@ class TopicPagingAdapter :
                 layoutTopic.setOnClickListener {
                     if (absoluteAdapterPosition != RecyclerView.NO_POSITION) {
                         val topic = getItem(absoluteAdapterPosition)
-                        if (topic != null)
-                            onTopicClickListener.onTopicClicked(topic)
+                        topic?.let { mListener?.invoke(it) }
                     }
                 }
 
@@ -38,10 +41,23 @@ class TopicPagingAdapter :
 
         fun bind(topic: Topic) {
             binding.apply {
-
                 tvTopicTitle.text = topic.name.replaceFirstChar { it.uppercase() }
-                layoutBg.setBackgroundColor(lighten(Color.parseColor(topic.color), .25))
-
+                layoutBg.setBackgroundColor(Color.parseColor(topic.color))
+                layoutTopic.setOnLongClickListener {
+                    val popup = CascadePopupMenu(binding.root.context, layoutTopic)
+                    popup.menu.addSubMenu("Topic").also {
+                        it.setHeaderTitle("Some Controls?")
+                        it.add("update").setOnMenuItemClickListener {
+                            mUpdateClicked?.invoke(topic)
+                            true
+                        }
+//                        it.add("delete").setOnMenuItemClickListener {
+//                            popup.navigateBack()
+//                        }
+                    }
+                    popup.show()
+                    return@setOnLongClickListener true
+                }
             }
         }
 

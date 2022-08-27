@@ -26,4 +26,7 @@ interface TopicsDao {
     @Query("SELECT * FROM topics WHERE name LIKE '%' || :query || '%'")
     fun getTopics(query: String): PagingSource<Int, Topic>
 
+    @Query("DELETE FROM topics")
+    fun deleteAll()
+
 }

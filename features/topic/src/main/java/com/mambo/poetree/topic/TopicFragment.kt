@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -33,7 +34,7 @@ class TopicFragment : Fragment(R.layout.fragment_topic) {
     private val binding by viewBinding(FragmentTopicBinding::bind)
 
     private val viewModel: TopicViewModel by viewModels()
-    private val mainViewModel: MainViewModel by viewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     private val lazyAdapter = LazyAdapter<String, ItemColorBinding>()
 
@@ -67,6 +68,11 @@ class TopicFragment : Fragment(R.layout.fragment_topic) {
         }
 
         viewModel.topic.observe(viewLifecycleOwner) {
+            val btnText = when (it != null) {
+                true -> "update"
+                false -> "save"
+            }
+            binding.btnSave.text = btnText
             binding.btnDelete.isVisible = false
         }
 

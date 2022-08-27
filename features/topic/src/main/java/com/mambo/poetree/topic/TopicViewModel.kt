@@ -12,7 +12,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -59,10 +58,8 @@ class TopicViewModel @Inject constructor() : ViewModel() {
     fun generateRandomColors() {
 
         val list = mutableListOf<String>()
-        for (number in 1 until 6) {
-            Timber.i("generateRandomColors: NUMBER -> $number")
+        for (number in 1 until 6)
             list.add(String.format("#%06X", 0xFFFFFF and generateRgb()))
-        }
 
         _color.value = String.format("#%06X", 0xFFFFFF and generateRgb())
         _colors.value = list

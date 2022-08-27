@@ -82,6 +82,7 @@ dependencies {
     implementation(Dependencies.Libraries.okHttpLogging)
     implementation(Dependencies.Libraries.prettyTime)
     implementation(Dependencies.Libraries.retrofit)
+    implementation(Dependencies.Libraries.cascade)
     implementation(Dependencies.Libraries.okHttp)
 
     kapt(Dependencies.Libraries.hiltCompiler)

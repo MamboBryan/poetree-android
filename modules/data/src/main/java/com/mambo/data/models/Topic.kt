@@ -12,10 +12,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Topic(
     @PrimaryKey(autoGenerate = false)
-    val id: Int = 0,
+    val id: Int,
     val name: String,
     val color: String,
-    val createdAt: String,
+    val createdAt: String?,
     val updatedAt: String?,
 ) : Parcelable {
     companion object {
@@ -23,7 +23,6 @@ data class Topic(
             override fun areItemsTheSame(oldItem: Topic, newItem: Topic): Boolean {
                 return oldItem == newItem
             }
-
             override fun areContentsTheSame(oldItem: Topic, newItem: Topic): Boolean {
                 return oldItem == newItem
             }

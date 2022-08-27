@@ -139,12 +139,10 @@ class PoemsApi @Inject constructor(
         response.body()
     }
 
-    suspend fun getTopics(page: Int = 0) = safeApiCall<PagedData<Topic>> {
+    suspend fun getTopics(page: Int = 1) = safeApiCall<PagedData<TopicDTO>> {
         val url = Endpoints.TOPICS.url
-        val response = client.delete(url) {
-            url {
-                parameters.append("page", page.toString())
-            }
+        val response = client.get(url) {
+            url { parameters.append("page", page.toString()) }
         }
         response.body()
     }

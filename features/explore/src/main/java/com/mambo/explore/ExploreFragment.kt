@@ -2,18 +2,20 @@ package com.mambo.explore
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
-import com.mambo.core.OnTopicClickListener
 import com.mambo.core.adapters.GenericStateAdapter
 import com.mambo.core.adapters.TopicPagingAdapter
+import com.mambo.core.utils.showContent
+import com.mambo.core.utils.showEmpty
+import com.mambo.core.utils.showError
+import com.mambo.core.utils.showLoading
 import com.mambo.core.viewmodel.MainViewModel
-import com.mambo.data.models.Topic
 import com.mambo.explore.databinding.FragmentExploreBinding
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
@@ -47,44 +49,24 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
         }
 
         lifecycleScope.launch {
-            viewModel.topics.collectLatest {
+            sharedViewModel.topics.collectLatest {
                 adapter.submitData(it)
             }
         }
 
-        lifecycleScope.launch {
-            adapter.loadStateFlow.collectLatest { loadState ->
-                binding.layoutStateExplore.apply {
+        lifecycleScope.launchWhenResumed {
+            adapter.loadStateFlow.collectLatest { state: CombinedLoadStates ->
+                when (state.mediator?.refresh) {
+                    is LoadState.Loading -> binding.layoutStateExplore.showLoading()
+                    is LoadState.Error -> binding.layoutStateExplore.showError()
+                    is LoadState.NotLoading -> {
+                        if (state.append.endOfPaginationReached && adapter.itemCount < 1)
+                            binding.layoutStateExplore.showEmpty()
+                        else
+                            binding.layoutStateExplore.showContent()
 
-                    stateContent.isVisible = false
-                    stateEmpty.isVisible = false
-                    stateError.isVisible = false
-                    stateLoading.isVisible = false
-
-                    when (loadState.source.refresh) {
-                        is LoadState.Loading -> {
-                            stateLoading.isVisible = true
-                        }
-
-                        is LoadState.Error -> {
-                            stateError.isVisible = true
-                        }
-
-                        is LoadState.NotLoading -> {
-
-                            if (loadState.append.endOfPaginationReached) {
-                                if (adapter.itemCount < 1)
-                                    stateEmpty.isVisible = true
-                                else {
-                                    stateContent.isVisible = true
-                                }
-                            } else {
-                                stateContent.isVisible = true
-                            }
-
-
-                        }
                     }
+                    null -> binding.layoutStateExplore.showLoading()
                 }
             }
         }
@@ -103,7 +85,6 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
                 recyclerView.adapter = adapter
                 recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
                 buttonRetry.setOnClickListener { adapter.retry() }
-
             }
 
             fabTopic.setOnClickListener {
@@ -111,12 +92,17 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
             }
 
         }
-        adapter.setListener(object : OnTopicClickListener {
-            override fun onTopicClicked(topic: Topic) {
-                sharedViewModel.setTopic(topic)
-                viewModel.onTopicClicked()
-            }
-        })
+
+        adapter.setOnTopicClicked {
+            sharedViewModel.setTopic(it)
+            viewModel.onTopicClicked()
+        }
+
+        adapter.setOnUpdateClicked {
+            sharedViewModel.setTopic(it)
+            navigateToTopic()
+        }
+
         adapter.withLoadStateHeaderAndFooter(
             header = GenericStateAdapter(adapter::retry),
             footer = GenericStateAdapter(adapter::retry)

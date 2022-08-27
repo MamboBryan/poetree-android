@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.google.gson.Gson
 import com.mambo.core.repository.PoemRepository
+import com.mambo.core.repository.TopicsRepository
 import com.mambo.core.utils.ConnectionLiveData
 import com.mambo.data.models.Poem
 import com.mambo.data.models.Topic
@@ -26,7 +27,8 @@ class MainViewModel @Inject constructor(
     application: Application,
     poemRepository: PoemRepository,
     preferences: UserPreferences,
-    state: SavedStateHandle
+    state: SavedStateHandle,
+    private val topicRepository: TopicsRepository
 ) : AndroidViewModel(application) {
 
     private val _connection = ConnectionLiveData(application)
@@ -43,6 +45,7 @@ class MainViewModel @Inject constructor(
     val darkModeFlow = preferences.darkMode
 
     val feedPoems = poemRepository.feedPoems().cachedIn(viewModelScope)
+    val topics = topicRepository.topics("").cachedIn(viewModelScope)
     val publicPoems = poemRepository.publishedPoems().cachedIn(viewModelScope)
 
     private val searchTopic = MutableStateFlow<Topic?>(null)

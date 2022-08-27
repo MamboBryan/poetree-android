@@ -71,10 +71,10 @@ dependencies {
     implementation(Dependencies.Libraries.paging)
     implementation(Dependencies.Libraries.hilt)
 
-    implementation(Dependencies.Libraries.timber)
-    implementation(Dependencies.Libraries.delegate)
     implementation(Dependencies.Libraries.circularImage)
     implementation(Dependencies.Libraries.prettyTime)
+    implementation(Dependencies.Libraries.delegate)
+    implementation(Dependencies.Libraries.timber)
     implementation(Dependencies.Libraries.coil)
 
     kapt(Dependencies.Libraries.hiltCompiler)

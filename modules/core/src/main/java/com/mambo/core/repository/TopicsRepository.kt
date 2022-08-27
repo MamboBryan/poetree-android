@@ -1,7 +1,9 @@
 package com.mambo.core.repository
 
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import com.mambo.core.source.TopicsMediator
 import com.mambo.data.requests.TopicRequest
 import com.mambo.local.TopicsDao
 import com.mambo.remote.service.PoemsApi
@@ -15,8 +17,6 @@ class TopicsRepository @Inject constructor() {
     @Inject
     lateinit var topicsDao: TopicsDao
 
-    fun topics() = topicsDao.getAll()
-
     fun getTopics() = Pager(PagingConfig(10)) { topicsDao.getTopics() }.flow
 
     fun getTopics(query: String) = Pager(PagingConfig(10)) { topicsDao.getTopics(query) }.flow
@@ -29,6 +29,14 @@ class TopicsRepository @Inject constructor() {
 
     suspend fun delete(topicId: Int) = poemsApi.deleteTopic(topicId)
 
-    suspend fun topics(page: Int = 0) = poemsApi.getTopics(page)
+    fun topics() = topicsDao.getAll()
+
+    @OptIn(ExperimentalPagingApi::class)
+    fun topics(query: String) = Pager(
+        config = PagingConfig(20),
+        remoteMediator = TopicsMediator(query = query, topicsDao = topicsDao, poemsApi = poemsApi)
+    ) {
+        topicsDao.getTopics()
+    }.flow
 
 }
