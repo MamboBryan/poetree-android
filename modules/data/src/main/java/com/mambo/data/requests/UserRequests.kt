@@ -18,3 +18,10 @@ data class UserUpdateRequest(
     val gender: Int?,
     val bio: String?
 )
+
+
+@Serializable
+data class UpdatePasswordRequest(
+    val oldPassword: String,
+    val newPassword: String,
+)

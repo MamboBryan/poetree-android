@@ -1,13 +1,13 @@
 rootProject.name = "Poetree"
-include(
-    ":app",
-    ":modules:core",
-    ":features:home"
-)
+include(":app")
+
 include(":modules:ui")
+include(":modules:data")
+include(":modules:core")
 include(":modules:local")
 include(":modules:remote")
-include(":modules:data")
+
+include(":features:home")
 include(":features:explore")
 include(":features:bookmarks")
 include(":features:library")
@@ -29,3 +29,4 @@ include(":features:loading")
 include(":features:setup")
 include(":features:publish")
 include(":features:settings")
+include(":features:topic")

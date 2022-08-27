@@ -62,6 +62,7 @@ dependencies {
     implementation(Dependencies.Libraries.legacySupport)
     implementation(Dependencies.Libraries.materialDesign)
     implementation(Dependencies.Libraries.constraintLayout)
+    implementation(Dependencies.Libraries.recyclerviewSelection)
 
     implementation(Dependencies.Libraries.playCoroutines)
     implementation(Dependencies.Libraries.workManager)

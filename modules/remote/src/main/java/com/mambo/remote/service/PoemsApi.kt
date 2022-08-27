@@ -1,13 +1,9 @@
 package com.mambo.remote.service
 
+import com.mambo.data.models.Topic
 import com.mambo.data.preferences.UserPreferences
-import com.mambo.data.requests.AuthRequest
-import com.mambo.data.requests.SetupRequest
-import com.mambo.data.requests.UserUpdateRequest
-import com.mambo.data.responses.AuthResponse
-import com.mambo.data.responses.ServerResponse
-import com.mambo.data.responses.TokenResponse
-import com.mambo.data.responses.UserDetails
+import com.mambo.data.requests.*
+import com.mambo.data.responses.*
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -29,7 +25,10 @@ class PoemsApi @Inject constructor(
         RESET,
         USERS_ME_DETAILS,
         USER_SETUP,
-        USER_UPDATE;
+        USER_UPDATE,
+        USER_UPDATE_PASSWORD,
+        TOPICS,
+        ;
 
         private val BASE_URL = "https://mambo-poetree.herokuapp.com/v1/"
 
@@ -42,6 +41,8 @@ class PoemsApi @Inject constructor(
                 USERS_ME_DETAILS -> "users/me"
                 USER_SETUP -> "users/me/setup"
                 USER_UPDATE -> "users/me/update"
+                USER_UPDATE_PASSWORD -> "users/me/update-password"
+                TOPICS -> "topics"
             }
 
     }
@@ -54,7 +55,7 @@ class PoemsApi @Inject constructor(
             ServerResponse(isSuccessful = false, message = e.localizedMessage ?: "error")
         }
     }
-    
+
     /**
      * AUTH
      */
@@ -93,6 +94,11 @@ class PoemsApi @Inject constructor(
         response.body()
     }
 
+    suspend fun updatePassword(request: UpdatePasswordRequest) = safeApiCall<TokenResponse> {
+        val response = client.put(Endpoints.USER_UPDATE_PASSWORD.url) { setBody(request) }
+        response.body()
+    }
+
     suspend fun uploadMessagingToken(token: String) = safeApiCall<UserDetails> {
         val response = client.put(Endpoints.USER_UPDATE.url) { setBody(mapOf("token" to token)) }
         response.body()
@@ -106,5 +112,41 @@ class PoemsApi @Inject constructor(
     /**
      * USERS
      */
+
+    /**
+     * TOPICS
+     */
+    suspend fun createTopic(request: TopicRequest) = safeApiCall<Topic> {
+        val response = client.post(Endpoints.TOPICS.url) { setBody(request) }
+        response.body()
+    }
+
+    suspend fun updateTopic(topicId: Int, request: TopicRequest) = safeApiCall<Topic> {
+        val url = Endpoints.TOPICS.url.plus("/$topicId")
+        val response = client.put(url) { setBody(request) }
+        response.body()
+    }
+
+    suspend fun getTopic(topicId: Int) = safeApiCall<Topic> {
+        val url = Endpoints.TOPICS.url.plus("/$topicId")
+        val response = client.get(url)
+        response.body()
+    }
+
+    suspend fun deleteTopic(topicId: Int) = safeApiCall<Boolean> {
+        val url = Endpoints.TOPICS.url.plus("/$topicId")
+        val response = client.delete(url)
+        response.body()
+    }
+
+    suspend fun getTopics(page: Int = 0) = safeApiCall<PagedData<Topic>> {
+        val url = Endpoints.TOPICS.url
+        val response = client.delete(url) {
+            url {
+                parameters.append("page", page.toString())
+            }
+        }
+        response.body()
+    }
 
 }

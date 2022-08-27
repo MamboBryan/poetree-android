@@ -20,7 +20,6 @@ import com.mambobryan.navigation.extensions.getDeeplink
 import com.mambobryan.navigation.extensions.navigate
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -106,6 +105,11 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
                 buttonRetry.setOnClickListener { adapter.retry() }
 
             }
+
+            fabTopic.setOnClickListener {
+                navigateToTopic()
+            }
+
         }
         adapter.setListener(object : OnTopicClickListener {
             override fun onTopicClicked(topic: Topic) {
@@ -119,8 +123,13 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
         )
     }
 
-    private fun navigateToSearch(){
+    private fun navigateToSearch() {
         val deeplink = getDeeplink(Destinations.SEARCH)
+        navigate(deeplink)
+    }
+
+    private fun navigateToTopic() {
+        val deeplink = getDeeplink(Destinations.TOPIC)
         navigate(deeplink)
     }
 

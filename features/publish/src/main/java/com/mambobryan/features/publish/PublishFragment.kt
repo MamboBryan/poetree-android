@@ -20,7 +20,6 @@ import com.mambo.core.adapters.GenericStateAdapter
 import com.mambo.core.extensions.onQueryTextChanged
 import com.mambo.core.viewmodel.MainViewModel
 import com.mambo.data.models.Topic
-import com.mambo.data.utils.isNotNull
 import com.mambobryan.features.publish.databinding.FragmentPublishBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -102,7 +101,7 @@ class PublishFragment : Fragment(R.layout.fragment_publish) {
 
         lifecycleScope.launchWhenStarted {
             viewModel.topic.collectLatest {
-                binding.apply { btnChoose.isEnabled = it.isNotNull() }
+                binding.apply { btnChoose.isEnabled = it != null }
             }
         }
 
@@ -110,6 +109,7 @@ class PublishFragment : Fragment(R.layout.fragment_publish) {
             viewModel.events.collectLatest { event ->
                 when (event) {
                     is PublishViewModel.TopicEvent.ShowErrorMessage -> {
+                        // TODO: change motion toast to normal toast
                         MotionToast.createToast(
                             requireActivity(),
                             "Error",
@@ -121,6 +121,7 @@ class PublishFragment : Fragment(R.layout.fragment_publish) {
                         )
                     }
                     is PublishViewModel.TopicEvent.ShowSuccessMessage -> {
+                        // TODO: change motion toast to normal toast
                         MotionToast.createToast(
                             requireActivity(),
                             "Success",

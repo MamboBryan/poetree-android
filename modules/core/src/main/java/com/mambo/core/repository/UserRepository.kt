@@ -1,6 +1,7 @@
 package com.mambo.core.repository
 
 import com.mambo.data.requests.SetupRequest
+import com.mambo.data.requests.UpdatePasswordRequest
 import com.mambo.data.requests.UserUpdateRequest
 import com.mambo.remote.service.PoemsApi
 import javax.inject.Inject
@@ -19,5 +20,7 @@ class UserRepository @Inject constructor() {
     suspend fun updateToken(token: String) = poemsApi.uploadMessagingToken(token)
 
     suspend fun updateImageUrl(url: String) = poemsApi.uploadImageUrl(url)
+
+    suspend fun updatePassword(request: UpdatePasswordRequest) = poemsApi.updatePassword(request)
 
 }

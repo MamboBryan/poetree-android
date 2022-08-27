@@ -17,10 +17,8 @@ object LocalModule {
     @Singleton
     fun provideDatabase(
         app: Application,
-        callback: PoetreeDatabase.Callback
     ): PoetreeDatabase =
         Room.databaseBuilder(app, PoetreeDatabase::class.java, PoetreeDatabase.DATABASE_NAME)
-            .addCallback(callback)
             .fallbackToDestructiveMigration()
             .build()
 

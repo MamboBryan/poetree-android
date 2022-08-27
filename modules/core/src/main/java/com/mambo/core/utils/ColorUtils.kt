@@ -4,6 +4,7 @@ import android.graphics.Color
 import kotlin.math.max
 import kotlin.math.min
 
+
 fun lighten(color: Int, fraction: Double): Int {
     var red: Int = Color.red(color)
     var green: Int = Color.green(color)
@@ -24,6 +25,16 @@ fun darken(color: Int, fraction: Double): Int {
     blue = darkenColor(blue, fraction)
     val alpha: Int = Color.alpha(color)
     return Color.argb(alpha, red, green, blue)
+}
+
+private fun getRandomPastel() {
+
+    val red = (0 until 128).random().plus(127f)
+    val blue = (0 until 128).random().plus(127f)
+    val green = (0 until 128).random().plus(127f)
+
+//    val hex = String.format("#%02x%02x%02x", r, g, b)
+
 }
 
 private fun darkenColor(color: Int, fraction: Double): Int {

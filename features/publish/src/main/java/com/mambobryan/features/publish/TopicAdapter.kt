@@ -7,12 +7,11 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mambo.core.OnTopicClickListener
 import com.mambo.data.models.Topic
-import com.mambo.data.utils.TOPIC_COMPARATOR
 import com.mambobryan.features.publish.databinding.ItemTopicChoiceBinding
 import javax.inject.Inject
 
 class TopicAdapter @Inject constructor() :
-    PagingDataAdapter<Topic, TopicAdapter.TopicViewHolder>(TOPIC_COMPARATOR) {
+    PagingDataAdapter<Topic, TopicAdapter.TopicViewHolder>(Topic.COMPARATOR) {
 
     private lateinit var onTopicClickListener: OnTopicClickListener
     private var selectedPosition = RecyclerView.NO_POSITION

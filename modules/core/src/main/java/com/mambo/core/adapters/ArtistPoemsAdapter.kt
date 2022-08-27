@@ -7,13 +7,12 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mambo.core.OnPoemClickListener
 import com.mambo.data.models.Poem
-import com.mambo.data.utils.POEM_COMPARATOR
 import com.mambo.ui.databinding.ItemPoemArtistBinding
 import org.ocpsoft.prettytime.PrettyTime
 import javax.inject.Inject
 
 class ArtistPoemsAdapter @Inject constructor() :
-    PagingDataAdapter<Poem, ArtistPoemsAdapter.PoemViewHolder>(POEM_COMPARATOR) {
+    PagingDataAdapter<Poem, ArtistPoemsAdapter.PoemViewHolder>(Poem.COMPARATOR) {
 
     private lateinit var onPoemClickListener: OnPoemClickListener
 

@@ -8,11 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mambo.core.OnTopicClickListener
 import com.mambo.core.utils.lighten
 import com.mambo.data.models.Topic
-import com.mambo.data.utils.TOPIC_COMPARATOR
 import com.mambo.ui.databinding.ItemTopicBinding
 
 class TopicPagingAdapter :
-    PagingDataAdapter<Topic, TopicPagingAdapter.TopicViewHolder>(TOPIC_COMPARATOR) {
+    PagingDataAdapter<Topic, TopicPagingAdapter.TopicViewHolder>(Topic.COMPARATOR) {
 
     private lateinit var onTopicClickListener: OnTopicClickListener
 

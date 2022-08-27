@@ -20,6 +20,7 @@ object Modules {
         const val setup = ":features:setup"
         const val publish = ":features:publish"
         const val settings = ":features:settings"
+        const val topic = ":features:topic"
     }
 
     object Commons {

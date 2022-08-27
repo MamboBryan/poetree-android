@@ -8,12 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mambo.bookmarks.databinding.ItemPoemBookmarkBinding
 import com.mambo.core.OnPoemClickListener
 import com.mambo.data.models.Poem
-import com.mambo.data.utils.POEM_COMPARATOR
 import org.ocpsoft.prettytime.PrettyTime
 import javax.inject.Inject
 
 class BookmarksAdapter @Inject constructor() :
-    PagingDataAdapter<Poem, BookmarksAdapter.PoemViewHolder>(POEM_COMPARATOR) {
+    PagingDataAdapter<Poem, BookmarksAdapter.PoemViewHolder>(Poem.COMPARATOR) {
 
     private lateinit var onPoemClickListener: OnPoemClickListener
 

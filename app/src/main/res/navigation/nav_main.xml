@@ -23,5 +23,6 @@
     <include app:graph="@navigation/flow_setup" />
     <include app:graph="@navigation/flow_publish" />
     <include app:graph="@navigation/flow_settings" />
+    <include app:graph="@navigation/flow_topic" />
 
 </navigation>

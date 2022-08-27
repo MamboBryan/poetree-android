@@ -10,3 +10,11 @@ data class ServerResponse<T>(
     val message: String,
     val data: T? = null
 )
+
+@Serializable
+data class PagedData<T>(
+    val current: Int?,
+    val next: Int?,
+    val previous: Int,
+    val list: List<T>
+)

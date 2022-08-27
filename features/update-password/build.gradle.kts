@@ -71,6 +71,7 @@ dependencies {
 
     implementation(Dependencies.Libraries.circularImage)
     implementation(Dependencies.Libraries.delegate)
+    implementation(Dependencies.Libraries.alert)
 
     kapt(Dependencies.Libraries.hiltCompiler)
 

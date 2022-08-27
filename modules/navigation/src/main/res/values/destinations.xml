@@ -17,5 +17,6 @@
     <string name="landing">app://com.mambo.poetree/landing</string>
     <string name="publish">app://com.mambo.poetree/publish</string>
     <string name="settings">app://com.mambo.poetree/settings</string>
+    <string name="topic">app://com.mambo.poetree/topic</string>
 
 </resources>

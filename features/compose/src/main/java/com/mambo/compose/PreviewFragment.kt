@@ -6,7 +6,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.mambo.compose.databinding.FragmentPreviewBinding
-import com.mambo.data.utils.isNotNull
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -51,7 +50,7 @@ class PreviewFragment : Fragment(R.layout.fragment_preview) {
         editorPreviewPoem.setCode()
 
         fabPreviewPublish.isEnabled = viewModel.poemContent.isNotEmpty() &&
-                viewModel.poemTitle.isNotEmpty() && viewModel.topic.isNotNull()
+                viewModel.poemTitle.isNotEmpty() && viewModel.topic != null
 
     }
 

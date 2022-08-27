@@ -6,13 +6,12 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mambo.core.OnPoemClickListener
 import com.mambo.data.models.Comment
-import com.mambo.data.utils.COMMENT_COMPARATOR
 import com.mambobryan.features.comments.databinding.ItemCommentBinding
 import org.ocpsoft.prettytime.PrettyTime
 import javax.inject.Inject
 
 class CommentsAdapter @Inject constructor() :
-    PagingDataAdapter<Comment, CommentsAdapter.CommentViewHolder>(COMMENT_COMPARATOR) {
+    PagingDataAdapter<Comment, CommentsAdapter.CommentViewHolder>(Comment.COMPARATOR) {
 
     private lateinit var onPoemClickListener: OnPoemClickListener
 
@@ -30,7 +29,7 @@ class CommentsAdapter @Inject constructor() :
 
 
                 val duration = prettyTime.formatDuration(comment.createdAt)
-                
+
 
             }
         }

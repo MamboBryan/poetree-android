@@ -18,7 +18,6 @@ import com.mambo.core.utils.hideKeyboard
 import com.mambo.core.utils.showKeyboard
 import com.mambo.core.viewmodel.MainViewModel
 import com.mambo.data.models.Poem
-import com.mambo.data.utils.isNull
 import com.mambobryan.features.search.databinding.FragmentSearchBinding
 import com.mambobryan.libraries.searchbar.model.MultiSearchChangeListener
 import com.mambobryan.navigation.Destinations
@@ -26,7 +25,6 @@ import com.mambobryan.navigation.extensions.getDeeplink
 import com.mambobryan.navigation.extensions.navigate
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
@@ -112,7 +110,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     private fun setupSearchView() = binding.apply {
         val topic = sharedViewModel.topic.value
 
-        if (topic.isNull()) {
+        if (topic == null) {
             searchViewSearch.performClick()
             searchViewSearch.requestFocus()
             showKeyboard(searchViewSearch)

@@ -77,6 +77,7 @@ dependencies {
     implementation(project(Modules.Features.setup))
     implementation(project(Modules.Features.publish))
     implementation(project(Modules.Features.settings))
+    implementation(project(Modules.Features.topic))
 
     implementation(platform(Dependencies.BOM.okHttp))
     implementation(platform(Dependencies.BOM.firebase))
