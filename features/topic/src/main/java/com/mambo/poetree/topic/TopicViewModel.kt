@@ -106,7 +106,20 @@ class TopicViewModel @Inject constructor() : ViewModel() {
             _uiEvents.value = TopicEvent.Loading(true)
 
             val id = _topic.value!!.id
-            val request = TopicRequest(name = name, color = color)
+
+            val prevName = _topic.value?.name
+            val prevColor = _topic.value?.name
+
+            if(name.equals(prevName) and color.equals(prevColor)){
+                _uiEvents.value = TopicEvent.Loading(false)
+                _uiEvents.value = TopicEvent.Error("Nothing changed in topic details")
+                return@launch
+            }
+
+            val request = TopicRequest(
+                name = name.takeIf { it == prevName },
+                color = color.takeIf { it == prevColor }
+            )
             val response = repository.update(id, request)
 
             _uiEvents.value = TopicEvent.Loading(false)

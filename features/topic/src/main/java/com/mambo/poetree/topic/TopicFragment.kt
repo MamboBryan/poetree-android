@@ -72,8 +72,12 @@ class TopicFragment : Fragment(R.layout.fragment_topic) {
                 true -> "update"
                 false -> "save"
             }
-            binding.btnSave.text = btnText
-            binding.btnDelete.isVisible = false
+            binding.apply {
+                edtName.setText(it?.name)
+                btnSave.text = btnText
+                btnDelete.isVisible = false
+            }
+
         }
 
         lifecycleScope.launchWhenResumed {

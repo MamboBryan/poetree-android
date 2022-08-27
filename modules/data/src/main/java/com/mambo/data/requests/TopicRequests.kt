@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TopicRequest(
-    val name: String,
-    val color: String
+    val name: String?,
+    val color: String?
 )
