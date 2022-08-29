@@ -1,5 +1,6 @@
 package com.mambo.compose
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,8 +8,11 @@ import com.mambo.core.repository.PoemRepository
 import com.mambo.data.models.Poem
 import com.mambo.data.models.Topic
 import com.mambo.data.models.User
+import com.mambo.data.preferences.UserPreferences
+import com.mambo.data.responses.UserDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.ocpsoft.prettytime.PrettyTime
@@ -19,7 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ComposeViewModel @Inject constructor(
     private val repository: PoemRepository,
-    private val state: SavedStateHandle
+    private val state: SavedStateHandle,
+    private val userPreferences: UserPreferences
 ) : ViewModel() {
 
     private val _eventChannel = Channel<ComposeEvent>()
@@ -48,6 +53,18 @@ class ComposeViewModel @Inject constructor(
             field = value
             state.set("poem_content", value)
         }
+
+    private val _user = MutableLiveData<UserDetails>()
+
+    init {
+        getUserDetails()
+    }
+
+    private fun getUserDetails() {
+        viewModelScope.launch {
+            _user.value = userPreferences.user.firstOrNull()
+        }
+    }
 
     fun getHtml(): String {
         val html = StringBuilder()

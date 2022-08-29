@@ -103,8 +103,7 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
                     false
                 }
             }
-
-
+            
         }
 
     }

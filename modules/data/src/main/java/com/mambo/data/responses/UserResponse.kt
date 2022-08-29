@@ -19,3 +19,11 @@ data class UserDetails(
 ) {
     val isSetup = name != null && dateOfBirth != null
 }
+
+@Serializable
+data class UserListResponse(
+    val id: String?,
+    val createdAt: String?,
+    val name: String?,
+    val image: String?
+)

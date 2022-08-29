@@ -1,9 +1,17 @@
 package com.mambo.data.requests
 
-import com.mambo.data.models.Topic
+import kotlinx.serialization.Serializable
 
-data class CreatePoemRequest(
-    val title: String,
-    val content: String,
-    val topic: Topic
+@Serializable
+data class EditPoemRequest(
+    val title: String?,
+    val content: String?,
+    val html: String?,
+    val topic: Int?,
+    val poemId: String? = null,
+)
+
+@Serializable
+data class PoemRequest(
+    val poemId: String,
 )

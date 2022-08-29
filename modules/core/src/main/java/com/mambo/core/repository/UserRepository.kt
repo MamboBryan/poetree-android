@@ -11,7 +11,7 @@ class UserRepository @Inject constructor() {
     @Inject
     lateinit var poemsApi: PoemsApi
 
-    suspend fun getUser() = poemsApi.getCurrentUserDetails()
+    suspend fun getUser() = poemsApi.getMyDetails()
 
     suspend fun setup(request: SetupRequest) = poemsApi.userSetup(request)
 
