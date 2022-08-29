@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/flow_topic"
+    app:startDestination="@id/topicFragment">
+
+    <fragment
+        android:id="@+id/topicFragment"
+        android:name="com.mambo.poetree.topic.TopicFragment"
+        android:label="fragment_topic"
+        tools:layout="@layout/fragment_topic">
+        <deepLink app:uri="@string/topic" />
+    </fragment>
+</navigation>

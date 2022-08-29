@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/flow_feeds"
+        android:icon="@drawable/ic_baseline_home_24"
+        android:title="Feed" />
+
+    <item
+        android:id="@+id/flow_explore"
+        android:icon="@drawable/ic_round_offline_bolt_24"
+        android:title="Explore" />
+
+    <item
+        android:id="@+id/flow_bookmarks"
+        android:icon="@drawable/ic_baseline_bookmark_24"
+        android:title="Bookmarks" />
+
+    <item
+        android:id="@+id/flow_library"
+        android:icon="@drawable/ic_baseline_book_24"
+        android:title="Library" />
+
+</menu>

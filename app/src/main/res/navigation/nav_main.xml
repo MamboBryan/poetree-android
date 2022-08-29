@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/flow_loading">
+
+    <include app:graph="@navigation/flow_feeds" />
+    <include app:graph="@navigation/flow_explore" />
+    <include app:graph="@navigation/flow_bookmarks" />
+    <include app:graph="@navigation/flow_library" />
+    <include app:graph="@navigation/flow_compose" />
+    <include app:graph="@navigation/flow_poem" />
+    <include app:graph="@navigation/flow_comments" />
+    <include app:graph="@navigation/flow_on_boarding" />
+    <include app:graph="@navigation/flow_account" />
+    <include app:graph="@navigation/flow_update_password" />
+    <include app:graph="@navigation/flow_search" />
+    <include app:graph="@navigation/flow_artist" />
+    <include app:graph="@navigation/flow_landing" />
+    <include app:graph="@navigation/flow_auth" />
+    <include app:graph="@navigation/flow_profile" />
+    <include app:graph="@navigation/flow_loading" />
+    <include app:graph="@navigation/flow_setup" />
+    <include app:graph="@navigation/flow_publish" />
+    <include app:graph="@navigation/flow_settings" />
+    <include app:graph="@navigation/flow_topic" />
+
+</navigation>

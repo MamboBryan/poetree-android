@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical"
+    tools:context=".ArtistFragment">
+
+    <include
+        android:id="@+id/layout_header"
+        layout="@layout/layout_artist_header" />
+
+    <com.scrollablelayout.ScrollableLayout
+        android:id="@+id/layout_scroll_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/layout_header">
+
+        <include
+            android:id="@+id/layout_details"
+            layout="@layout/layout_artist_details" />
+
+        <include
+            android:id="@+id/layout_artist_state"
+            layout="@layout/layout_complete_recycler_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.scrollablelayout.ScrollableLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
