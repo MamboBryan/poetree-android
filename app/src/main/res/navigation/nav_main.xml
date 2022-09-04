@@ -6,8 +6,7 @@
 
     <action
         android:id="@+id/from_feeds_to_poem"
-        app:destination="@+id/flow_poem"
-        app:popUpTo="@id/navigation_main">
+        app:destination="@+id/flow_poem">
 
         <argument
             android:name="poem"

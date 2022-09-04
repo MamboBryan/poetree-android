@@ -246,11 +246,11 @@ class PoemViewModel @Inject constructor(
 
         try {
 
-            updateLikes(liked)
+            updateLikes(liked.not())
 
             val response = when (liked) {
-                true -> likeRepository.likePoem(poemId = poem.value!!.id)
-                false -> likeRepository.unLikePoem(poemId = poem.value!!.id)
+                true -> likeRepository.unLikePoem(poemId = poem.value!!.id)
+                false -> likeRepository.likePoem(poemId = poem.value!!.id)
             }
 
             if (response.isSuccessful.not()) {
@@ -259,7 +259,6 @@ class PoemViewModel @Inject constructor(
                 return@launch
             }
 
-            updateLikes(liked)
             updateUi(PoemEvent.SneakSuccess(response.message))
 
         } catch (e: Exception) {
@@ -270,7 +269,7 @@ class PoemViewModel @Inject constructor(
 
     private fun updateLikes(liked: Boolean) {
         _likes.value = _likes.value?.let { (_, likes) ->
-            Pair(liked.not(), if (liked.not()) likes - 1 else likes + 1)
+            Pair(liked, if (liked) likes + 1 else likes - 1)
         }
     }
 
@@ -280,11 +279,11 @@ class PoemViewModel @Inject constructor(
 
         try {
 
-            updateBookmarked(bookmarked)
+            updateBookmarked(bookmarked.not())
 
             val response = when (bookmarked) {
-                true -> likeRepository.likePoem(poemId = poem.value!!.id)
-                false -> likeRepository.unLikePoem(poemId = poem.value!!.id)
+                true -> poemRepository.unBookmark(poemId = poem.value!!.id)
+                false -> poemRepository.bookmark(poemId = poem.value!!.id)
             }
 
             if (response.isSuccessful.not()) {
@@ -300,7 +299,6 @@ class PoemViewModel @Inject constructor(
                 false -> poemRepository.delete(bookmark)
             }
 
-            updateBookmarked(bookmarked)
             updateUi(PoemEvent.SneakSuccess(response.message))
 
         } catch (e: Exception) {
@@ -311,7 +309,7 @@ class PoemViewModel @Inject constructor(
 
     private fun updateBookmarked(bookmarked: Boolean) {
         _bookmarks.value = _bookmarks.value?.let { (_, bookmarks) ->
-            Pair(bookmarked.not(), if (bookmarked.not()) bookmarks - 1 else bookmarks + 1)
+            Pair(bookmarked, if (bookmarked) bookmarks + 1 else bookmarks - 1)
         }
     }
 

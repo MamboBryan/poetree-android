@@ -136,8 +136,10 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
                 it?.let { (liked, likes) ->
                     binding.apply {
                         tvPoemLikes.text = prettyCount(likes)
-                        val icon = if (liked) R.drawable.ic_baseline_favorite_24
-                        else R.drawable.ic_baseline_favorite_border_24
+                        val icon = when (liked) {
+                            true -> R.drawable.ic_baseline_favorite_24
+                            false -> R.drawable.ic_baseline_favorite_border_24
+                        }
                         ivPoemLike.setImageDrawable(
                             ContextCompat.getDrawable(requireContext(), icon)
                         )
@@ -151,8 +153,10 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
                 it?.let { (bookmarked, bookmarks) ->
                     binding.apply {
                         tvPoemBookmarks.text = prettyCount(bookmarks)
-                        val icon = if (bookmarked) R.drawable.ic_baseline_bookmark_24
-                        else R.drawable.ic_baseline_bookmark_border_24
+                        val icon = when (bookmarked) {
+                            true -> R.drawable.ic_baseline_bookmark_24
+                            false -> R.drawable.ic_baseline_bookmark_border_24
+                        }
                         ivPoemBookmark.setImageDrawable(
                             ContextCompat.getDrawable(requireContext(), icon)
                         )
@@ -166,8 +170,10 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
                 it?.let { (commented, comments) ->
                     binding.apply {
                         tvPoemComments.text = prettyCount(comments)
-                        val icon = if (commented) R.drawable.ic_baseline_mode_comment_24
-                        else R.drawable.ic_outline_mode_comment_24
+                        val icon = when (commented) {
+                            true -> R.drawable.ic_baseline_mode_comment_24
+                            false -> R.drawable.ic_outline_mode_comment_24
+                        }
                         ivPoemComment.setImageDrawable(
                             ContextCompat.getDrawable(requireContext(), icon)
                         )
