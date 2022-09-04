@@ -2,7 +2,7 @@ object Modules {
 
     object Features {
         const val auth = ":features:auth"
-        const val home = ":features:home"
+        const val feed = ":features:feed"
         const val explore = ":features:explore"
         const val bookmarks = ":features:bookmarks"
         const val library = ":features:library"

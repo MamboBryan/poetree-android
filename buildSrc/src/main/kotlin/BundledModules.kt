@@ -9,7 +9,7 @@ fun DependencyHandler.commonModules() {
 
 fun DependencyHandler.featureModules() {
     implementation(project(Modules.Features.auth))
-    implementation(project(Modules.Features.home))
+    implementation(project(Modules.Features.feed))
     implementation(project(Modules.Features.poem))
     implementation(project(Modules.Features.search))
     implementation(project(Modules.Features.artist))

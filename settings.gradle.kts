@@ -7,7 +7,7 @@ include(":modules:core")
 include(":modules:local")
 include(":modules:remote")
 
-include(":features:home")
+include(":features:feed")
 include(":features:explore")
 include(":features:bookmarks")
 include(":features:library")
