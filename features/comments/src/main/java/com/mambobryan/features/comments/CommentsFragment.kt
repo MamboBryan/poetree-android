@@ -13,14 +13,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import com.google.android.material.snackbar.Snackbar
-import com.mambo.core.OnPoemClickListener
 import com.mambo.core.adapters.GenericStateAdapter
 import com.mambo.core.adapters.LazyPagingAdapter
 import com.mambo.core.adapters.getInflater
 import com.mambo.core.utils.*
 import com.mambo.core.viewmodel.MainViewModel
 import com.mambo.data.models.Comment
-import com.mambo.data.models.Poem
 import com.mambobryan.features.comments.databinding.FragmentCommentsBinding
 import com.mambobryan.features.comments.databinding.ItemCommentBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
@@ -33,7 +31,6 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
 
     private val binding by viewBinding(FragmentCommentsBinding::bind)
     private val viewModel: CommentViewModel by viewModels()
-    private val sharedViewModel: MainViewModel by activityViewModels()
 
     private val adapter = LazyPagingAdapter<Comment, ItemCommentBinding>(
         comparator = Comment.COMPARATOR,
@@ -65,10 +62,6 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
-
-        sharedViewModel.poem.observe(viewLifecycleOwner) {
-            it?.let { poem -> viewModel.updatePoem(poem) }
-        }
 
         viewModel.poem.observe(viewLifecycleOwner) {
             it?.let {
@@ -140,6 +133,7 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
                     }
                     is CommentViewModel.CommentsEvent.ShowSuccess -> {
                         Snackbar.make(requireView(), event.message, Snackbar.LENGTH_SHORT).show()
+                        adapter.refresh()
                     }
                 }
             }

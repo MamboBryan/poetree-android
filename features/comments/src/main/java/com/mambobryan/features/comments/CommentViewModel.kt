@@ -47,10 +47,6 @@ class CommentViewModel @Inject constructor(
         }
     }
 
-    fun updatePoem(poem: Poem) = viewModelScope.launch {
-        this@CommentViewModel.poem.value = poem
-    }
-
     fun onContentUpdated(text: String) {
         _content.value = text
     }
@@ -76,6 +72,7 @@ class CommentViewModel @Inject constructor(
             updateSendingComment()
             updateUi(CommentsEvent.RefreshAdapter)
             updateUi(CommentsEvent.ShowSuccess(response.message))
+
         } catch (e: Exception) {
             updateUi(CommentsEvent.ShowError(e.localizedMessage))
             updateSendingComment()

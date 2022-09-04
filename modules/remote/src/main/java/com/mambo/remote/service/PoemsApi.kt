@@ -242,10 +242,10 @@ class PoemsApi @Inject constructor(
         response.body()
     }
 
-    suspend fun markPoemAsRead(request: PoemRequest) = safeApiCall<Any> {
+    suspend fun markPoemAsRead(poemId: String) = safeApiCall<Boolean> {
         val url = Endpoints.POEM.url.plus("/read")
         val response = client.post(url) {
-            setBody(request)
+            setBody(mapOf("poemId" to poemId))
         }
         response.body()
     }

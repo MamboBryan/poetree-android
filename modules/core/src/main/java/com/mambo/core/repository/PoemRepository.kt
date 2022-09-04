@@ -4,15 +4,15 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.mambo.core.source.PoemsMediator
 import com.mambo.core.source.UserPoemsMediator
+import com.mambo.data.models.Bookmark
 import com.mambo.data.models.LocalPoem
-import com.mambo.data.models.Poem
 import com.mambo.data.models.Topic
 import com.mambo.data.requests.CreatePoemRequest
 import com.mambo.data.requests.EditPoemRequest
 import com.mambo.data.requests.PoemRequest
+import com.mambo.local.BookmarksDao
 import com.mambo.local.PoemsDao
 import com.mambo.remote.service.PoemsApi
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class PoemRepository @Inject constructor() {
@@ -21,11 +21,10 @@ class PoemRepository @Inject constructor() {
     lateinit var poemsDao: PoemsDao
 
     @Inject
+    lateinit var bookmarksDao: BookmarksDao
+
+    @Inject
     lateinit var poemsApi: PoemsApi
-
-    fun poems(): Flow<List<Poem>> = poemsDao.getAll()
-
-    fun feedPoems() = Pager(PagingConfig(10)) { poemsDao.getAllPoems() }.flow
 
     fun searchPoems(topic: Topic?, query: String) = Pager(PagingConfig(10)) {
         if (topic != null) poemsDao.getPoems(query)
@@ -53,23 +52,35 @@ class PoemRepository @Inject constructor() {
      * LOCAL
      */
 
-    // SINGLE
-
     suspend fun saveLocal(poem: LocalPoem) = poemsDao.insert(poem)
 
     suspend fun updateLocal(poem: LocalPoem) = poemsDao.update(poem)
 
     suspend fun deleteLocal(poem: LocalPoem) = poemsDao.delete(poem)
 
-    // MULTIPLE
-
     fun localSavedPoems() = Pager(PagingConfig(20)) { poemsDao.getAllPoems() }.flow
+
+    /**
+     * BOOKMARKS
+     */
+
+    suspend fun saveBookmark(bookmark: Bookmark) = bookmarksDao.insert(bookmark)
+
+    suspend fun updateBookmark(bookmark: Bookmark) = bookmarksDao.update(bookmark)
+
+    suspend fun delete(bookmark: Bookmark) = bookmarksDao.delete(bookmark)
+
+    suspend fun deleteAllBookmarks() = bookmarksDao.deleteAll()
+
+    fun bookmarks() = Pager(PagingConfig(20)) { bookmarksDao.getBookmarks() }.flow
+
+    fun searchBookmarks(query: String) = Pager(PagingConfig(20)) {
+        bookmarksDao.searchBookmarks(query = query)
+    }.flow
 
     /**
      * REMOTE
      */
-
-    // SINGLE
 
     suspend fun createPublished(request: CreatePoemRequest) = poemsApi.createPoem(request)
 
@@ -79,7 +90,11 @@ class PoemRepository @Inject constructor() {
 
     suspend fun getPublished(poemId: String) = poemsApi.getPoem(PoemRequest(poemId))
 
-    // MULTIPLE
+    suspend fun markAsRead(poemId: String) = poemsApi.markPoemAsRead(poemId)
+
+    suspend fun bookmark(poemId: String) = poemsApi.bookmarkPoem(poemId = poemId)
+
+    suspend fun unBookmark(poemId: String) = poemsApi.unBookmarkPoem(poemId = poemId)
 
     fun publishedPoems(query: String = "") = Pager(PagingConfig(20)) {
         PoemsMediator(query, poemsApi)

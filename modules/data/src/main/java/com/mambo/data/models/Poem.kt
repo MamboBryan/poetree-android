@@ -6,7 +6,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 import java.util.*
 
 @Parcelize
@@ -30,6 +29,7 @@ open class Poem(
     open var liked: Boolean = false
     open var comments: Long = 0L
     open var commented: Boolean = false
+    open var remoteId: String? = null
 
     companion object {
         val COMPARATOR = object : DiffUtil.ItemCallback<Poem>() {
@@ -81,6 +81,17 @@ open class Poem(
         topic = this.topic,
     )
 
+    fun toBookmark() = Bookmark(
+        id = UUID.randomUUID().toString(),
+        title = this.title,
+        content = this.content,
+        html = this.html,
+        createdAt = this.createdAt,
+        updatedAt = this.updatedAt,
+        topic = this.topic,
+        user = this.user
+    )
+
 }
 
 @Entity(tableName = "poems")
@@ -93,7 +104,30 @@ data class LocalPoem(
     override val html: String,
     override val createdAt: String,
     override val updatedAt: String,
-    override val topic: Topic?
+    override val topic: Topic?,
+    override var remoteId: String? = null
+) : Parcelable, Poem(
+    id = id,
+    title = title,
+    content = content,
+    html = html,
+    createdAt = createdAt,
+    updatedAt = updatedAt,
+    topic = topic
+)
+
+@Entity(tableName = "bookmarks")
+@Parcelize
+data class Bookmark(
+    @PrimaryKey(autoGenerate = false)
+    override val id: String,
+    override val title: String,
+    override val content: String,
+    override val html: String,
+    override val createdAt: String,
+    override val updatedAt: String,
+    override val topic: Topic?,
+    override var user: User?
 ) : Parcelable, Poem(
     id = id,
     title = title,
