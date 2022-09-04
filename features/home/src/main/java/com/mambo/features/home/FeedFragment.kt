@@ -28,13 +28,13 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FeedFragment : Fragment(R.layout.fragment_feed) {
 
-    @Inject
-    lateinit var feedActions: FeedActions
-
     private val mainViewModel: MainViewModel by activityViewModels()
     private val viewModel: FeedViewModel by viewModels()
 
     private val binding by viewBinding(FragmentFeedBinding::bind)
+
+    @Inject
+    lateinit var feedActions: FeedActions
 
     @Inject
     lateinit var adapter: PoemPagingAdapter
@@ -43,19 +43,6 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.events.collect { event ->
-                when (event) {
-                    FeedViewModel.FeedEvent.NavigateToProfile -> navigateToProfile()
-                    FeedViewModel.FeedEvent.NavigateToCompose -> navigateToCompose()
-                    FeedViewModel.FeedEvent.NavigateToSettings -> navigateToSettings()
-                    is FeedViewModel.FeedEvent.NavigateToPoem -> {
-                        navigateToPoem(event.poem)
-                    }
-                }
-            }
-        }
 
         lifecycleScope.launchWhenStarted {
             mainViewModel.feedPoems.collectLatest { adapter.submitData(it) }
@@ -94,9 +81,9 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
     private fun initViews() {
         binding.apply {
 
-            imageUser.setOnClickListener { viewModel.onUserImageClicked() }
-            ivFeedSettings.setOnClickListener { viewModel.onSettingsClicked() }
-            btnCreatePoem.setOnClickListener { viewModel.onCreatePoemClicked() }
+            imageUser.setOnClickListener { navigateToProfile() }
+            ivFeedSettings.setOnClickListener { navigateToSettings() }
+            btnCreatePoem.setOnClickListener { navigateToCompose() }
 
             layoutFeedState.apply {
                 buttonRetry.setOnClickListener { adapter.retry() }
@@ -110,7 +97,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
 
         }
 
-        adapter.onPoemClicked { viewModel.onPoemClicked(poem = it) }
+        adapter.onPoemClicked { navigateToPoem(poem = it) }
 
         adapter.withLoadStateHeaderAndFooter(
             header = GenericStateAdapter(adapter::retry),
