@@ -3,33 +3,28 @@ package com.mambo.bookmarks
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mambo.core.repository.PoemRepository
+import com.mambo.data.models.Poem
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class BookmarksViewModel @Inject constructor(
-): ViewModel() {
+) : ViewModel() {
 
-    private val _eventChannel = Channel<BookmarkEvent>()
-    val events = _eventChannel.receiveAsFlow()
+    @Inject
+    lateinit var repository: PoemRepository
 
-    fun onSearchClicked() = updateUi(BookmarkEvent.ToggleSearchEditText)
+    private val _message = MutableStateFlow<String?>(null)
+    val message get() = _message
 
-    fun onSortClicked() = updateUi(BookmarkEvent.OpenFilterDialog)
-
-    fun onPoemClicked() = updateUi(BookmarkEvent.NavigateToPoem)
-
-    private fun updateUi(event: BookmarkEvent) = viewModelScope.launch {
-        _eventChannel.send(event)
-    }
-
-    sealed class BookmarkEvent {
-        object ToggleSearchEditText : BookmarkEvent()
-        object NavigateToPoem : BookmarkEvent()
-        object OpenFilterDialog : BookmarkEvent()
+    fun deleteBookmark(poem: Poem) = viewModelScope.launch {
+        repository.deleteBookmark(poem.toBookmark())
+        _message.value = "Poem Deleted!"
+        delay(2000)
+        _message.value = null
     }
 
 }

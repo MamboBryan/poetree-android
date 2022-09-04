@@ -58,6 +58,8 @@ class PoemRepository @Inject constructor() {
 
     suspend fun deleteLocal(poem: LocalPoem) = poemsDao.delete(poem)
 
+    suspend fun deleteAllLocal() = poemsDao.deleteAll()
+
     fun localSavedPoems() = Pager(PagingConfig(20)) { poemsDao.getAllPoems() }.flow
 
     /**
@@ -68,13 +70,11 @@ class PoemRepository @Inject constructor() {
 
     suspend fun updateBookmark(bookmark: Bookmark) = bookmarksDao.update(bookmark)
 
-    suspend fun delete(bookmark: Bookmark) = bookmarksDao.delete(bookmark)
+    suspend fun deleteBookmark(bookmark: Bookmark) = bookmarksDao.delete(bookmark.id)
 
     suspend fun deleteAllBookmarks() = bookmarksDao.deleteAll()
 
-    fun bookmarks() = Pager(PagingConfig(20)) { bookmarksDao.getBookmarks() }.flow
-
-    fun searchBookmarks(query: String) = Pager(PagingConfig(20)) {
+    fun bookmarks(query: String) = Pager(PagingConfig(20)) {
         bookmarksDao.searchBookmarks(query = query)
     }.flow
 

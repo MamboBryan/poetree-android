@@ -58,7 +58,7 @@ class MainViewModel @Inject constructor(
     val searchedPoems = _searches.cachedIn(viewModelScope)
 
     private val bookmarksQuery = MutableStateFlow("")
-    private val _bookmarks = bookmarksQuery.flatMapLatest { poemRepository.searchPoems(it) }
+    private val _bookmarks = bookmarksQuery.flatMapLatest { poemRepository.bookmarks(it) }
     val bookmarkedPoems = _bookmarks.cachedIn(viewModelScope)
 
     private val unpublishedQuery = MutableStateFlow("")

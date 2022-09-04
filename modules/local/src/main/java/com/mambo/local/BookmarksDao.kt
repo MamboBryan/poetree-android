@@ -20,8 +20,8 @@ interface BookmarksDao {
     @Update
     suspend fun update(poem: Bookmark)
 
-    @Delete
-    suspend fun delete(poem: Bookmark)
+    @Query("DELETE FROM bookmarks WHERE id = :id")
+    suspend fun delete(id: String)
 
     @Query("SELECT * FROM bookmarks")
     fun getBookmarks(): PagingSource<Int, Poem>
@@ -29,7 +29,7 @@ interface BookmarksDao {
     @Query("SELECT * FROM bookmarks WHERE title LIKE '%' || :query || '%'")
     fun searchBookmarks(query: String): PagingSource<Int, Poem>
 
-    @Query("DELETE  FROM poems")
+    @Query("DELETE  FROM bookmarks")
     suspend fun deleteAll()
 
 }

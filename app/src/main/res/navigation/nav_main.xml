@@ -5,16 +5,6 @@
     app:startDestination="@id/flow_loading">
 
     <action
-        android:id="@+id/from_feeds_to_poem"
-        app:destination="@+id/flow_poem">
-
-        <argument
-            android:name="poem"
-            app:argType="com.mambo.data.models.Poem" />
-
-    </action>
-
-    <action
         android:id="@+id/from_feeds_to_profile"
         app:destination="@+id/flow_profile" />
 
@@ -23,7 +13,7 @@
         app:destination="@+id/flow_settings" />
 
     <action
-        android:id="@+id/toCompose"
+        android:id="@+id/to_compose"
         app:destination="@+id/flow_compose">
 
         <argument
@@ -50,7 +40,15 @@
     </action>
 
     <action
-        android:id="@+id/from_poem_to_artist"
+        android:id="@+id/to_poem"
+        app:destination="@+id/flow_poem">
+        <argument
+            android:name="poem"
+            app:argType="com.mambo.data.models.Poem" />
+    </action>
+
+    <action
+        android:id="@+id/to_artist"
         app:destination="@+id/flow_artist">
         <argument
             android:name="artist"

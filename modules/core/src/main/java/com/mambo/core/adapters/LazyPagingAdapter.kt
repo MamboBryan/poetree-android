@@ -23,12 +23,12 @@ import kotlinx.coroutines.launch
 class LazyPagingAdapter<T : Any, R : ViewBinding>(
     val create: (parent: ViewGroup) -> R,
     val bind: (R.(item: T) -> Unit)? = null,
-    val selected: ((item: T) -> Unit)? = null,
     val comparator: DiffUtil.ItemCallback<T>
 ) : PagingDataAdapter<T, LazyPagingAdapter<T, R>.LazyViewHolder>(comparator) {
 
     private var onSwipedRight: ((item: T) -> Unit)? = null
     private var onSwipedLeft: ((item: T) -> Unit)? = null
+    private var selected: ((item: T) -> Unit)? = null
 
     inner class LazyViewHolder(val binding: R) : RecyclerView.ViewHolder(binding.root) {
 
@@ -54,6 +54,10 @@ class LazyPagingAdapter<T : Any, R : ViewBinding>(
     override fun onBindViewHolder(holder: LazyViewHolder, position: Int) {
         val item = getItem(position) as T
         holder.bindHolder(item)
+    }
+
+    fun onItemSelected(block: ((item: T) -> Unit)? = null) {
+        selected = block
     }
 
     private fun getMutableList(): MutableList<T> = this.snapshot().filterNotNull().toMutableList()
@@ -84,8 +88,29 @@ class LazyPagingAdapter<T : Any, R : ViewBinding>(
         ItemTouchHelper(swiper).attachToRecyclerView(view)
     }
 
-    fun onSwipedLeft(swiped: (item: T) -> Unit) {
-        onSwipedLeft = swiped
+    fun onSwipedLeft(
+        @DrawableRes icon: Int? = null,
+        @ColorRes iconColor: Int? = null,
+        @ColorRes color: Int? = null,
+        refresh: Boolean = true,
+        view: RecyclerView,
+        swiped: (item: T) -> Unit
+    ) {
+        val fields = LazySwipeFields(
+            drawable = icon,
+            iconColor = iconColor,
+            background = color
+        )
+        val swiper = object : SwipeRight(context = view.context, lazyField = fields) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                getItem(viewHolder.absoluteAdapterPosition)?.let {
+                    swiped.invoke(it)
+                    if (refresh) notifyItemChanged(viewHolder.absoluteAdapterPosition)
+                }
+            }
+
+        }
+        ItemTouchHelper(swiper).attachToRecyclerView(view)
     }
 
     fun add(item: T) {

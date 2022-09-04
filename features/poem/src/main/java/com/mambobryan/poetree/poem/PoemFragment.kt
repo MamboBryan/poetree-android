@@ -89,8 +89,15 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
                     transformations(CircleCropTransformation())
                 }
 
-                if (poem.read.not())
-                    startReadTimer()
+                when (poem.type) {
+                    Poem.Type.LOCAL -> {}
+                    Poem.Type.BOOKMARK -> viewModel.getPoemUpdate()
+                    Poem.Type.REMOTE -> {
+                        if (poem.read.not()) startReadTimer()
+                        if (poem.bookmarked) viewModel.saveLocalBookmark()
+                    }
+                }
+
 
             }
         }

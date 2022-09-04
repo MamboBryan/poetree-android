@@ -18,6 +18,7 @@ open class Poem(
     open val createdAt: String,
     open val updatedAt: String,
     open val topic: Topic? = null,
+    open var type: Type = Type.REMOTE
 ) : Parcelable {
 
     open var user: User? = null
@@ -30,6 +31,12 @@ open class Poem(
     open var comments: Long = 0L
     open var commented: Boolean = false
     open var remoteId: String? = null
+
+    enum class Type {
+        LOCAL,
+        BOOKMARK,
+        REMOTE
+    }
 
     companion object {
         val COMPARATOR = object : DiffUtil.ItemCallback<Poem>() {
@@ -82,7 +89,7 @@ open class Poem(
     )
 
     fun toBookmark() = Bookmark(
-        id = UUID.randomUUID().toString(),
+        id = this.id,
         title = this.title,
         content = this.content,
         html = this.html,
@@ -113,7 +120,8 @@ data class LocalPoem(
     html = html,
     createdAt = createdAt,
     updatedAt = updatedAt,
-    topic = topic
+    topic = topic,
+    type = Type.LOCAL
 )
 
 @Entity(tableName = "bookmarks")
@@ -127,7 +135,7 @@ data class Bookmark(
     override val createdAt: String,
     override val updatedAt: String,
     override val topic: Topic?,
-    override var user: User?
+    override var user: User?,
 ) : Parcelable, Poem(
     id = id,
     title = title,
@@ -135,7 +143,8 @@ data class Bookmark(
     html = html,
     createdAt = createdAt,
     updatedAt = updatedAt,
-    topic = topic
+    topic = topic,
+    type = Type.BOOKMARK
 )
 
 data class PoemDto(

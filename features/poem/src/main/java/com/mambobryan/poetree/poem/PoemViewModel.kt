@@ -296,7 +296,7 @@ class PoemViewModel @Inject constructor(
 
             when (bookmarked.not()) {
                 true -> poemRepository.saveBookmark(bookmark)
-                false -> poemRepository.delete(bookmark)
+                false -> poemRepository.deleteBookmark(bookmark)
             }
 
             updateUi(PoemEvent.SneakSuccess(response.message))
@@ -345,6 +345,26 @@ class PoemViewModel @Inject constructor(
 
     private fun updateUi(event: PoemEvent) = viewModelScope.launch { _eventChannel.send(event) }
 
+    fun getPoemUpdate() = viewModelScope.launch {
+
+        val response = poemRepository.getPublished(poemId = poem.value!!.id)
+
+        if (response.isSuccessful.not()) {
+            updateUi(PoemEvent.SneakError("Failed getting poem updates"))
+            return@launch
+        }
+
+        val data = response.data
+
+        _poem.value = data?.toPoemDto()
+        updateUi(PoemEvent.SneakSuccess("Got poem updates"))
+
+    }
+
+    fun saveLocalBookmark() = viewModelScope.launch {
+        poemRepository.saveBookmark(_poem.value!!.toBookmark())
+    }
+
     sealed class PoemEvent {
         object ShowLoadingDialog : PoemEvent()
         object HideLoadingDialog : PoemEvent()
@@ -352,8 +372,8 @@ class PoemViewModel @Inject constructor(
         object ClearCommentEditText : PoemEvent()
         data class ShowSnackBarError(val message: String) : PoemEvent()
         data class SneakSuccess(val message: String) : PoemEvent()
-        data class ShowError(val message: String) : PoemEvent()
         data class ShowSuccess(val message: String) : PoemEvent()
         data class SneakError(val message: String) : PoemEvent()
+        data class ShowError(val message: String) : PoemEvent()
     }
 }

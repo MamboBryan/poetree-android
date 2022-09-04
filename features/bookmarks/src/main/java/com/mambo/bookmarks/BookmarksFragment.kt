@@ -1,21 +1,28 @@
 package com.mambo.bookmarks
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import com.mambo.bookmarks.databinding.FragmentBookmarksBinding
+import com.mambo.bookmarks.databinding.ItemPoemBookmarkBinding
 import com.mambo.core.adapters.GenericStateAdapter
+import com.mambo.core.adapters.LazyPagingAdapter
+import com.mambo.core.adapters.getInflater
 import com.mambo.core.extensions.onQueryTextChanged
+import com.mambo.core.utils.*
 import com.mambo.core.viewmodel.MainViewModel
+import com.mambo.data.models.Poem
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
 import com.mambobryan.navigation.extensions.navigate
@@ -23,6 +30,7 @@ import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.ocpsoft.prettytime.PrettyTime
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -34,7 +42,29 @@ class BookmarksFragment : Fragment(R.layout.fragment_bookmarks) {
     private val binding by viewBinding(FragmentBookmarksBinding::bind)
 
     @Inject
-    lateinit var adapter: BookmarksAdapter
+    lateinit var bookmarkActions: BookmarkActions
+
+    private val adapter = LazyPagingAdapter<Poem, ItemPoemBookmarkBinding>(
+        comparator = Poem.COMPARATOR,
+        create = {
+            ItemPoemBookmarkBinding.inflate(it.getInflater(), it, false)
+        },
+        bind = { poem ->
+            binding.apply {
+
+                val duration = PrettyTime().formatDuration(poem.createdAt.toDate())
+                val message = " \u2022 $duration "
+
+                tvPoemDuration.text = message
+                tvPoemUser.text = poem.user?.name
+                tvPoemTitle.text = poem.title
+
+                val color = poem.topic?.color ?: "#F7DEE6"
+                layoutBookmarkBg.setBackgroundColor(Color.parseColor(color))
+
+            }
+        }
+    )
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_bookmarks, menu)
@@ -54,54 +84,30 @@ class BookmarksFragment : Fragment(R.layout.fragment_bookmarks) {
 
         initViews()
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.events.collect { event ->
-                when (event) {
-                    BookmarksViewModel.BookmarkEvent.NavigateToPoem -> navigateToPoem()
-                    BookmarksViewModel.BookmarkEvent.OpenFilterDialog -> {}
-                    BookmarksViewModel.BookmarkEvent.ToggleSearchEditText -> {}
-                }
-            }
-        }
-
         lifecycleScope.launch {
             sharedViewModel.bookmarkedPoems.collectLatest { adapter.submitData(it) }
         }
 
-        lifecycleScope.launch {
-            adapter.loadStateFlow.collectLatest { loadState ->
+        lifecycleScope.launchWhenStarted {
+            adapter.loadStateFlow.collectLatest { state: CombinedLoadStates ->
                 binding.layoutStateBookmarks.apply {
-
-                    stateContent.isVisible = false
-                    stateEmpty.isVisible = false
-                    stateError.isVisible = false
-                    stateLoading.isVisible = false
-
-                    when (loadState.source.refresh) {
-                        is LoadState.Loading -> {
-                            stateLoading.isVisible = true
-                        }
-
-                        is LoadState.Error -> {
-                            stateError.isVisible = true
-                        }
-
+                    when (state.source.refresh) {
+                        is LoadState.Loading -> showLoading()
+                        is LoadState.Error -> showError()
                         is LoadState.NotLoading -> {
-
-                            if (loadState.append.endOfPaginationReached) {
-                                if (adapter.itemCount < 1)
-                                    stateEmpty.isVisible = true
-                                else {
-                                    stateContent.isVisible = true
-                                }
-                            } else {
-                                stateContent.isVisible = true
-                            }
-
-
+                            if (state.append.endOfPaginationReached && adapter.itemCount < 1)
+                                showEmpty()
+                            else
+                                showContent()
                         }
                     }
                 }
+            }
+        }
+
+        lifecycleScope.launchWhenResumed {
+            viewModel.message.collectLatest {
+                if (it != null) Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }
         }
 
@@ -117,15 +123,20 @@ class BookmarksFragment : Fragment(R.layout.fragment_bookmarks) {
                 tvError.text = "Couldn't load Bookmarks!"
 
                 recyclerView.adapter = adapter
+
                 buttonRetry.setOnClickListener { adapter.retry() }
+                stateContent.setOnRefreshListener { adapter.refresh() }
 
             }
 
         }
 
-        adapter.onPoemClicked {
-            sharedViewModel.setPoem(it)
-            viewModel.onPoemClicked()
+        adapter.onItemSelected {
+            bookmarkActions.navigateToPoem(it)
+        }
+
+        adapter.onSwipedRight(view = binding.layoutStateBookmarks.recyclerView) {
+            viewModel.deleteBookmark(it)
         }
 
         adapter.withLoadStateHeaderAndFooter(

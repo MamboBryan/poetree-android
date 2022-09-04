@@ -84,7 +84,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     private fun showLogoutDialog() {
         val alert = AlertView(
             "Logging Out",
-            "We're going to miss you! \n Are you sure you want to logout?",
+            "You're going to lose all your saved poems and We're going to miss you! \n Are you sure you want to logout?",
             AlertStyle.DIALOG
         )
         alert.addAction(

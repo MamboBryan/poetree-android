@@ -3,6 +3,7 @@ package com.mambo.poetree.navigation
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.mambo.bookmarks.BookmarkActions
 import com.mambo.data.models.Poem
 import com.mambo.data.models.User
 import com.mambo.features.home.FeedActions
@@ -20,7 +21,7 @@ import javax.inject.Inject
 @ActivityScoped
 class Navigator @Inject constructor(
     private val controller: NavController
-) : FeedActions, PoemActions {
+) : FeedActions, PoemActions, BookmarkActions {
 
     @Module
     @InstallIn(ActivityComponent::class)
@@ -43,7 +44,7 @@ class Navigator @Inject constructor(
     }
 
     override fun navigateToPoem(poem: Poem) {
-        controller.navigate(NavigationMainDirections.fromFeedsToPoem(poem))
+        controller.navigate(NavigationMainDirections.toPoem(poem))
     }
 
     override fun navigateToProfile() {
@@ -74,7 +75,14 @@ class Navigator @Inject constructor(
     }
 
     override fun navigateToArtist(user: User) {
-        controller.navigate(NavigationMainDirections.fromPoemToArtist(artist = user))
+        controller.navigate(NavigationMainDirections.toArtist(artist = user))
+    }
+
+    @Module
+    @InstallIn(ActivityComponent::class)
+    abstract class BookmarksModule {
+        @Binds
+        abstract fun bookmarksActions(navigator: Navigator): BookmarkActions
     }
 
 }
