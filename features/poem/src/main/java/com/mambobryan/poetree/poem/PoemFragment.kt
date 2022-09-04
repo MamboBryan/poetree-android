@@ -24,14 +24,11 @@ import com.mambo.core.utils.LoadingDialog
 import com.mambo.core.utils.prettyCount
 import com.mambo.core.viewmodel.MainViewModel
 import com.mambo.data.models.Poem
-import com.mambobryan.navigation.Destinations
-import com.mambobryan.navigation.extensions.getDeeplink
-import com.mambobryan.navigation.extensions.getNavOptionsPopUpToCurrent
-import com.mambobryan.navigation.extensions.navigate
 import com.mambobryan.poetree.poem.databinding.FragmentPoemBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PoemFragment : Fragment(R.layout.fragment_poem) {
@@ -41,17 +38,11 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
 
     private val binding by viewBinding(FragmentPoemBinding::bind)
 
-    override fun onDestroy() {
-        super.onDestroy()
-        sharedViewModel.setPoem(null)
-    }
+    @Inject
+    lateinit var poemActions: PoemActions
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        sharedViewModel.poem.observe(viewLifecycleOwner) {
-            viewModel.updatePoem(it!!)
-        }
 
         initViews()
         initEditor()
@@ -59,18 +50,12 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
         lifecycleScope.launchWhenStarted {
             viewModel.events.collect { event ->
                 when (event) {
-                    PoemViewModel.PoemEvent.NavigateToArtistDetails -> navigateToArtistDetails()
-                    PoemViewModel.PoemEvent.NavigateToComments -> navigateToComments()
                     PoemViewModel.PoemEvent.HideLoadingDialog -> LoadingDialog.dismiss()
                     PoemViewModel.PoemEvent.ShowLoadingDialog -> {
                         LoadingDialog.show(requireContext(), false)
                     }
                     PoemViewModel.PoemEvent.NavigateToBackstack -> {
                         findNavController().popBackStack()
-                    }
-                    is PoemViewModel.PoemEvent.NavigateToEditPoem -> {
-                        sharedViewModel.setPoem(event.poem)
-                        navigateToEditPoem()
                     }
                     is PoemViewModel.PoemEvent.ShowPoemDeleteDialog -> {
                         showConfirmDeleteDialog()
@@ -256,8 +241,8 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
 
         ivPoemLike.setOnClickListener { viewModel.onLikeClicked() }
         ivPoemBookmark.setOnClickListener { viewModel.onBookmarkClicked() }
-        ivPoemComment.setOnClickListener { viewModel.onCommentsClicked() }
-        ivPoemArtist.setOnClickListener { viewModel.onArtistImageClicked() }
+        ivPoemComment.setOnClickListener { navigateToComments() }
+        ivPoemArtist.setOnClickListener { navigateToArtistDetails() }
 
         layoutPoemComment.apply {
             edtComment.doAfterTextChanged { viewModel.onCommentUpdated(it.toString()) }
@@ -303,16 +288,19 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
     }
 
     private fun navigateToEditPoem() {
-        sharedViewModel.setPoem(viewModel.poem.value)
-        navigate(getDeeplink(Destinations.COMPOSE), getNavOptionsPopUpToCurrent())
+//        sharedViewModel.setPoem(viewModel.poem.value)
+//        navigate(getDeeplink(Destinations.COMPOSE), getNavOptionsPopUpToCurrent())
+        poemActions.navigateToCompose(viewModel.poem.value!!)
     }
 
     private fun navigateToArtistDetails() {
-        navigate(getDeeplink(Destinations.ARTIST))
+//        navigate(getDeeplink(Destinations.ARTIST))
+        poemActions.navigateToArtist(viewModel.poem.value!!.user!!)
     }
 
     private fun navigateToComments() {
-        navigate(getDeeplink(Destinations.COMMENTS))
+//        navigate(getDeeplink(Destinations.COMMENTS))
+        poemActions.navigateToComments(viewModel.poem.value!!)
     }
 
 }

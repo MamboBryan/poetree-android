@@ -34,6 +34,30 @@
 
     </action>
 
+    <action
+        android:id="@+id/from_poem_to_comments"
+        app:destination="@+id/flow_comments">
+        <argument
+            android:name="poem"
+            app:argType="com.mambo.data.models.Poem" />
+    </action>
+
+    <action
+        android:id="@+id/from_poem_to_compose"
+        app:destination="@+id/flow_compose">
+        <argument
+            android:name="poem"
+            app:argType="com.mambo.data.models.Poem" />
+    </action>
+
+    <action
+        android:id="@+id/from_poem_to_artist"
+        app:destination="@+id/flow_artist">
+        <argument
+            android:name="artist"
+            app:argType="com.mambo.data.models.User" />
+    </action>
+
     <include app:graph="@navigation/flow_feeds" />
     <include app:graph="@navigation/flow_explore" />
     <include app:graph="@navigation/flow_bookmarks" />

@@ -51,14 +51,10 @@ class PoemViewModel @Inject constructor(
             userDetails = preferences.user.firstOrNull().also {
                 userId = it?.id
             }
+
+            _comments.value = Pair(_poem.value!!.commented, _poem.value!!.comments)
+
         }
-    }
-
-    fun updatePoem(poem: Poem) = viewModelScope.launch {
-        _poem.value = poem
-
-        _comments.value = Pair(poem.commented, poem.comments)
-
     }
 
     fun getHtml(): String {
@@ -110,10 +106,6 @@ class PoemViewModel @Inject constructor(
             updateUi(PoemEvent.ShowSnackBarError("Failed Sending Comment"))
         }
     }
-
-    fun onCommentsClicked() = updateUi(PoemEvent.NavigateToComments)
-
-    fun onArtistImageClicked() = updateUi(PoemEvent.NavigateToArtistDetails)
 
     fun onDeleteConfirmed() {
 

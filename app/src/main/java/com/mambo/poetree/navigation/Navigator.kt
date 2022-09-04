@@ -4,9 +4,11 @@ import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.mambo.data.models.Poem
+import com.mambo.data.models.User
 import com.mambo.features.home.FeedActions
 import com.mambo.poetree.NavigationMainDirections
 import com.mambo.poetree.R
+import com.mambobryan.poetree.poem.PoemActions
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -18,7 +20,7 @@ import javax.inject.Inject
 @ActivityScoped
 class Navigator @Inject constructor(
     private val controller: NavController
-) : FeedActions {
+) : FeedActions, PoemActions {
 
     @Module
     @InstallIn(ActivityComponent::class)
@@ -54,6 +56,25 @@ class Navigator @Inject constructor(
 
     override fun navigateToCompose() {
         controller.navigate(NavigationMainDirections.toCompose(poem = null))
+    }
+
+    @Module
+    @InstallIn(ActivityComponent::class)
+    abstract class PoemModule {
+        @Binds
+        abstract fun poemActions(navigator: Navigator): PoemActions
+    }
+
+    override fun navigateToComments(poem: Poem) {
+        controller.navigate(NavigationMainDirections.fromPoemToComments(poem = poem))
+    }
+
+    override fun navigateToCompose(poem: Poem) {
+        controller.navigate(NavigationMainDirections.fromPoemToCompose(poem = poem))
+    }
+
+    override fun navigateToArtist(user: User) {
+        controller.navigate(NavigationMainDirections.fromPoemToArtist(artist = user))
     }
 
 }
