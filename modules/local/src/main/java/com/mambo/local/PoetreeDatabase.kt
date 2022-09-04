@@ -3,13 +3,14 @@ package com.mambo.local
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.mambo.data.models.LocalPoem
 import com.mambo.data.models.Poem
 import com.mambo.data.models.Topic
 
 @Database(
-    entities = [Poem::class, Topic::class],
+    entities = [LocalPoem::class, Topic::class],
     exportSchema = false,
-    version = 2
+    version = 3
 )
 @TypeConverters(Converters::class)
 abstract class PoetreeDatabase : RoomDatabase() {

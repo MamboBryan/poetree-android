@@ -44,7 +44,9 @@ class MainViewModel @Inject constructor(
 
     val darkModeFlow = preferences.darkMode
 
-    val feedPoems = poemRepository.feedPoems().cachedIn(viewModelScope)
+    val feedPoems = poemRepository.publishedPoems("").cachedIn(viewModelScope)
+    val libraryPoems = poemRepository.localSavedPoems()
+
     val topics = topicRepository.topics("").cachedIn(viewModelScope)
     val publicPoems = poemRepository.publishedPoems().cachedIn(viewModelScope)
 

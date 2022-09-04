@@ -24,9 +24,17 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_compose_choose_topic"
-        android:title="Choose Topic"
+        android:id="@+id/action_compose_publish"
+        android:icon="@drawable/ic_baseline_publish_24"
+        android:title="Publish"
         android:visible="true"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_compose_delete"
+        android:icon="@drawable/ic_baseline_delete_24"
+        android:title="Delete"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
 
 </menu>

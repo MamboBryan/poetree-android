@@ -78,6 +78,8 @@ dependencies {
     implementation(Dependencies.Libraries.delegate)
     implementation(Dependencies.Libraries.wysiwyg)
     implementation(Dependencies.Libraries.sneaker)
+    implementation(Dependencies.Libraries.timber)
+    implementation(Dependencies.Libraries.alert)
     implementation(Dependencies.Libraries.coil)
 
     kapt(Dependencies.Libraries.hiltCompiler)

@@ -23,7 +23,7 @@
             layout="@layout/layout_artist_details" />
 
         <include
-            android:id="@+id/layout_profile_state"
+            android:id="@+id/layout_profile_poems"
             layout="@layout/layout_complete_recycler_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

@@ -2,22 +2,19 @@ package com.mambobryan.features.search
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
-import com.mambo.core.OnPoemClickListener
 import com.mambo.core.adapters.GenericStateAdapter
 import com.mambo.core.adapters.PoemPagingAdapter
-import com.mambo.core.utils.hideKeyboard
-import com.mambo.core.utils.showKeyboard
+import com.mambo.core.utils.*
 import com.mambo.core.viewmodel.MainViewModel
-import com.mambo.data.models.Poem
 import com.mambobryan.features.search.databinding.FragmentSearchBinding
 import com.mambobryan.libraries.searchbar.model.MultiSearchChangeListener
 import com.mambobryan.navigation.Destinations
@@ -62,38 +59,16 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         }
 
         lifecycleScope.launchWhenStarted {
-            adapter.loadStateFlow.collectLatest { loadState ->
+            adapter.loadStateFlow.collectLatest { state: CombinedLoadStates ->
                 binding.layoutPoems.apply {
-
-                    stateContent.isVisible = false
-                    stateEmpty.isVisible = false
-                    stateError.isVisible = false
-                    stateLoading.isVisible = false
-
-                    when (loadState.source.refresh) {
-                        is LoadState.Loading -> {
-                            stateLoading.isVisible = true
-                        }
-
-                        is LoadState.Error -> {
-                            stateError.isVisible = true
-                            stateContent.isRefreshing = false
-                        }
-
+                    when (state.source.refresh) {
+                        is LoadState.Loading -> showLoading()
+                        is LoadState.Error -> showError()
                         is LoadState.NotLoading -> {
-
-                            if (loadState.append.endOfPaginationReached) {
-                                if (adapter.itemCount < 1)
-                                    stateEmpty.isVisible = true
-                                else {
-                                    stateContent.isVisible = true
-                                }
-                            } else {
-                                stateContent.isVisible = true
-                            }
-
-                            stateContent.isRefreshing = false
-
+                            if (state.append.endOfPaginationReached && adapter.itemCount < 1)
+                                showEmpty()
+                            else
+                                showContent()
                         }
                     }
                 }
@@ -159,11 +134,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             }
         }
 
-        adapter.setListener(object : OnPoemClickListener {
-            override fun onPoemClicked(poem: Poem) {
-                viewModel.onPoemClicked(poem)
-            }
-        })
+        adapter.onPoemClicked { viewModel.onPoemClicked(poem = it) }
 
         adapter.withLoadStateHeaderAndFooter(
             header = GenericStateAdapter(adapter::retry),

@@ -17,7 +17,7 @@ object Versions {
     const val constraintLayout = "1.1.3"
     const val jUnit = "4.12"
     const val datastore = "1.0.0-alpha08"
-    const val ktx = "1.3.2"
+    const val ktx = "1.8.0"
     const val legacy = "1.0.0"
     const val lifecycle = "2.3.0"
     const val lifecycleExtensions = "2.2.0"

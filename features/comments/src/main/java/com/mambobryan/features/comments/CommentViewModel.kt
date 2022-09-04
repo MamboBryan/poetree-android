@@ -1,52 +1,106 @@
 package com.mambobryan.features.comments
 
 import androidx.lifecycle.*
-import com.mambo.core.repository.PoemRepository
-import com.mambo.data.models.Comment
+import com.mambo.core.repository.CommentRepository
+import com.mambo.data.models.Poem
+import com.mambo.data.preferences.UserPreferences
+import com.mambo.data.requests.CreateCommentRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CommentViewModel @Inject constructor(
-    poemsRepository: PoemRepository,
-    stateHandle: SavedStateHandle
+    private val repository: CommentRepository,
+    preferences: UserPreferences,
+    state: SavedStateHandle
 ) : ViewModel() {
 
-    private val _eventChannel = Channel<CommentsEvent>()
-    val events = _eventChannel.receiveAsFlow()
+    private val _events = MutableStateFlow<CommentsEvent>(CommentsEvent.Idle)
+    val events: StateFlow<CommentsEvent> get() = _events
 
-    private val _comments = poemsRepository.poems()
-    val comments = _comments.asLiveData()
+    val poem = state.getLiveData<Poem?>("poem", null)
 
-    private val _comment = stateHandle.getLiveData<Comment?>("comment", null)
-    val comment: LiveData<Comment?> get() = _comment
+    private val _comments = poem.switchMap {
+        if (it != null)
+            repository.getComments(it.id).asLiveData()
+        else
+            MutableLiveData(null)
 
-    private val _content = stateHandle.getLiveData("content", "")
+    }
+    val comments = _comments
+
+    private val _content = state.getLiveData("content", "")
     val content: LiveData<String> get() = _content
 
-    private val _isLoading = MutableLiveData(false)
-    val isLoading: LiveData<Boolean> get() = _isLoading
+    private val _isSendingComment = MutableLiveData(false)
+    val isSendingComment: LiveData<Boolean> get() = _isSendingComment
 
-    fun updateComment(comment: Comment) {
-        _comment.value = comment
+    var userId: String? = null
+
+    init {
+        viewModelScope.launch {Poem
+            userId = preferences.user.firstOrNull()?.id
+        }
+    }
+
+    fun updatePoem(poem: Poem) = viewModelScope.launch {
+        this@CommentViewModel.poem.value = poem
     }
 
     fun onContentUpdated(text: String) {
         _content.value = text
     }
 
-    fun onCommentSendClicked() {
-        TODO("Not yet implemented")
+    fun onCommentSendClicked() = viewModelScope.launch {
+        updateSendingComment(isSending = true)
+        try {
+
+            val request = CreateCommentRequest(
+                poemId = poem.value!!.id,
+                content = _content.value!!
+            )
+
+            val response = repository.create(request = request)
+
+            if (response.isSuccessful.not()) {
+                updateUi(CommentsEvent.ShowError(response.message))
+                updateSendingComment()
+                return@launch
+            }
+
+            clearContent()
+            updateSendingComment()
+            updateUi(CommentsEvent.RefreshAdapter)
+            updateUi(CommentsEvent.ShowSuccess(response.message))
+        } catch (e: Exception) {
+            updateUi(CommentsEvent.ShowError(e.localizedMessage))
+            updateSendingComment()
+        }
+    }
+
+    private fun clearContent() {
+        _content.value = ""
+        updateUi(CommentsEvent.ClearTextInput)
+    }
+
+    private fun updateSendingComment(isSending: Boolean = false) {
+        _isSendingComment.value = isSending
     }
 
     private fun updateUi(event: CommentsEvent) = viewModelScope.launch {
-        _eventChannel.send(event)
+        _events.value = event
     }
 
     sealed class CommentsEvent {
+        data class ShowError(val message: String) : CommentsEvent()
+        data class ShowSuccess(val message: String) : CommentsEvent()
+        object ClearTextInput : CommentsEvent()
+        object RefreshAdapter : CommentsEvent()
+        object Idle : CommentsEvent()
     }
 
 

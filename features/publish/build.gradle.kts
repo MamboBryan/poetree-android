@@ -76,6 +76,8 @@ dependencies {
     implementation(Dependencies.Libraries.motionToast)
     implementation(Dependencies.Libraries.delegate)
     implementation(Dependencies.Libraries.sneaker)
+    implementation(Dependencies.Libraries.timber)
+    implementation(Dependencies.Libraries.alert)
 
     kapt(Dependencies.Libraries.hiltCompiler)
 

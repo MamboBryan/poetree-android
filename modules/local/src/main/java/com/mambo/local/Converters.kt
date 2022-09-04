@@ -9,12 +9,12 @@ import java.util.*
 class Converters {
 
     @TypeConverter
-    fun fromUser(user: User): String {
+    fun fromUser(user: User?): String {
         return Gson().toJson(user)
     }
 
     @TypeConverter
-    fun toUser(string: String): User {
+    fun toUser(string: String): User? {
         return Gson().fromJson(string, User::class.java)
     }
 

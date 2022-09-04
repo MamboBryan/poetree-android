@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mambo.core.OnPoemClickListener
+import com.mambo.core.utils.prettyCount
+import com.mambo.core.utils.toDate
 import com.mambo.data.models.Poem
 import com.mambo.ui.databinding.ItemPoemBinding
 import org.ocpsoft.prettytime.PrettyTime
@@ -14,10 +16,10 @@ import javax.inject.Inject
 class PoemPagingAdapter @Inject constructor() :
     PagingDataAdapter<Poem, PoemPagingAdapter.PoemViewHolder>(Poem.COMPARATOR) {
 
-    private lateinit var onPoemClickListener: OnPoemClickListener
+    private var mOnClickListener: ((poem: Poem) -> Unit)? = null
 
-    fun setListener(listener: OnPoemClickListener) {
-        onPoemClickListener = listener
+    fun onPoemClicked(block: (poem: Poem) -> Unit) {
+        mOnClickListener = block
     }
 
     inner class PoemViewHolder(private val binding: ItemPoemBinding) :
@@ -31,8 +33,7 @@ class PoemPagingAdapter @Inject constructor() :
                 layoutPoemClick.setOnClickListener {
                     if (absoluteAdapterPosition != RecyclerView.NO_POSITION) {
                         val poem = getItem(absoluteAdapterPosition)
-                        if (poem != null)
-                            onPoemClickListener.onPoemClicked(poem)
+                        if (poem != null) mOnClickListener?.invoke(poem)
                     }
                 }
 
@@ -40,21 +41,77 @@ class PoemPagingAdapter @Inject constructor() :
         }
 
         fun bind(poem: Poem) {
+
+            val context = binding.root.context
+
             binding.apply {
 
-                val duration = prettyTime.formatDuration(poem.createdAt)
+                val date = poem.updatedAt.toDate()
+                val duration = prettyTime.formatDuration(date)
                 val message = " \u2022 $duration "
 
-                tvPoemUsername.text = poem.user?.username
+                tvPoemUsername.text = poem.user?.name
                 tvPoemTitle.text = poem.title
                 tvPoemDate.text = message
 
-                tvLikes.text = "${poem.likesCount}"
-                tvComments.text = "${poem.commentsCount}"
-                tvBookmarks.text = "${poem.bookmarksCount}"
-                tvReads.text = "${poem.readsCount}"
+                val likeIcon = when (poem.liked) {
+                    true -> com.mambo.ui.R.drawable.liked
+                    false -> com.mambo.ui.R.drawable.unliked
+                }
+                tvLikes.apply {
+                    text = prettyCount(poem.likes)
+                    setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        likeIcon,
+                        0,
+                        0,
+                        0
+                    )
+                }
 
-                val color = poem.topic?.color ?: "#C8F9F3"
+                val commentIcon = when (poem.commented) {
+                    true -> com.mambo.ui.R.drawable.commented
+                    false -> com.mambo.ui.R.drawable.uncommented
+                }
+                tvComments.apply {
+                    text = prettyCount(poem.comments)
+                    setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        commentIcon,
+                        0,
+                        0,
+                        0
+                    )
+                }
+
+                val bookmarkIcon = when (poem.bookmarked) {
+                    true -> com.mambo.ui.R.drawable.bookmarked
+                    false -> com.mambo.ui.R.drawable.unbookmarked
+                }
+                tvBookmarks.apply {
+                    text = prettyCount(poem.bookmarks)
+                    setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        bookmarkIcon,
+                        0,
+                        0,
+                        0
+                    )
+                }
+
+                val readIcon = when (poem.read) {
+                    true -> com.mambo.ui.R.drawable.read
+                    false -> com.mambo.ui.R.drawable.unread
+                }
+                tvReads.apply {
+                    text = prettyCount(poem.reads)
+                    setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        readIcon,
+                        0,
+                        0,
+                        0
+                    )
+                }
+
+
+                val color = poem.topic?.color ?: "#fefefe"
                 layoutPoem.setBackgroundColor(Color.parseColor(color))
 
             }

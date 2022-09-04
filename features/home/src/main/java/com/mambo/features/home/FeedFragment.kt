@@ -1,16 +1,18 @@
 package com.mambo.features.home
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import android.view.ViewGroup
+import androidx.fragment.app.*
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
+import androidx.viewbinding.ViewBinding
 import coil.load
 import coil.size.Scale
 import coil.transform.CircleCropTransformation
+import com.google.android.material.snackbar.Snackbar
 import com.mambo.core.OnPoemClickListener
 import com.mambo.core.adapters.GenericStateAdapter
 import com.mambo.core.adapters.PoemPagingAdapter
@@ -21,6 +23,7 @@ import com.mambo.core.utils.showLoading
 import com.mambo.core.viewmodel.MainViewModel
 import com.mambo.data.models.Poem
 import com.mambo.features.home.databinding.FragmentFeedBinding
+import com.mambo.features.home.databinding.LayoutNameValidatBinding
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
 import com.mambobryan.navigation.extensions.navigate
@@ -112,12 +115,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
 
         }
 
-        adapter.setListener(object : OnPoemClickListener {
-            override fun onPoemClicked(poem: Poem) {
-                viewModel.onPoemClicked(poem)
-            }
-
-        })
+        adapter.onPoemClicked { viewModel.onPoemClicked(poem = it) }
 
         adapter.withLoadStateHeaderAndFooter(
             header = GenericStateAdapter(adapter::retry),

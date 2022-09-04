@@ -7,6 +7,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mambo.bookmarks.databinding.ItemPoemBookmarkBinding
 import com.mambo.core.OnPoemClickListener
+import com.mambo.core.utils.toDate
 import com.mambo.data.models.Poem
 import org.ocpsoft.prettytime.PrettyTime
 import javax.inject.Inject
@@ -14,10 +15,10 @@ import javax.inject.Inject
 class BookmarksAdapter @Inject constructor() :
     PagingDataAdapter<Poem, BookmarksAdapter.PoemViewHolder>(Poem.COMPARATOR) {
 
-    private lateinit var onPoemClickListener: OnPoemClickListener
+    private var mOnClickListener: ((poem: Poem) -> Unit)? = null
 
-    fun setListener(listener: OnPoemClickListener) {
-        onPoemClickListener = listener
+    fun onPoemClicked(block: (poem: Poem) -> Unit) {
+        mOnClickListener = block
     }
 
     inner class PoemViewHolder(private val binding: ItemPoemBookmarkBinding) :
@@ -31,8 +32,7 @@ class BookmarksAdapter @Inject constructor() :
                 layoutBookmarkClick.setOnClickListener {
                     if (absoluteAdapterPosition != RecyclerView.NO_POSITION) {
                         val poem = getItem(absoluteAdapterPosition)
-                        if (poem != null)
-                            onPoemClickListener.onPoemClicked(poem)
+                        poem?.let { mOnClickListener?.invoke(it) }
                     }
                 }
 
@@ -42,11 +42,11 @@ class BookmarksAdapter @Inject constructor() :
         fun bind(poem: Poem) {
             binding.apply {
 
-                val duration = prettyTime.formatDuration(poem.createdAt)
+                val duration = prettyTime.formatDuration(poem.createdAt.toDate())
                 val message = " \u2022 $duration "
 
                 tvPoemDuration.text = message
-                tvPoemUser.text = poem.user?.username
+                tvPoemUser.text = poem.user?.name
                 tvPoemTitle.text = poem.title
 
                 val color = poem.topic?.color ?: "#F7DEE6"

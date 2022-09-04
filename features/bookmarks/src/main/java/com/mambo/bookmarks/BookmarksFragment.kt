@@ -13,17 +13,14 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import com.mambo.bookmarks.databinding.FragmentBookmarksBinding
-import com.mambo.core.OnPoemClickListener
 import com.mambo.core.adapters.GenericStateAdapter
 import com.mambo.core.extensions.onQueryTextChanged
 import com.mambo.core.viewmodel.MainViewModel
-import com.mambo.data.models.Poem
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
 import com.mambobryan.navigation.extensions.navigate
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -126,12 +123,10 @@ class BookmarksFragment : Fragment(R.layout.fragment_bookmarks) {
 
         }
 
-        adapter.setListener(object : OnPoemClickListener {
-            override fun onPoemClicked(poem: Poem) {
-                sharedViewModel.setPoem(poem)
-                viewModel.onPoemClicked()
-            }
-        })
+        adapter.onPoemClicked {
+            sharedViewModel.setPoem(it)
+            viewModel.onPoemClicked()
+        }
 
         adapter.withLoadStateHeaderAndFooter(
             header = GenericStateAdapter(adapter::retry),

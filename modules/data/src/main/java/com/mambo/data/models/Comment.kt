@@ -4,10 +4,14 @@ import androidx.recyclerview.widget.DiffUtil
 import java.util.*
 
 data class Comment(
-    val id: Int?,
-    val createdAt: Date?,
-    val user: User,
-    val content: String
+    val id: String,
+    val createdAt: String,
+    val updatedAt: String?,
+    val content: String,
+    val poemId: String,
+    val user: MinimalUser,
+    val liked: Boolean,
+    val likes: Long
 ){
     companion object {
         val COMPARATOR = object : DiffUtil.ItemCallback<Comment>() {

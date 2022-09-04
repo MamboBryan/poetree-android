@@ -1,12 +1,7 @@
 package com.mambo.core.utils
 
-import android.text.format.DateFormat.getDateFormat
-import android.text.format.DateFormat.getTimeFormat
+import org.ocpsoft.prettytime.PrettyTime
 import java.text.SimpleDateFormat
-import java.time.Instant
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneId
 import java.util.*
 
 val timeFormat = SimpleDateFormat("hh:mm a").also { it.isLenient = false }
@@ -58,6 +53,11 @@ fun Date?.toDateString(): String? {
 fun Date?.toDateTimeString(): String? {
     if (this == null) return null
     return dateTimeFormat.format(this)
+}
+
+fun Date?.toDaysAgo(): String? {
+    if (this == null) return null
+    return PrettyTime().format(this) + " ago"
 }
 
 fun Date.isValidAge(): Boolean {

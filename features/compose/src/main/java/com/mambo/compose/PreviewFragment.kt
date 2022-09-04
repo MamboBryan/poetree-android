@@ -17,16 +17,13 @@ class PreviewFragment : Fragment(R.layout.fragment_preview) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.fabPreviewPublish.setOnClickListener {  }
         setUpPoemPreview()
-
     }
 
     override fun onResume() {
         super.onResume()
-
         updatePoemPreview()
-
     }
 
     private fun setUpPoemPreview() = binding.apply {

@@ -1,5 +1,6 @@
 package com.mambobryan.features.profile
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -10,7 +11,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
+import coil.load
+import coil.size.Scale
+import coil.transform.CircleCropTransformation
+import com.google.android.material.snackbar.Snackbar
 import com.irozon.alertview.AlertActionStyle
 import com.irozon.alertview.AlertStyle
 import com.irozon.alertview.AlertTheme
@@ -19,7 +25,7 @@ import com.irozon.alertview.objects.AlertAction
 import com.mambo.core.OnPoemClickListener
 import com.mambo.core.adapters.ArtistPoemsAdapter
 import com.mambo.core.adapters.GenericStateAdapter
-import com.mambo.core.utils.prettyCount
+import com.mambo.core.utils.*
 import com.mambo.core.viewmodel.MainViewModel
 import com.mambo.data.models.Poem
 import com.mambobryan.features.profile.databinding.FragmentProfileBinding
@@ -28,9 +34,7 @@ import com.mambobryan.navigation.extensions.getDeeplink
 import com.mambobryan.navigation.extensions.navigate
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -55,9 +59,15 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             viewModel.events.collect { event ->
                 when (event) {
                     ProfileViewModel.ProfileEvent.ShowDarkModeDialog -> showDarkModeDialog()
+                    ProfileViewModel.ProfileEvent.HideLoading -> {
+                        binding.layoutProfileDetails.progressProfile.isVisible = false
+                    }
                     is ProfileViewModel.ProfileEvent.NavigateToPoem -> {
                         sharedViewModel.setPoem(event.poem)
                         navigateToLanding()
+                    }
+                    is ProfileViewModel.ProfileEvent.ShowError -> {
+                        Snackbar.make(requireView(), event.message, Snackbar.LENGTH_LONG).show()
                     }
                 }
             }
@@ -67,41 +77,50 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             sharedViewModel.publicPoems.collectLatest { adapter.submitData(it) }
         }
 
-        lifecycleScope.launch {
-            adapter.loadStateFlow.collectLatest { loadState ->
-                binding.layoutProfileState.apply {
+        lifecycleScope.launchWhenStarted {
+            adapter.loadStateFlow.collectLatest { state: CombinedLoadStates ->
+                when (state.source.refresh) {
+                    is LoadState.Loading -> binding.layoutProfilePoems.showLoading()
+                    is LoadState.Error -> binding.layoutProfilePoems.showError()
+                    is LoadState.NotLoading -> {
+                        if (state.append.endOfPaginationReached && adapter.itemCount < 1)
+                            binding.layoutProfilePoems.showEmpty()
+                        else
+                            binding.layoutProfilePoems.showContent()
 
-                    stateContent.isVisible = false
-                    stateEmpty.isVisible = false
-                    stateError.isVisible = false
-                    stateLoading.isVisible = false
+                    }
+                }
+            }
+        }
 
-                    when (loadState.source.refresh) {
-                        is LoadState.Loading -> {
-                            stateLoading.isVisible = true
-                        }
+        lifecycleScope.launchWhenResumed {
+            viewModel.userDetails.collectLatest {
+                it?.let { userDetails ->
+                    binding.layoutProfileHeader.tvHeaderTitle.text = userDetails.name
+                    binding.layoutProfileDetails.apply {
+                        tvArtistName.text = userDetails.name
+                        tvArtistBio.text = userDetails.bio
+                        tvArtistReads.text = prettyCount(userDetails.reads ?: 0)
+                        tvArtistBookmarks.text = prettyCount(userDetails.bookmarks ?: 0)
+                        tvArtistLikes.text = prettyCount(userDetails.likes ?: 0)
 
-                        is LoadState.Error -> {
-                            stateError.isVisible = true
-                            stateContent.isRefreshing = false
-                        }
-
-                        is LoadState.NotLoading -> {
-
-                            if (loadState.append.endOfPaginationReached) {
-                                if (adapter.itemCount < 1)
-                                    stateEmpty.isVisible = true
-                                else {
-                                    stateContent.isVisible = true
-                                }
-                            } else {
-                                stateContent.isVisible = true
-                            }
-
-                            stateContent.isRefreshing = false
-
+                        ivArtistMage.load(Color.parseColor("#000000")) {
+                            scale(Scale.FILL)
+                            crossfade(true)
+                            placeholder(R.drawable.ic_baseline_account_circle_24)
+                            error(R.drawable.ic_baseline_account_circle_24)
+                            transformations(CircleCropTransformation())
                         }
                     }
+                }
+            }
+        }
+
+        lifecycleScope.launchWhenResumed {
+            viewModel.poems.collectLatest {
+                it?.let { data ->
+                    adapter.submitData(data)
+                    //binding.layoutProfilePoems.stateContent.isRefreshing = false
                 }
             }
         }
@@ -110,44 +129,26 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private fun initViews() = binding.apply {
 
-        setupUserView()
         setUpScrollView()
 
         layoutProfileHeader.ivHeaderDarkMode.setOnClickListener { viewModel.onAppThemeClicked() }
         layoutProfileHeader.ivHeaderBack.setOnClickListener { findNavController().popBackStack() }
 
-        layoutProfileState.apply {
+        layoutProfilePoems.apply {
             buttonRetry.setOnClickListener { adapter.retry() }
             recyclerView.adapter = adapter
-            recyclerView.setHasFixedSize(true)
             stateContent.setOnRefreshListener {
                 recyclerView.scrollToPosition(0)
                 adapter.refresh()
             }
         }
-        adapter.setListener(object : OnPoemClickListener {
-            override fun onPoemClicked(poem: Poem) {
-                viewModel.onPoemClicked(poem)
-            }
-        })
+
+        adapter.onPoemClicked { viewModel.onPoemClicked(it) }
 
         adapter.withLoadStateHeaderAndFooter(
             header = GenericStateAdapter(adapter::retry),
             footer = GenericStateAdapter(adapter::retry)
         )
-    }
-
-    private fun setupUserView() = binding.apply {
-//        val user = sharedViewModel.user.value
-        layoutProfileHeader.tvHeaderTitle.text = "MamboBryan"
-        layoutProfileDetails.apply {
-            tvArtistName.text = "MamboBryan"
-//            tvArtistBio.text =""
-            tvArtistReads.text = prettyCount(2000000)
-            tvArtistBookmarks.text = prettyCount(20000)
-            tvArtistLikes.text = prettyCount(200000)
-        }
-
     }
 
     private fun setUpScrollView() = binding.apply {

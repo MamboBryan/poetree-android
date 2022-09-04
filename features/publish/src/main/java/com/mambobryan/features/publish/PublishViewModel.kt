@@ -39,6 +39,13 @@ class PublishViewModel @Inject constructor(
         query.value = text
     }
 
+    fun onQuerySubmitted(text: String) {
+        viewModelScope.launch {
+
+        }
+        query.value = text
+    }
+
     fun updatePoem(poem: Poem) {
         _poem.value = poem
     }
@@ -53,11 +60,9 @@ class PublishViewModel @Inject constructor(
 
         try {
 
-            val id = poemRepo.update(updatedPoem)
-            val poem = poemRepo.get(id.toLong())
+            poemRepo.update(updatedPoem.toLocalPoem())
 
-            //update shared view-model poem
-            _eventChannel.send(TopicEvent.UpdateSharedViewModelPoem(poem))
+            _eventChannel.send(TopicEvent.UpdateSharedViewModelPoem(updatedPoem))
             _eventChannel.send(TopicEvent.ShowSuccessMessage("Topic Set Successfully"))
 
         } catch (e: Exception) {

@@ -7,7 +7,6 @@ import com.mambo.data.responses.*
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
-import io.ktor.http.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -89,8 +88,7 @@ class PoemsApi @Inject constructor(
     }
 
     suspend fun reset(email: String) = safeApiCall<Boolean> {
-        val response = client.post {
-            url(Endpoints.RESET.url)
+        val response = client.post(Endpoints.RESET.url) {
             setBody(mapOf("email" to email))
         }
         response.body()
@@ -101,62 +99,52 @@ class PoemsApi @Inject constructor(
      */
 
     suspend fun getMyDetails() = safeApiCall<UserDetails> {
-        val response = client.get {
-            url(Endpoints.USER_ME.url)
-        }
+        val response = client.get(Endpoints.USER_ME.url)
         response.body()
     }
 
     suspend fun userSetup(request: SetupRequest) = safeApiCall<UserDetails> {
-        val response = client.post {
-            url(Endpoints.USER_ME.url) {
-                path("setup")
-            }
+        val url = Endpoints.USER_ME.url.plus("/setup")
+        val response = client.post(url) {
             setBody(request)
         }
         response.body()
     }
 
     suspend fun updateUser(request: UserUpdateRequest) = safeApiCall<UserDetails> {
-        val response = client.put {
-            url(Endpoints.USER_ME.url) {
-                path("update")
-            }
+        val url = Endpoints.USER_ME.url.plus("/update")
+        val response = client.put(url) {
             setBody(request)
         }
         response.body()
     }
 
     suspend fun updatePassword(request: UpdatePasswordRequest) = safeApiCall<TokenResponse> {
-        val response = client.put {
-            url(Endpoints.USER_ME.url) {
-                path("update-password")
-            }
+        val url = Endpoints.USER_ME.url.plus("/update-password")
+        val response = client.put(url) {
             setBody(request)
         }
         response.body()
     }
 
     suspend fun uploadMessagingToken(token: String) = safeApiCall<UserDetails> {
-        val response = client.put {
-            url(Endpoints.USER_ME.url) { path("update") }
+        val url = Endpoints.USER_ME.url.plus("/update")
+        val response = client.put(url) {
             setBody(mapOf("token" to token))
         }
         response.body()
     }
 
-    suspend fun uploadImageUrl(url: String) = safeApiCall<UserDetails> {
-        val response = client.put {
-            url(Endpoints.USER_ME.url) { path("update") }
-            setBody(mapOf("imageUrl" to url))
+    suspend fun uploadImageUrl(imageUrl: String) = safeApiCall<UserDetails> {
+        val url = Endpoints.USER_ME.url.plus("/update")
+        val response = client.put(url) {
+            setBody(mapOf("imageUrl" to imageUrl))
         }
         response.body()
     }
 
     suspend fun deleteAccount() = safeApiCall<Boolean> {
-        val response = client.delete {
-            url(Endpoints.USER_ME.url) { path("delete") }
-        }
+        val response = client.delete(Endpoints.USER_ME.url.plus("/delete"))
         response.body()
     }
 
@@ -165,8 +153,7 @@ class PoemsApi @Inject constructor(
      */
 
     suspend fun getUser(userId: String) = safeApiCall<UserDetails> {
-        val response = client.post {
-            url(Endpoints.USER.url)
+        val response = client.post(Endpoints.USER.url) {
             setBody(mapOf("userId" to userId))
         }
         response.body()
@@ -178,8 +165,7 @@ class PoemsApi @Inject constructor(
     }
 
     suspend fun searchUsers(query: String) = safeApiCall<PagedData<UserListResponse>> {
-        val response = client.get {
-            url(Endpoints.USERS.url)
+        val response = client.get(Endpoints.USERS.url) {
             parameter("name", query)
         }
         response.body()
@@ -224,73 +210,70 @@ class PoemsApi @Inject constructor(
      * POEMS
      */
 
-    suspend fun createPoem(request: EditPoemRequest) = safeApiCall<PoemResponse> {
-        val response = client.post {
-            url(Endpoints.POEMS.url)
+    suspend fun createPoem(request: CreatePoemRequest) = safeApiCall<PoemResponse> {
+        val url = Endpoints.POEMS.url
+        val response = client.post(url) {
             setBody(request)
         }
         response.body()
     }
 
     suspend fun getPoem(request: PoemRequest) = safeApiCall<PoemResponse> {
-        val response = client.post {
-            url(Endpoints.POEM.url)
+        val url = Endpoints.POEM.url
+        val response = client.post(url) {
             setBody(request)
         }
         response.body()
     }
 
     suspend fun updatePoem(request: EditPoemRequest) = safeApiCall<PoemResponse> {
-        val response = client.put {
-            url(Endpoints.POEM.url)
+        val url = Endpoints.POEM.url
+        val response = client.put(url) {
             setBody(request)
         }
         response.body()
     }
 
     suspend fun deletePoem(request: PoemRequest) = safeApiCall<Boolean> {
-        val response = client.delete {
-            url(Endpoints.POEM.url)
+        val url = Endpoints.POEM.url
+        val response = client.delete(url) {
             setBody(request)
         }
         response.body()
     }
 
     suspend fun markPoemAsRead(request: PoemRequest) = safeApiCall<Any> {
-        val response = client.post {
-            url(Endpoints.POEM.url) { path("read") }
+        val url = Endpoints.POEM.url.plus("/read")
+        val response = client.post(url) {
             setBody(request)
         }
         response.body()
     }
 
     suspend fun getPoems(page: Int = 1) = safeApiCall<PagedData<PoemResponse>> {
-        val response = client.get {
-            url(Endpoints.POEMS.url) {
-                parameter("page", page.toString())
-            }
+        val url = Endpoints.POEMS.url
+        val response = client.get(url) {
+            parameter("page", page.toString())
         }
         response.body()
     }
 
     suspend fun getUserPoems(userId: String, page: Int = 1) = safeApiCall<PagedData<PoemResponse>> {
-        val response = client.get {
-            url(Endpoints.USER.url) {
-                path("poems")
-                parameter("page", page.toString())
-            }
+        val url = Endpoints.USER.url.plus("/poems")
+        val response = client.post(url) {
+            setBody(mapOf("userId" to userId))
+            parameter("page", page.toString())
         }
         response.body()
     }
 
     suspend fun searchPoems(query: String, topic: Int?, page: Int = 1) =
         safeApiCall<PagedData<PoemResponse>> {
-            val response = client.get() {
-                url(Endpoints.POEMS.url) {
-                    if (topic != null) parameter("topic", topic.toString())
-                    parameter("q", query)
-                    parameter("page", page.toString())
-                }
+            val url = Endpoints.POEMS.url
+            val response = client.get(url) {
+                if (topic != null) parameter("topic", topic.toString())
+                parameter("q", query)
+                parameter("page", page.toString())
             }
             response.body()
         }
@@ -300,32 +283,40 @@ class PoemsApi @Inject constructor(
      */
 
     suspend fun createComment(request: CreateCommentRequest) = safeApiCall<CommentResponse> {
-        val response = client.post {
-            url(Endpoints.COMMENTS.url)
+        val response = client.post(Endpoints.COMMENTS.url) {
             setBody(request)
         }
         response.body()
     }
 
     suspend fun updateComment(request: UpdateCommentRequest) = safeApiCall<CommentResponse> {
-        val response = client.put {
-            url(Endpoints.COMMENTS.url)
+        val response = client.put(Endpoints.COMMENTS.url) {
             setBody(request)
         }
         response.body()
     }
 
     suspend fun getComment(commentId: String) = safeApiCall<CompleteCommentResponse> {
-        val response = client.post {
-            url(Endpoints.COMMENT.url)
+        val response = client.post(Endpoints.COMMENT.url) {
             setBody(mapOf("commentId" to commentId))
         }
         response.body()
     }
 
+    suspend fun getComments(poemId: String, page: Int = 1) =
+        safeApiCall<PagedData<CompleteCommentResponse>> {
+
+            val url = Endpoints.POEM.url.plus("/comments")
+
+            val response = client.post(url) {
+                setBody(mapOf("poemId" to poemId))
+                parameter("page", page.toString())
+            }
+            response.body()
+        }
+
     suspend fun deleteComment(commentId: String) = safeApiCall<Boolean> {
-        val response = client.delete {
-            url(Endpoints.COMMENT.url)
+        val response = client.delete(Endpoints.COMMENT.url) {
             setBody(mapOf("commentId" to commentId))
         }
         response.body()
@@ -336,16 +327,16 @@ class PoemsApi @Inject constructor(
      */
 
     suspend fun bookmarkPoem(poemId: String) = safeApiCall<Boolean> {
-        val response = client.post {
-            url(Endpoints.POEM.url) { path("bookmark") }
+        val url = Endpoints.POEM.url.plus("/bookmark")
+        val response = client.post(url) {
             setBody(mapOf("poemId" to poemId))
         }
         response.body()
     }
 
     suspend fun unBookmarkPoem(poemId: String) = safeApiCall<Boolean> {
-        val response = client.delete {
-            url(Endpoints.POEM.url) { path("un-bookmark") }
+        val url = Endpoints.POEM.url.plus("/un-bookmark")
+        val response = client.delete(url) {
             setBody(mapOf("poemId" to poemId))
         }
         response.body()
@@ -356,32 +347,32 @@ class PoemsApi @Inject constructor(
      */
 
     suspend fun likePoem(poemId: String) = safeApiCall<Boolean> {
-        val response = client.post {
-            url(Endpoints.POEM.url) { path("like") }
+        val url = Endpoints.POEM.url.plus("/like")
+        val response = client.post(url) {
             setBody(mapOf("poemId" to poemId))
         }
         response.body()
     }
 
     suspend fun unLikePoem(poemId: String) = safeApiCall<Boolean> {
-        val response = client.delete {
-            url(Endpoints.POEM.url) { path("unlike") }
+        val url = Endpoints.POEM.url.plus("/unlike")
+        val response = client.delete(url) {
             setBody(mapOf("poemId" to poemId))
         }
         response.body()
     }
 
     suspend fun likeComment(poemId: String) = safeApiCall<Boolean> {
-        val response = client.post {
-            url(Endpoints.COMMENT.url) { path("like") }
+        val url = Endpoints.COMMENT.url.plus("/like")
+        val response = client.post(url) {
             setBody(mapOf("commentId" to poemId))
         }
         response.body()
     }
 
     suspend fun unLikeComment(poemId: String) = safeApiCall<Boolean> {
-        val response = client.delete {
-            url(Endpoints.COMMENT.url) { path("unlike") }
+        val url = Endpoints.COMMENT.url.plus("/unlike")
+        val response = client.delete(url) {
             setBody(mapOf("commentId" to poemId))
         }
         response.body()

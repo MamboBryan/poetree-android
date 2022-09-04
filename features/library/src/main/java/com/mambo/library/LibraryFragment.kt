@@ -6,24 +6,25 @@ import android.view.MenuInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
-import com.mambo.core.OnPoemClickListener
 import com.mambo.core.adapters.GenericStateAdapter
 import com.mambo.core.extensions.onQueryTextChanged
+import com.mambo.core.utils.showContent
+import com.mambo.core.utils.showEmpty
+import com.mambo.core.utils.showError
+import com.mambo.core.utils.showLoading
 import com.mambo.core.viewmodel.MainViewModel
-import com.mambo.data.models.Poem
 import com.mambo.library.databinding.FragmentLibraryBinding
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
 import com.mambobryan.navigation.extensions.navigate
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -68,41 +69,20 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
         }
 
         lifecycleScope.launch {
-            sharedViewModel.unpublishedPoems.collectLatest { adapter.submitData(it) }
+            sharedViewModel.libraryPoems.collectLatest { adapter.submitData(it) }
         }
 
-        lifecycleScope.launch {
-            adapter.loadStateFlow.collectLatest { loadState ->
-                binding.layoutLibraryState.apply {
+        lifecycleScope.launchWhenStarted {
+            adapter.loadStateFlow.collectLatest { state: CombinedLoadStates ->
+                when (state.source.refresh) {
+                    is LoadState.Loading -> binding.layoutLibraryState.showLoading()
+                    is LoadState.Error -> binding.layoutLibraryState.showError()
+                    is LoadState.NotLoading -> {
+                        if (state.append.endOfPaginationReached && adapter.itemCount < 1)
+                            binding.layoutLibraryState.showEmpty()
+                        else
+                            binding.layoutLibraryState.showContent()
 
-                    stateContent.isVisible = false
-                    stateEmpty.isVisible = false
-                    stateError.isVisible = false
-                    stateLoading.isVisible = false
-
-                    when (loadState.source.refresh) {
-                        is LoadState.Loading -> {
-                            stateLoading.isVisible = true
-                        }
-
-                        is LoadState.Error -> {
-                            stateError.isVisible = true
-                        }
-
-                        is LoadState.NotLoading -> {
-
-                            if (loadState.append.endOfPaginationReached) {
-                                if (adapter.itemCount < 1)
-                                    stateEmpty.isVisible = true
-                                else {
-                                    stateContent.isVisible = true
-                                }
-                            } else {
-                                stateContent.isVisible = true
-                            }
-
-
-                        }
                     }
                 }
             }
@@ -127,12 +107,10 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
 
         }
 
-        adapter.setListener(object : OnPoemClickListener {
-            override fun onPoemClicked(poem: Poem) {
-                sharedViewModel.setPoem(poem)
-                viewModel.onPoemClicked()
-            }
-        })
+        adapter.onPoemClicked {
+            sharedViewModel.setPoem(it)
+            viewModel.onPoemClicked()
+        }
 
         adapter.withLoadStateHeaderAndFooter(
             header = GenericStateAdapter(adapter::retry),

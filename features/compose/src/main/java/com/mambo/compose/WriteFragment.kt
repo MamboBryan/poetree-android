@@ -1,6 +1,7 @@
 package com.mambo.compose
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
@@ -43,7 +44,6 @@ class WriteFragment : Fragment(R.layout.fragment_write) {
         val textColor = ContextCompat.getColor(requireContext(), R.color.color_on_background)
         val backgroundColor = ContextCompat.getColor(requireContext(), R.color.color_background)
 
-
         editor.setEditorFontSize(16)
         editor.setEditorFontColor(textColor)
         editor.setEditorBackgroundColor(backgroundColor)
@@ -77,13 +77,10 @@ class WriteFragment : Fragment(R.layout.fragment_write) {
 
         actionHeading.setOnClickListener { editor.setHeading(4) }
 
-        editor.setOnTextChangeListener(object :
-            WYSIWYG.OnTextChangeListener {
-            override fun onTextChange(text: String?) {
-                viewModel.poemContent = text ?: ""
-            }
-
-        })
+        editor.onTextChanged { content, html ->
+            viewModel.poemContent = content ?: ""
+            viewModel.poemHtml = html ?: ""
+        }
 
     }
 

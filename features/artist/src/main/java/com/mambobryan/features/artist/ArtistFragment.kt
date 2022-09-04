@@ -121,11 +121,8 @@ class ArtistFragment : Fragment(R.layout.fragment_artist) {
                 adapter.refresh()
             }
         }
-        adapter.setListener(object : OnPoemClickListener {
-            override fun onPoemClicked(poem: Poem) {
-                viewModel.onPoemClicked(poem)
-            }
-        })
+
+        adapter.onPoemClicked { viewModel.onPoemClicked(poem = it) }
 
         adapter.withLoadStateHeaderAndFooter(
             header = GenericStateAdapter(adapter::retry),
@@ -135,7 +132,6 @@ class ArtistFragment : Fragment(R.layout.fragment_artist) {
     }
 
     private fun setupUserView() = binding.apply {
-        val user = sharedViewModel.user.value
         layoutHeader.tvHeaderTitle.text = "MamboBryan"
         layoutDetails.apply {
             tvArtistName.text = "MamboBryan"

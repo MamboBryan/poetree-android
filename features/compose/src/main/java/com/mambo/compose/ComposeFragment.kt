@@ -3,22 +3,30 @@ package com.mambo.compose
 import android.os.Bundle
 import android.view.View
 import androidx.activity.addCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
-import com.google.android.material.snackbar.Snackbar
+import com.irozon.alertview.AlertActionStyle
+import com.irozon.alertview.AlertStyle
+import com.irozon.alertview.AlertView
+import com.irozon.alertview.objects.AlertAction
+import com.irozon.sneaker.Sneaker
 import com.mambo.compose.databinding.FragmentComposeBinding
 import com.mambo.core.adapters.ViewPagerAdapter
+import com.mambo.core.utils.LoadingDialog
+import com.mambo.core.utils.toObliviousHumanLanguage
 import com.mambo.core.viewmodel.MainViewModel
+import com.mambo.data.models.Poem
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
+import com.mambobryan.navigation.extensions.getNavOptionsPopUpToCurrent
 import com.mambobryan.navigation.extensions.navigate
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class ComposeFragment : Fragment(R.layout.fragment_compose) {
@@ -29,15 +37,15 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         viewModel.updatePoem(sharedViewModel.poem.value)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sharedViewModel.poem.observe(viewLifecycleOwner){
-            viewModel.updatePoem(it)
-        }
+        sharedViewModel.poem.observe(viewLifecycleOwner) { viewModel.updatePoem(it) }
 
         setupNavigation()
         setupViews()
@@ -46,26 +54,36 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.events.collect { event ->
                 when (event) {
-
-                    is ComposeViewModel.ComposeEvent.ShowInvalidInputMessage -> {
-                        Snackbar.make(requireView(), event.message, Snackbar.LENGTH_LONG).show()
-                    }
-
-                    is ComposeViewModel.ComposeEvent.NavigateToPublish -> {
-                        sharedViewModel.setPoem(event.poem)
-                        navigateToPublish()
-                    }
-
-                    ComposeViewModel.ComposeEvent.NavigateToPreview -> showPreview()
-
-                    ComposeViewModel.ComposeEvent.NavigateToComposeView -> showEditView()
-
                     ComposeViewModel.ComposeEvent.NavigateToBackstack -> navigateBack()
-
+                    ComposeViewModel.ComposeEvent.HideLoading -> LoadingDialog.dismiss()
+                    ComposeViewModel.ComposeEvent.ShowLoading -> LoadingDialog.show(requireContext())
+                    is ComposeViewModel.ComposeEvent.ShowInvalidInputMessage -> showError(event.message)
+                    is ComposeViewModel.ComposeEvent.NavigateToPublish -> navigateToPublish(event.poem)
+                    is ComposeViewModel.ComposeEvent.NavigateToPoem -> navigateToPoem(event.poem)
+                    is ComposeViewModel.ComposeEvent.ShowError -> showError(event.message)
+                    is ComposeViewModel.ComposeEvent.ShowSuccess -> showSuccess(event.message)
                 }
             }
         }
 
+    }
+
+    private fun showError(message: String) {
+        val alert = AlertView(
+            title = "Error",
+            message = "\n${message.toObliviousHumanLanguage()}\n",
+            style = AlertStyle.DIALOG
+        )
+        alert.addAction(AlertAction("dismiss", AlertActionStyle.DEFAULT) {})
+        alert.show(requireActivity() as AppCompatActivity)
+    }
+
+    private fun showSuccess(message: String) {
+        Sneaker.with(requireActivity())
+            .setIcon(R.drawable.ic_baseline_check_circle_24)
+            .setMessage(message)
+            .setTitle("Success")
+            .sneakSuccess()
     }
 
     private fun setupNavigation() = binding.apply {
@@ -76,46 +94,36 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
     }
 
     private fun setupViews() = binding.apply {
-
-        toolbarCompose.title = if (viewModel.poem == null) "Compose" else "Edit"
+        toolbarCompose.title = if (viewModel.poem == null) "Compose" else "Update"
         toolbarCompose.inflateMenu(R.menu.menu_compose)
         toolbarCompose.setOnMenuItemClickListener { item ->
-
             when (item.itemId) {
 
                 R.id.action_compose_edit -> {
-                    viewModel.onEditClicked()
+                    showEditView()
                     true
                 }
                 R.id.action_compose_preview -> {
-                    viewModel.onPreviewClicked()
+                    showPreview()
                     true
                 }
                 R.id.action_compose_stash -> {
                     viewModel.onStash()
                     true
                 }
-                R.id.action_compose_choose_topic -> {
-                    viewModel.onPublish()
+                R.id.action_compose_publish -> {
+                    showConfirmPublishDialog()
+                    true
+                }
+                R.id.action_compose_delete -> {
+                    showConfirmDeleteDialog()
                     true
                 }
                 else -> {
                     false
                 }
             }
-            
         }
-
-    }
-
-    private fun showEditView() {
-        binding.apply { viewpagerCompose.setCurrentItem(0, true) }
-        updateMenu()
-    }
-
-    private fun showPreview() {
-        binding.apply { viewpagerCompose.setCurrentItem(1, true) }
-        updateMenu()
     }
 
     private fun updateMenu() = binding.apply {
@@ -143,7 +151,48 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
 
     }
 
-    private fun navigateToPublish() {
+    private fun showEditView() {
+        binding.apply { viewpagerCompose.setCurrentItem(0, true) }
+        updateMenu()
+    }
+
+    private fun showPreview() {
+        binding.apply { viewpagerCompose.setCurrentItem(1, true) }
+        updateMenu()
+    }
+
+    private fun showConfirmDeleteDialog() {
+        val alert = AlertView(
+            "Delete Poem!",
+            "You are about to delete this poem. Do you wish you to continue?",
+            AlertStyle.IOS
+        )
+        alert.addAction(AlertAction("Yes", AlertActionStyle.NEGATIVE) {
+            viewModel.onDeleteConfirmed()
+        })
+        alert.show(requireActivity() as AppCompatActivity)
+    }
+
+    private fun showConfirmPublishDialog() {
+        val alert = AlertView(
+            "Publish Your Art!",
+            "You are about to publish this poem. Do you wish you to continue?",
+            AlertStyle.IOS
+        )
+        alert.addAction(AlertAction("Yes", AlertActionStyle.NEGATIVE) {
+            viewModel.onPublishConfirmed()
+        })
+        alert.show(requireActivity() as AppCompatActivity)
+    }
+
+    private fun navigateToPoem(poem: Poem) {
+        sharedViewModel.setPoem(poem)
+        val deeplink = getDeeplink(Destinations.POEM)
+        navigate(deeplink, getNavOptionsPopUpToCurrent())
+    }
+
+    private fun navigateToPublish(poem: Poem) {
+        sharedViewModel.setPoem(poem)
         val deeplink = getDeeplink(Destinations.PUBLISH)
         navigate(deeplink)
     }

@@ -2,6 +2,7 @@ package com.mambo.local
 
 import androidx.paging.PagingSource
 import androidx.room.*
+import com.mambo.data.models.LocalPoem
 import com.mambo.data.models.Poem
 import kotlinx.coroutines.flow.Flow
 
@@ -9,28 +10,28 @@ import kotlinx.coroutines.flow.Flow
 interface PoemsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(poems: List<Poem>)
+    suspend fun insertAll(poems: List<LocalPoem>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(vararg poem: Poem): Array<Long>
+    suspend fun insert(vararg poem: LocalPoem): Array<Long>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert( poem: Poem): Long
+    suspend fun insert(poem: LocalPoem): Long
 
     @Update
-    suspend fun update(poem: Poem): Int
+    suspend fun update(poem: LocalPoem): Int
 
     @Delete
-    suspend fun delete(poems: Poem)
+    suspend fun delete(poem: LocalPoem)
 
     @Query("SELECT * FROM poems")
     fun getAllPoems(): PagingSource<Int, Poem>
 
-    @Query("SELECT * FROM poems WHERE isBookmarked = 1 AND title LIKE '%' || :query || '%'")
+    @Query("SELECT * FROM poems WHERE bookmarked = 1 AND title LIKE '%' || :query || '%'")
     fun getBookmarks(query: String): PagingSource<Int, Poem>
 
-    @Query("SELECT * FROM poems WHERE userId = :userId AND isPublic = 0 AND title LIKE '%' || :query || '%'")
-    fun getUnPublishedPoems(userId: String, query: String): PagingSource<Int, Poem>
+    @Query("SELECT * FROM poems WHERE title LIKE '%' || :query || '%'")
+    fun getUnPublishedPoems(query: String): PagingSource<Int, Poem>
 
     @Query("SELECT * FROM poems")
     fun getAll(): Flow<List<Poem>>

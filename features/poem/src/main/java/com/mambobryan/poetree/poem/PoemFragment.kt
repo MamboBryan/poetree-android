@@ -12,6 +12,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import coil.load
+import coil.transform.CircleCropTransformation
 import com.google.android.material.snackbar.Snackbar
 import com.irozon.alertview.AlertActionStyle
 import com.irozon.alertview.AlertStyle
@@ -21,6 +23,7 @@ import com.irozon.sneaker.Sneaker
 import com.mambo.core.utils.LoadingDialog
 import com.mambo.core.utils.prettyCount
 import com.mambo.core.viewmodel.MainViewModel
+import com.mambo.data.models.Poem
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
 import com.mambobryan.navigation.extensions.getNavOptionsPopUpToCurrent
@@ -28,7 +31,7 @@ import com.mambobryan.navigation.extensions.navigate
 import com.mambobryan.poetree.poem.databinding.FragmentPoemBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class PoemFragment : Fragment(R.layout.fragment_poem) {
@@ -38,10 +41,15 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
 
     private val binding by viewBinding(FragmentPoemBinding::bind)
 
+    override fun onDestroy() {
+        super.onDestroy()
+        sharedViewModel.setPoem(null)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sharedViewModel.poem.observe(viewLifecycleOwner){
+        sharedViewModel.poem.observe(viewLifecycleOwner) {
             viewModel.updatePoem(it!!)
         }
 
@@ -96,10 +104,7 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
                             else R.drawable.ic_baseline_favorite_border_24
 
                             ivPoemLike.setImageDrawable(
-                                ContextCompat.getDrawable(
-                                    requireContext(),
-                                    icon
-                                )
+                                ContextCompat.getDrawable(requireContext(), icon)
                             )
                         }
                     }
@@ -110,13 +115,30 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
             }
         }
 
-        viewModel.poem.observe(viewLifecycleOwner) {
+        viewModel.poem.observe(viewLifecycleOwner) { poem ->
             binding.apply {
 
                 layoutPoemContent.isVisible = true
+                layoutPoemActions.isVisible = poem.isLocal().not() == true
+                layoutPoemComment.root.isVisible = poem.isLocal().not() == true
 
                 editor.html = viewModel.getHtml()
                 editor.setCode()
+
+                updateMenu(poem)
+
+                tvPoemLikes.text = prettyCount(poem.likes)
+                tvPoemBookmarks.text = prettyCount(poem.bookmarks)
+                tvPoemComments.text = prettyCount(poem.comments)
+                tvPoemReads.text = prettyCount(poem.reads)
+
+                ivPoemArtist.isVisible = poem.isMine(userId = viewModel.userId).not()
+                ivPoemArtist.load(poem.user?.image) {
+                    placeholder(R.drawable.ic_baseline_account_circle_24)
+                    error(R.drawable.ic_baseline_account_circle_24)
+                    transformations(CircleCropTransformation())
+                }
+
             }
         }
 
@@ -126,19 +148,9 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
                 ivComment.isEnabled = !it.isNullOrEmpty()
 
                 if (it.isNullOrEmpty())
-                    ivComment.setColorFilter(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.primary_100
-                        ), android.graphics.PorterDuff.Mode.SRC_IN
-                    )
+                    ivComment.setColorFilter(getColor(R.color.primary_100))
                 else
-                    ivComment.setColorFilter(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.colorPrimary
-                        ), android.graphics.PorterDuff.Mode.SRC_IN
-                    )
+                    ivComment.setColorFilter(getColor(R.color.colorPrimary))
 
             }
         }
@@ -151,6 +163,90 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
             }
         }
 
+        lifecycleScope.launchWhenResumed {
+            viewModel.comments.collectLatest {
+                it?.let { (commented, comments) ->
+                    binding.apply {
+                        tvPoemComments.text = prettyCount(comments)
+                        val icon = if (commented) R.drawable.ic_baseline_mode_comment_24
+                        else R.drawable.ic_outline_mode_comment_24
+                        ivPoemComment.setImageDrawable(
+                            ContextCompat.getDrawable(requireContext(), icon)
+                        )
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun getColor(id: Int) = ContextCompat.getColor(requireContext(), id)
+
+    private fun updateMenu(poem: Poem) {
+        binding.apply {
+
+            // TODO: change to new menu provider implementation
+//            val menuHost = binding.toolbar as MenuHost
+//            menuHost.addMenuProvider(
+//                object : MenuProvider {
+//                    override fun onPrepareMenu(menu: Menu) {
+//                        super.onPrepareMenu(menu)
+//                    }
+//
+//                    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+//                        menuInflater.inflate(R.menu.menu_poem, menu)
+//                    }
+//
+//                    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+//                        return when (menuItem.itemId) {
+//                            R.id.action_poem_edit -> {
+//                                navigateToEditPoem()
+//                                true
+//                            }
+//                            R.id.action_poem_publish -> {
+//                                showConfirmPublishDialog()
+//                                true
+//                            }
+//                            R.id.action_poem_delete -> {
+//                                showConfirmDeleteDialog()
+//                                true
+//                            }
+//                            else -> false
+//                        }
+//                    }
+//
+//                    override fun onMenuClosed(menu: Menu) {
+//                        super.onMenuClosed(menu)
+//                    }
+//                },
+//                viewLifecycleOwner,
+//                Lifecycle.State.RESUMED
+//            )
+
+            if (poem.isLocal() or poem.isMine(viewModel.userId)) {
+                toolbar.inflateMenu(R.menu.menu_poem)
+                val publish = toolbar.menu.findItem(R.id.action_poem_publish)
+                publish.isVisible = poem.isLocal()
+            }
+
+            toolbar.setOnMenuItemClickListener {
+                return@setOnMenuItemClickListener when (it.itemId) {
+                    R.id.action_poem_edit -> {
+                        navigateToEditPoem()
+                        true
+                    }
+                    R.id.action_poem_publish -> {
+                        showConfirmPublishDialog()
+                        true
+                    }
+                    R.id.action_poem_delete -> {
+                        showConfirmDeleteDialog()
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }
     }
 
     private fun initViews() = binding.apply {
@@ -158,49 +254,12 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
         NavigationUI.setupWithNavController(toolbar, findNavController())
         toolbar.title = null
 
-//        if (viewModel.isUser)
-        toolbar.inflateMenu(R.menu.menu_poem)
-
-        val publishAction = toolbar.menu.findItem(R.id.action_poem_publish)
-        publishAction.isVisible = viewModel.poem.value?.isPublic ?: false
-
-        toolbar.setOnMenuItemClickListener {
-            return@setOnMenuItemClickListener when (it.itemId) {
-                R.id.action_poem_edit -> {
-                    viewModel.onEditClicked()
-                    true
-                }
-                R.id.action_poem_publish -> {
-                    viewModel.onPublishClicked()
-                    true
-                }
-                R.id.action_poem_delete -> {
-                    viewModel.onDeleteClicked()
-                    true
-                }
-                else -> false
-            }
-        }
-
-        layoutPoemActions.isVisible = viewModel.isOnline
-
-        layoutPoemActions.isVisible = true
-
         ivPoemLike.setOnClickListener { viewModel.onLikeClicked() }
-//        tvPoemLikes.text = prettyCount(viewModel.poem.value?.likesCount!!)
-        tvPoemLikes.text = prettyCount(2000)
-
         ivPoemBookmark.setOnClickListener { viewModel.onBookmarkClicked() }
-        tvPoemBookmarks.text = prettyCount(200000)
-
         ivPoemComment.setOnClickListener { viewModel.onCommentsClicked() }
-        tvPoemComments.text = prettyCount(200)
-        tvPoemReads.text = prettyCount(2000000)
-
         ivPoemArtist.setOnClickListener { viewModel.onArtistImageClicked() }
 
         layoutPoemComment.apply {
-//            layoutCommentRoot.isVisible = viewModel.isOnline
             edtComment.doAfterTextChanged { viewModel.onCommentUpdated(it.toString()) }
             ivComment.setOnClickListener { viewModel.onCommentSendClicked() }
         }
@@ -231,7 +290,20 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
         alert.show(requireActivity() as AppCompatActivity)
     }
 
+    private fun showConfirmPublishDialog() {
+        val alert = AlertView(
+            "Publish Your Art!",
+            "You are about to publish this poem. Do you wish you to continue?",
+            AlertStyle.IOS
+        )
+        alert.addAction(AlertAction("Yes", AlertActionStyle.NEGATIVE) {
+            viewModel.onPublishConfirmed()
+        })
+        alert.show(requireActivity() as AppCompatActivity)
+    }
+
     private fun navigateToEditPoem() {
+        sharedViewModel.setPoem(viewModel.poem.value)
         navigate(getDeeplink(Destinations.COMPOSE), getNavOptionsPopUpToCurrent())
     }
 
@@ -241,11 +313,6 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
 
     private fun navigateToComments() {
         navigate(getDeeplink(Destinations.COMMENTS))
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        sharedViewModel.setPoem(null)
     }
 
 }

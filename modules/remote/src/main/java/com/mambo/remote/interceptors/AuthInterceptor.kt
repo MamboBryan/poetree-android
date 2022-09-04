@@ -25,28 +25,19 @@ class AuthInterceptor @Inject constructor(
     val preferences: UserPreferences,
 ) : Interceptor {
 
-    private var refreshToken: String
-    private var accessToken: String
-
-    init {
-        runBlocking {
-            refreshToken = preferences.refreshToken.first() ?: ""
-            accessToken = preferences.accessToken.first() ?: ""
-        }
-    }
-
     override fun intercept(chain: Interceptor.Chain): Response {
 
+        val refreshToken = runBlocking { preferences.refreshToken.first() ?: "" }
+        val accessToken = runBlocking { preferences.accessToken.first() ?: "" }
+
         val request = chain.request()
-        val response = chain.proceed(
-            request = request.newRequestWithAccessToken(token = accessToken)
-        )
+        val response = chain.proceed(request.newRequestWithAccessToken(token = accessToken))
 
         return when (response.code) {
             HttpStatusCode.Unauthorized.value -> {
-                val newAccessToken = refreshToken() ?: throw IOException("Login again to continue")
-                request.newRequestWithAccessToken(token = newAccessToken)
-                chain.proceed(request)
+                val newAccessToken =
+                    refreshToken(refreshToken) ?: throw IOException("Login again to continue")
+                chain.proceed(request.newRequestWithAccessToken(token = newAccessToken))
             }
             else -> response
         }
@@ -59,7 +50,7 @@ class AuthInterceptor @Inject constructor(
             .build()
     }
 
-    private fun refreshToken(): String? {
+    private fun refreshToken(refreshToken: String): String? {
         synchronized(this) {
 
             val okHttpClient = OkHttpClient.Builder()
@@ -86,16 +77,18 @@ class AuthInterceptor @Inject constructor(
             return when (response.isSuccessful) {
                 true -> {
 
-                    val responseBody = response.body.toString()
+                    val responseBody = response.body?.string() ?: return null
                     val data = Json.decodeFromString<ServerResponse<TokenResponse>>(responseBody)
 
                     val tokens = data.data!!
+
                     runBlocking {
                         preferences.updateTokens(
                             access = tokens.accessToken,
                             refresh = tokens.refreshToken
                         )
                     }
+
                     tokens.accessToken
                 }
                 false -> {

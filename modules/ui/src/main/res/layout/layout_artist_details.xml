@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="?attr/colorSurface"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="?attr/colorSurface">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -12,7 +12,7 @@
         android:layout_height="100dp"
         app:cardBackgroundColor="?attr/colorSurface"
         app:cardElevation="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/progress_profile"
         app:layout_constraintEnd_toStartOf="@+id/cardView2"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -100,16 +100,15 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <com.mikhaellopez.circularimageview.CircularImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_artist_mage"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        app:civ_border="false"
         android:layout_marginTop="16dp"
-        android:src="@drawable/profile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/profile"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
@@ -127,8 +126,8 @@
         android:id="@+id/tv_artist_bio"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_marginTop="8dp"
+        android:gravity="center"
         android:text="The End of an era has beome the start of another!"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
@@ -148,5 +147,11 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.8" />
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progress_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

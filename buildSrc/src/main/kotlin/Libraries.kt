@@ -24,7 +24,7 @@ object Dependencies {
         val appCompat by lazy { "androidx.appcompat:appcompat:${Versions.appCompat}" }
         val materialDesign by lazy { "com.google.android.material:material:${Versions.material}" }
         val constraintLayout by lazy { "androidx.constraintlayout:constraintlayout:${Versions.constraintLayout}" }
-        val fragment by lazy { "androidx.fragment:fragment-ktx:${Versions.ktx}" }
+        val fragment by lazy { "androidx.fragment:fragment-ktx:1.5.2" }
         val recyclerview by lazy { "androidx.recyclerview:recyclerview:${Versions.recyclerview}" }
         val legacySupport by lazy { "androidx.legacy:legacy-support-v4:${Versions.legacy}" }
         val playServicesAuth by lazy { "com.google.android.gms:play-services-auth:${Versions.playServicesAuth}" }

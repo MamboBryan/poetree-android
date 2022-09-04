@@ -44,6 +44,7 @@ fun LayoutCompleteRecyclerRefreshBinding.showLoading(text: String? = null) {
 }
 
 fun LayoutCompleteRecyclerRefreshBinding.showError() {
+    stateContent.isRefreshing = false
     stateContent.isVisible = false
     stateEmpty.isVisible = false
     stateLoading.isVisible = false
@@ -51,6 +52,7 @@ fun LayoutCompleteRecyclerRefreshBinding.showError() {
 }
 
 fun LayoutCompleteRecyclerRefreshBinding.showEmpty() {
+    stateContent.isRefreshing = false
     stateContent.isVisible = false
     stateLoading.isVisible = false
     stateError.isVisible = false
@@ -58,6 +60,7 @@ fun LayoutCompleteRecyclerRefreshBinding.showEmpty() {
 }
 
 fun LayoutCompleteRecyclerRefreshBinding.showContent() {
+    stateContent.isRefreshing = false
     stateEmpty.isVisible = false
     stateLoading.isVisible = false
     stateError.isVisible = false

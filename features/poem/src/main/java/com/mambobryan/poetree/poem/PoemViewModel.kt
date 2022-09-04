@@ -1,11 +1,20 @@
 package com.mambobryan.poetree.poem
 
 import androidx.lifecycle.*
+import com.mambo.core.repository.CommentRepository
 import com.mambo.core.repository.PoemRepository
+import com.mambo.core.utils.toDate
 import com.mambo.data.models.Poem
+import com.mambo.data.preferences.UserPreferences
+import com.mambo.data.requests.CreateCommentRequest
+import com.mambo.data.responses.CommentResponse
+import com.mambo.data.responses.UserDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.ocpsoft.prettytime.PrettyTime
@@ -14,13 +23,15 @@ import javax.inject.Inject
 @HiltViewModel
 class PoemViewModel @Inject constructor(
     private val poemRepository: PoemRepository,
+    private val commentRepository: CommentRepository,
+    private val preferences: UserPreferences,
     state: SavedStateHandle
 ) : ViewModel() {
 
     private val _eventChannel = Channel<PoemEvent>()
     val events = _eventChannel.receiveAsFlow()
 
-    private val _poem = state.getLiveData<Poem>("poem", null)
+    private val _poem = state.getLiveData<Poem>("poem")
     val poem: LiveData<Poem> get() = _poem
 
     private val _comment = MutableLiveData("")
@@ -29,24 +40,24 @@ class PoemViewModel @Inject constructor(
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> get() = _isLoading
 
-    private var title = ""
-    private var content = ""
-    private var topic = ""
-    private var duration = ""
-    var isOnline = false
-    var isUser = false
+    private val _comments = MutableStateFlow<Pair<Boolean, Long>?>(null)
+    val comments: StateFlow<Pair<Boolean, Long>?> get() = _comments
 
-    fun updatePoem(poem: Poem) {
+    var userDetails: UserDetails? = null
+    var userId: String? = null
+
+    init {
+        viewModelScope.launch {
+            userDetails = preferences.user.firstOrNull().also {
+                userId = it?.id
+            }
+        }
+    }
+
+    fun updatePoem(poem: Poem) = viewModelScope.launch {
         _poem.value = poem
 
-        val prettyTime = PrettyTime()
-
-        title = poem.title!!
-        content = poem.content!!
-
-        topic = poem.topic?.name ?: "No Topic"
-        duration = prettyTime.formatDuration(poem.createdAt)
-        isOnline = poem.isOffline?.not() ?: false
+        _comments.value = Pair(poem.commented, poem.comments)
 
     }
 
@@ -55,11 +66,11 @@ class PoemViewModel @Inject constructor(
         val prettyTime = PrettyTime()
 
         val topic = _poem.value?.topic?.name ?: "Topicless"
-        val duration = prettyTime.formatDuration(_poem.value?.createdAt)
+        val duration = prettyTime.formatDuration(_poem.value?.createdAt.toDate())
 
         html.append("$topic • $duration ")
         html.append("<h2><b> ${_poem.value?.title}</b></h2>")
-        html.append("By • ${_poem.value?.user?.username}")
+        html.append("By • ${_poem.value?.user?.name ?: "Me"}")
         html.append("<br><br>")
         html.append("<i>${_poem.value?.content}</i>")
         html.append("<br><br>")
@@ -74,9 +85,25 @@ class PoemViewModel @Inject constructor(
     fun onCommentSendClicked() = viewModelScope.launch {
         _isLoading.value = true
         try {
-            delay(2500)
-            _isLoading.value = false
+
+            val request = CreateCommentRequest(
+                poemId = poem.value!!.id,
+                content = comment.value!!
+            )
+
+            val response = commentRepository.create(request = request)
+
+            if (response.isSuccessful.not()) {
+                updateUi(PoemEvent.ShowSnackBarError(response.message))
+                _isLoading.value = false
+                return@launch
+            }
+
             _comment.value = ""
+            _isLoading.value = false
+            _comments.value = _comments.value?.let { (_, comments) -> Pair(true, comments + 1) }
+
+            updateUi(PoemEvent.ShowSuccessSneaker(response.message))
             updateUi(PoemEvent.ClearCommentEditText)
         } catch (e: Exception) {
             _isLoading.value = false
@@ -88,13 +115,9 @@ class PoemViewModel @Inject constructor(
 
     fun onArtistImageClicked() = updateUi(PoemEvent.NavigateToArtistDetails)
 
-    fun onEditClicked() = updateUi(PoemEvent.NavigateToEditPoem(_poem.value!!))
-
-    fun onDeleteClicked() = updateUi(PoemEvent.ShowPoemDeleteDialog)
-
     fun onDeleteConfirmed() {
 
-        val isRemote = _poem.value?.isPublic ?: false
+        val isRemote = _poem.value?.isLocal()?.not() ?: false
 
         if (isRemote)
             deleteFromRemote()
@@ -102,7 +125,7 @@ class PoemViewModel @Inject constructor(
             deleteFromLocal()
     }
 
-    fun onPublishClicked() = viewModelScope.launch {
+    fun onPublishConfirmed() = viewModelScope.launch {
         showLoading()
         try {
             delay(2000)
