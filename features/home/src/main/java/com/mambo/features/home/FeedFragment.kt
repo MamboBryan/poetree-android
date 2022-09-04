@@ -1,19 +1,16 @@
 package com.mambo.features.home
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.*
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
-import androidx.viewbinding.ViewBinding
 import coil.load
 import coil.size.Scale
 import coil.transform.CircleCropTransformation
-import com.google.android.material.snackbar.Snackbar
-import com.mambo.core.OnPoemClickListener
 import com.mambo.core.adapters.GenericStateAdapter
 import com.mambo.core.adapters.PoemPagingAdapter
 import com.mambo.core.utils.showContent
@@ -23,10 +20,6 @@ import com.mambo.core.utils.showLoading
 import com.mambo.core.viewmodel.MainViewModel
 import com.mambo.data.models.Poem
 import com.mambo.features.home.databinding.FragmentFeedBinding
-import com.mambo.features.home.databinding.LayoutNameValidatBinding
-import com.mambobryan.navigation.Destinations
-import com.mambobryan.navigation.extensions.getDeeplink
-import com.mambobryan.navigation.extensions.navigate
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -34,6 +27,9 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class FeedFragment : Fragment(R.layout.fragment_feed) {
+
+    @Inject
+    lateinit var feedActions: FeedActions
 
     private val mainViewModel: MainViewModel by activityViewModels()
     private val viewModel: FeedViewModel by viewModels()
@@ -55,8 +51,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                     FeedViewModel.FeedEvent.NavigateToCompose -> navigateToCompose()
                     FeedViewModel.FeedEvent.NavigateToSettings -> navigateToSettings()
                     is FeedViewModel.FeedEvent.NavigateToPoem -> {
-                        mainViewModel.setPoem(event.poem)
-                        navigateToPoem()
+                        navigateToPoem(event.poem)
                     }
                 }
             }
@@ -125,22 +120,19 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
     }
 
     private fun navigateToProfile() {
-        val deeplink = getDeeplink(Destinations.PROFILE)
-        navigate(deeplink)
+        feedActions.navigateToProfile()
     }
 
     private fun navigateToCompose() {
-        val deeplink = getDeeplink(Destinations.COMPOSE)
-        navigate(deeplink)
+        feedActions.navigateToCompose()
     }
 
-    private fun navigateToPoem() {
-        val deeplink = getDeeplink(Destinations.POEM)
-        navigate(deeplink)
+    private fun navigateToPoem(poem: Poem) {
+        feedActions.navigateToPoem(poem = poem)
     }
 
     private fun navigateToSettings() {
-        navigate(getDeeplink(Destinations.SETTINGS))
+        feedActions.navigateToSettings()
     }
 
 }

@@ -1,8 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_main"
+    android:id="@+id/navigation_main"
     app:startDestination="@id/flow_loading">
+
+    <action
+        android:id="@+id/from_feeds_to_poem"
+        app:destination="@+id/flow_poem"
+        app:popUpTo="@id/navigation_main">
+
+        <argument
+            android:name="poem"
+            app:argType="com.mambo.data.models.Poem" />
+
+    </action>
+
+    <action
+        android:id="@+id/from_feeds_to_profile"
+        app:destination="@+id/flow_profile" />
+
+    <action
+        android:id="@+id/from_feeds_to_settings"
+        app:destination="@+id/flow_settings" />
+
+    <action
+        android:id="@+id/toCompose"
+        app:destination="@+id/flow_compose">
+
+        <argument
+            android:name="poem"
+            app:argType="com.mambo.data.models.Poem"
+            app:nullable="true" />
+
+    </action>
 
     <include app:graph="@navigation/flow_feeds" />
     <include app:graph="@navigation/flow_explore" />
