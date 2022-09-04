@@ -1,4 +1,4 @@
-object Configs {
+object Android {
 
     const val compileSdkVersion = 31
     const val buildToolsVersion = "30.0.0"

@@ -9,8 +9,8 @@ object Dependencies {
         val googleServicesGradle by lazy { "com.google.gms:google-services:${Versions.googleServicesGradlePlugin}" }
         val hiltGradle by lazy { "com.google.dagger:hilt-android-gradle-plugin:${Versions.hilt}" }
         val navigationSafeArgsGradle by lazy { "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.navigation}" }
-        val crashlyticsGradle by lazy {"com.google.firebase:firebase-crashlytics-gradle:${Versions.crashlyticsGradlePlugin}"}
-        val kotlinxSerialization by lazy {"org.jetbrains.kotlin:kotlin-serialization:${Versions.kotlin}"}
+        val crashlyticsGradle by lazy { "com.google.firebase:firebase-crashlytics-gradle:${Versions.crashlyticsGradlePlugin}" }
+        val kotlinxSerialization by lazy { "org.jetbrains.kotlin:kotlin-serialization:${Versions.kotlin}" }
     }
 
     /**
@@ -54,6 +54,7 @@ object Dependencies {
         val hiltWorkCompiler by lazy { "androidx.hilt:hilt-compiler:${Versions.hiltWork}" }
         val workManager by lazy { "androidx.work:work-runtime-ktx:${Versions.workManager}" }
         val androidXStartup by lazy { "androidx.startup:startup-runtime:${Versions.androidXStartup}" }
+        val splashScreen by lazy { "androidx.core:core-splashscreen:1.0.0-beta01" }
 
         val gson by lazy { "com.google.code.gson:gson:${Versions.gson}" }
         val coil by lazy { "io.coil-kt:coil:${Versions.coil}" }
@@ -65,30 +66,28 @@ object Dependencies {
         val switch by lazy { "com.github.zcweng:switch-button:${Versions.switch}" }
         val circularImage by lazy { "com.mikhaellopez:circularimageview:${Versions.circularImageView}" }
         val liquidSwipe by lazy { "com.cuberto:liquid-swipe:${Versions.liquidSwipe}" }
-        val sneaker by lazy {"com.irozon.sneaker:sneaker:${Versions.sneaker}"}
-        val alert by lazy {"com.irozon.alertview:alertview:${Versions.alert}"}
-        val alerter by lazy {"com.github.tapadoo:alerter:${Versions.alerter}"}
-        val likeButton by lazy {"com.github.jd-alexander:LikeButton:${Versions.likeButton}"}
-        val scrollLayout by lazy {"com.github.w446108264:ScrollableLayout:${Versions.scrollLayout}"}
-        val motionToast by lazy {"com.github.Spikeysanju:MotionToast:${Versions.motionToast}"}
-        val cascade by lazy {"me.saket.cascade:cascade:1.3.0"}
+        val sneaker by lazy { "com.irozon.sneaker:sneaker:${Versions.sneaker}" }
+        val alert by lazy { "com.irozon.alertview:alertview:${Versions.alert}" }
+        val alerter by lazy { "com.github.tapadoo:alerter:${Versions.alerter}" }
+        val likeButton by lazy { "com.github.jd-alexander:LikeButton:${Versions.likeButton}" }
+        val scrollLayout by lazy { "com.github.w446108264:ScrollableLayout:${Versions.scrollLayout}" }
+        val motionToast by lazy { "com.github.Spikeysanju:MotionToast:${Versions.motionToast}" }
+        val cascade by lazy { "me.saket.cascade:cascade:1.3.0" }
 
         val timber by lazy { "com.jakewharton.timber:timber:${Versions.timber}" }
         val retrofit by lazy { "com.squareup.retrofit2:retrofit:${Versions.retrofit}" }
         val retrofitConverter by lazy { "com.squareup.retrofit2:converter-gson:${Versions.retrofit}" }
         val okHttp by lazy { "com.squareup.okhttp3:okhttp" }
         val okHttpLogging by lazy { "com.squareup.okhttp3:logging-interceptor" }
-        val chuckDebug by lazy { "com.readystatesoftware.chuck:library:${Versions.chuck}" }
-        val chuckRelease by lazy { "com.readystatesoftware.chuck:library-no-op:${Versions.chuck}" }
 
     }
 
-    object BOM{
+    object BOM {
         val okHttp by lazy { "com.squareup.okhttp3:okhttp-bom:${Versions.okHttp}" }
         val firebase by lazy { "com.google.firebase:firebase-bom:${Versions.firebaseBOM}" }
     }
 
-    object Firebase{
+    object Firebase {
         val analytics by lazy { "com.google.firebase:firebase-analytics-ktx" }
         val messaging by lazy { "com.google.firebase:firebase-messaging-ktx" }
         val storage by lazy { "com.google.firebase:firebase-storage-ktx" }
