@@ -5,7 +5,6 @@ import android.view.View
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -19,33 +18,22 @@ import com.mambo.compose.databinding.FragmentComposeBinding
 import com.mambo.core.adapters.ViewPagerAdapter
 import com.mambo.core.utils.LoadingDialog
 import com.mambo.core.utils.toObliviousHumanLanguage
-import com.mambo.core.viewmodel.MainViewModel
 import com.mambo.data.models.Poem
-import com.mambobryan.navigation.Destinations
-import com.mambobryan.navigation.extensions.getDeeplink
-import com.mambobryan.navigation.extensions.getNavOptionsPopUpToCurrent
-import com.mambobryan.navigation.extensions.navigate
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ComposeFragment : Fragment(R.layout.fragment_compose) {
 
     private val binding by viewBinding(FragmentComposeBinding::bind)
     private val viewModel: ComposeViewModel by viewModels()
-    private val sharedViewModel: MainViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        viewModel.updatePoem(sharedViewModel.poem.value)
-
-    }
+    @Inject
+    lateinit var composeActions: ComposeActions
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        sharedViewModel.poem.observe(viewLifecycleOwner) { viewModel.updatePoem(it) }
 
         setupNavigation()
         setupViews()
@@ -94,7 +82,7 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
     }
 
     private fun setupViews() = binding.apply {
-        toolbarCompose.title = if (viewModel.poem == null) "Compose" else "Update"
+        toolbarCompose.title = if (viewModel.poem.value == null) "Compose" else "Update"
         toolbarCompose.inflateMenu(R.menu.menu_compose)
         toolbarCompose.setOnMenuItemClickListener { item ->
             when (item.itemId) {
@@ -186,15 +174,11 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
     }
 
     private fun navigateToPoem(poem: Poem) {
-        sharedViewModel.setPoem(poem)
-        val deeplink = getDeeplink(Destinations.POEM)
-        navigate(deeplink, getNavOptionsPopUpToCurrent())
+        composeActions.navigateToPoem(poem)
     }
 
     private fun navigateToPublish(poem: Poem) {
-        sharedViewModel.setPoem(poem)
-        val deeplink = getDeeplink(Destinations.PUBLISH)
-        navigate(deeplink)
+        composeActions.navigateToPoem(poem)
     }
 
     private fun navigateBack() {

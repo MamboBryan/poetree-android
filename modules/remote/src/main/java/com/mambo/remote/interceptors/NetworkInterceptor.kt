@@ -5,7 +5,10 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import dagger.hilt.android.qualifiers.ApplicationContext
 import okhttp3.Interceptor
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.Response
+import okhttp3.ResponseBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import javax.inject.Inject
 
 class NetworkInterceptor @Inject constructor(
@@ -14,23 +17,20 @@ class NetworkInterceptor @Inject constructor(
 
     override fun intercept(chain: Interceptor.Chain): Response {
 
-        return if (!isConnectionOn()) {
-            throw Exception("No Internet")
-        } else if (!isInternetAvailable()) {
-            throw Exception("No Internet")
-        } else {
-            chain.proceed(chain.request())
-        }
+        if (isConnectionOn().not()) throw Exception("No Internet")
+
+        if (isInternetAvailable().not()) throw Exception("Connection has no internet.")
+
+        return chain.proceed(chain.request())
+
     }
 
     /**
      * Checks if connection is on
      */
     private fun isConnectionOn(): Boolean {
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as
-                    ConnectivityManager
-        return postAndroidMInternetCheck(connectivityManager)
+        val manager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return postAndroidMInternetCheck(manager)
     }
 
     /**

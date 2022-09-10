@@ -22,12 +22,10 @@ import com.irozon.alertview.AlertStyle
 import com.irozon.alertview.AlertTheme
 import com.irozon.alertview.AlertView
 import com.irozon.alertview.objects.AlertAction
-import com.mambo.core.OnPoemClickListener
 import com.mambo.core.adapters.ArtistPoemsAdapter
 import com.mambo.core.adapters.GenericStateAdapter
 import com.mambo.core.utils.*
 import com.mambo.core.viewmodel.MainViewModel
-import com.mambo.data.models.Poem
 import com.mambobryan.features.profile.databinding.FragmentProfileBinding
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
@@ -120,7 +118,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             viewModel.poems.collectLatest {
                 it?.let { data ->
                     adapter.submitData(data)
-                    //binding.layoutProfilePoems.stateContent.isRefreshing = false
+                    binding.layoutProfilePoems.stateContent.isRefreshing = false
                 }
             }
         }

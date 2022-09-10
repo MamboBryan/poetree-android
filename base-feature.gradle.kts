@@ -5,6 +5,7 @@ apply {
 
 apply(plugin = Plugins.android)
 apply(plugin = Plugins.navigation)
+apply(plugin = Plugins.hilt)
 apply(plugin = Plugins.googleServices)
 
 dependencies {
@@ -18,6 +19,8 @@ dependencies {
     test()
 
     navigation()
+
+    hilt()
 
     alert()
 

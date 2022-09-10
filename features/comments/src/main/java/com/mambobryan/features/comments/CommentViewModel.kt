@@ -42,7 +42,8 @@ class CommentViewModel @Inject constructor(
     var userId: String? = null
 
     init {
-        viewModelScope.launch {Poem
+        viewModelScope.launch {
+            Poem
             userId = preferences.user.firstOrNull()?.id
         }
     }
@@ -74,7 +75,7 @@ class CommentViewModel @Inject constructor(
             updateUi(CommentsEvent.ShowSuccess(response.message))
 
         } catch (e: Exception) {
-            updateUi(CommentsEvent.ShowError(e.localizedMessage))
+            updateUi(CommentsEvent.ShowError(e.localizedMessage ?: "Unable to send comment"))
             updateSendingComment()
         }
     }
@@ -90,6 +91,14 @@ class CommentViewModel @Inject constructor(
 
     private fun updateUi(event: CommentsEvent) = viewModelScope.launch {
         _events.value = event
+    }
+
+    fun onCommentLiked(commentId: String) = viewModelScope.launch {
+
+    }
+
+    fun onCommentUnliked(commentId: String) = viewModelScope.launch {
+
     }
 
     sealed class CommentsEvent {

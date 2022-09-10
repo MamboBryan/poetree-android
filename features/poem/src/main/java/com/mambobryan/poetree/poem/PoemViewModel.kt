@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.mambo.core.repository.CommentRepository
 import com.mambo.core.repository.LikeRepository
 import com.mambo.core.repository.PoemRepository
+import com.mambo.core.utils.prettyCount
 import com.mambo.core.utils.toDate
 import com.mambo.data.models.Poem
 import com.mambo.data.preferences.UserPreferences
@@ -87,8 +88,9 @@ class PoemViewModel @Inject constructor(
 
         val topic = (_poem.value?.topic?.name ?: "Topicless").replaceFirstChar { it.uppercase() }
         val duration = prettyTime.formatDuration(_poem.value?.createdAt.toDate())
+        val reads = "${prettyCount(_reads.value?.second ?: 0)} reads"
 
-        html.append("$topic • $duration ")
+        html.append("$topic • $duration • $reads")
         html.append("<h2><b> ${_poem.value?.title}</b></h2>")
         html.append("By • ${_poem.value?.user?.name ?: "Me"}")
         html.append("<br><br>")
@@ -356,7 +358,9 @@ class PoemViewModel @Inject constructor(
 
         val data = response.data
 
-        _poem.value = data?.toPoemDto()
+        val updatedPoem = data?.toPoemDto()
+        _poem.value = updatedPoem
+        updatedPoem?.toBookmark()?.let { poemRepository.updateBookmark(it) }
         updateUi(PoemEvent.SneakSuccess("Got poem updates"))
 
     }

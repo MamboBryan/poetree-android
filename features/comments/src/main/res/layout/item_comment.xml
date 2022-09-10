@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="8dp">
@@ -10,59 +11,62 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="TextView"
         android:textColor="?attr/colorOnBackground"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="TextView" />
 
     <TextView
         android:id="@+id/tv_comment_days"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
         app:layout_constraintStart_toStartOf="@+id/tv_comment_user"
-        app:layout_constraintTop_toBottomOf="@+id/tv_comment_user" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_comment_user"
+        tools:text="TextView" />
 
     <TextView
         android:id="@+id/tv_comment_content"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tv_comment_user"
-        app:layout_constraintTop_toBottomOf="@+id/tv_comment_days" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_comment_days"
+        tools:text="TextView" />
 
     <View
         android:id="@+id/view"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="@color/color_divider"
-        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_comment_content" />
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <ImageView
+    <com.like.LikeButton
         android:id="@+id/iv_comment_like"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:background="?attr/selectableItemBackground"
-        android:padding="4dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="8dp"
+        app:icon_type="heart"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_comment_days"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="@+id/tv_comment_content"
         app:layout_constraintTop_toTopOf="@+id/tv_comment_user"
-        app:srcCompat="@drawable/ic_baseline_favorite_24" />
+        tools:srcCompat="@drawable/ic_baseline_favorite_24" />
 
     <TextView
         android:id="@+id/tv_comment_likes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_comment_like"
-        app:layout_constraintEnd_toStartOf="@+id/iv_comment_like"
-        app:layout_constraintTop_toTopOf="@+id/iv_comment_like" />
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tv_comment_content"
+        app:layout_constraintTop_toBottomOf="@+id/tv_comment_content"
+        tools:text="TextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

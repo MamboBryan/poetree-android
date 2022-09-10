@@ -1,9 +1,6 @@
 package com.mambo.compose
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.mambo.core.repository.PoemRepository
 import com.mambo.core.utils.toDate
 import com.mambo.core.utils.toDateTimeString
@@ -34,11 +31,8 @@ class ComposeViewModel @Inject constructor(
     private val _eventChannel = Channel<ComposeEvent>()
     val events = _eventChannel.receiveAsFlow()
 
-    var poem = state.get<Poem>("poem")
-        set(value) {
-            field = value
-            state["poem"] = value
-        }
+    private val _poem = state.getLiveData<Poem>("poem")
+    val poem: LiveData<Poem> get() = _poem
 
     var topic = state.get<Topic>("topic")
         set(value) {
@@ -68,6 +62,11 @@ class ComposeViewModel @Inject constructor(
 
     init {
         getUserDetails()
+        _poem.value?.let {
+            topic = it.topic
+            poemTitle = it.title
+            poemContent = it.content
+        }
     }
 
     private fun getUserDetails() {
@@ -80,8 +79,9 @@ class ComposeViewModel @Inject constructor(
         val html = StringBuilder()
         val prettyTime = PrettyTime()
 
-        val topic = poem?.topic?.name ?: "Topicless"
-        val duration = prettyTime.formatDuration(poem?.createdAt.toDate()).ifBlank { "A minute" }
+        val topic = (poem.value?.topic?.name ?: "Topicless").replaceFirstChar { it.uppercase() }
+        val duration =
+            prettyTime.formatDuration(poem.value?.createdAt.toDate()).ifBlank { "A minute ago" }
         val title = poemTitle.ifEmpty { "Untitled" }
         val content = poemContent.ifEmpty { "No art has been penned down" }
 
@@ -106,9 +106,9 @@ class ComposeViewModel @Inject constructor(
             poemTitle = "Untitled $date"
         }
 
-        if (poem != null) {
+        if (poem.value != null) {
 
-            val updatedPoem = poem!!.copy(title = poemTitle, content = poemContent)
+            val updatedPoem = poem.value!!.copy(title = poemTitle, content = poemContent)
             updateLocal(updatedPoem)
 
         } else {
@@ -131,26 +131,22 @@ class ComposeViewModel @Inject constructor(
             return
         }
 
-        if (poem?.topic == null) {
+        if (poem.value?.topic == null) {
             showInvalidInputMessage("Select Topic to publish")
             return
         }
 
-//        if (poem != null) {
-//
-//            val updatedPoem = poem!!.copy(title = poemTitle, content = poemContent)
-//            updatePublished(updatedPoem)
-//
-//        } else {
-
-        val newPoem = getNewPoem()
-        createPublished(newPoem)
-
-//        }
+        if (poem.value?.remoteId != null) {
+            val updatedPoem = poem.value!!.copy(title = poemTitle, content = poemContent)
+            updatePublished(updatedPoem)
+        } else {
+            val newPoem = getNewPoem()
+            createPublished(newPoem)
+        }
     }
 
     fun onDeleteConfirmed() {
-        poem?.let { deleteLocal(it) }
+        poem.value?.let { deleteLocal(it) }
     }
 
     fun onBackClicked() {
@@ -165,28 +161,18 @@ class ComposeViewModel @Inject constructor(
         _eventChannel.send(event)
     }
 
-    fun updatePoem(selectedPoem: Poem?) {
-
-        if (selectedPoem != null) {
-            poem = selectedPoem
-            topic = selectedPoem.topic
-            poemTitle = selectedPoem.title
-            poemContent = selectedPoem.content
-        }
-
-    }
-
     private fun getNewPoem() = LocalPoem(
         createdAt = Date().toDateTimeString() ?: "",
         updatedAt = Date().toDateTimeString() ?: "",
         title = poemTitle,
         content = poemContent,
         html = poemContent,
-        topic = topic
+        topic = topic,
+        remoteId = poem.value?.id
     )
 
     @Throws(NullPointerException::class)
-    private fun getUpdatedPoem() = poem!!.copy(
+    private fun getUpdatedPoem() = poem.value!!.copy(
         title = poemTitle,
         content = poemContent,
         html = poemContent,
@@ -195,6 +181,7 @@ class ComposeViewModel @Inject constructor(
 
     private fun createLocal(poem: Poem) = viewModelScope.launch {
         repository.saveLocal(poem.toLocalPoem())
+        updateUi(ComposeEvent.NavigateToBackstack)
     }
 
     private fun updateLocal(poem: Poem) = viewModelScope.launch {

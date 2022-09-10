@@ -4,11 +4,14 @@ import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.mambo.bookmarks.BookmarkActions
+import com.mambo.compose.ComposeActions
 import com.mambo.data.models.Poem
 import com.mambo.data.models.User
 import com.mambo.features.home.FeedActions
+import com.mambo.library.LibraryActions
 import com.mambo.poetree.NavigationMainDirections
 import com.mambo.poetree.R
+import com.mambobryan.features.loading.LoadingActions
 import com.mambobryan.poetree.poem.PoemActions
 import dagger.Binds
 import dagger.Module
@@ -21,7 +24,7 @@ import javax.inject.Inject
 @ActivityScoped
 class Navigator @Inject constructor(
     private val controller: NavController
-) : FeedActions, PoemActions, BookmarkActions {
+) : FeedActions, PoemActions, BookmarkActions, ComposeActions, LoadingActions, LibraryActions {
 
     @Module
     @InstallIn(ActivityComponent::class)
@@ -84,5 +87,31 @@ class Navigator @Inject constructor(
         @Binds
         abstract fun bookmarksActions(navigator: Navigator): BookmarkActions
     }
+
+    @Module
+    @InstallIn(ActivityComponent::class)
+    abstract class ComposeModule {
+        @Binds
+        abstract fun composeActions(navigator: Navigator): ComposeActions
+    }
+
+    @Module
+    @InstallIn(ActivityComponent::class)
+    abstract class LoadingModule {
+        @Binds
+        abstract fun loadingActions(navigator: Navigator): LoadingActions
+    }
+
+    override fun navigateToFeeds() {
+        controller.navigate(NavigationMainDirections.toFeeds())
+    }
+
+    @Module
+    @InstallIn(ActivityComponent::class)
+    abstract class LibraryModule {
+        @Binds
+        abstract fun libraryActions(navigator: Navigator): LibraryActions
+    }
+
 
 }

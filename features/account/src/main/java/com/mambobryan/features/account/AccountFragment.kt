@@ -37,6 +37,20 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
     private val binding by viewBinding(FragmentAccountBinding::bind)
     private val viewModel: AccountViewModel by viewModels()
 
+    private val startResultImage = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        when (result.resultCode) {
+            Activity.RESULT_OK -> {
+                val data = result.data?.data!!
+                viewModel.onImageSelected(data)
+            }
+            else -> {
+                showErrorMessage("No Image Selected") { openGalleryForImage() }
+            }
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -147,20 +161,6 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
     }
 
     private fun openGalleryForImage() {
-
-        val startResultImage = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result: ActivityResult ->
-            when (result.resultCode) {
-                Activity.RESULT_OK -> {
-                    val data = result.data?.data!!
-                    viewModel.onImageSelected(data)
-                }
-                else -> {
-                    showErrorMessage("No Image Selected") { openGalleryForImage() }
-                }
-            }
-        }
 
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"

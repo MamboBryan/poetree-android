@@ -10,7 +10,7 @@ import com.mambo.data.models.Topic
 @Database(
     entities = [LocalPoem::class, Bookmark::class, Topic::class],
     exportSchema = false,
-    version = 4
+    version = 5
 )
 @TypeConverters(Converters::class)
 abstract class PoetreeDatabase : RoomDatabase() {

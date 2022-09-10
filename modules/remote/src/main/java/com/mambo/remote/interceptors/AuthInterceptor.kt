@@ -27,21 +27,25 @@ class AuthInterceptor @Inject constructor(
 
     override fun intercept(chain: Interceptor.Chain): Response {
 
-        val refreshToken = runBlocking { preferences.refreshToken.first() ?: "" }
-        val accessToken = runBlocking { preferences.accessToken.first() ?: "" }
+        try {
+            val refreshToken = runBlocking { preferences.refreshToken.first() ?: "" }
+            val accessToken = runBlocking { preferences.accessToken.first() ?: "" }
 
-        val request = chain.request()
-        val response = chain.proceed(request.newRequestWithAccessToken(token = accessToken))
+            val request = chain.request()
+            val response = chain.proceed(request.newRequestWithAccessToken(token = accessToken))
 
-        return when (response.code) {
-            HttpStatusCode.Unauthorized.value -> {
-                val newAccessToken =
-                    refreshToken(refreshToken) ?: throw IOException("Login again to continue")
-                chain.proceed(request.newRequestWithAccessToken(token = newAccessToken))
+            return when (response.code) {
+                HttpStatusCode.Unauthorized.value -> {
+                    val newAccessToken = refreshToken(refreshToken)
+                        ?: throw IOException("Login again to continue")
+                    chain.proceed(request.newRequestWithAccessToken(token = newAccessToken))
+                }
+                else -> response
             }
-            else -> response
-        }
 
+        } catch (e: Exception) {
+            throw e
+        }
     }
 
     private fun Request.newRequestWithAccessToken(token: String): Request {

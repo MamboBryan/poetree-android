@@ -61,7 +61,7 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
                             .setAction("retry") { viewModel.onCommentSendClicked() }
                             .show()
                     }
-                    is PoemViewModel.PoemEvent.ShowError -> showError(event.message)
+                    is PoemViewModel.PoemEvent.ShowError -> showError(message = event.message)
                     is PoemViewModel.PoemEvent.SneakError -> {
                         Sneaker.with(requireActivity()).setMessage(event.message).sneakError()
                     }
@@ -125,14 +125,8 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
             viewModel.reads.collectLatest {
                 it?.let { (read, reads) ->
                     binding.apply {
-                        tvPoemReads.text = prettyCount(reads)
-                        val icon = when (read) {
-                            true -> R.drawable.ic_baseline_done_all_24
-                            false -> R.drawable.ic_baseline_check_24
-                        }
-                        ivPoemReads.setImageDrawable(
-                            ContextCompat.getDrawable(requireContext(), icon)
-                        )
+                        editor.html = viewModel.getHtml()
+                        editor.setCode()
                     }
                 }
             }
@@ -251,7 +245,7 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
                         true
                     }
                     R.id.action_poem_publish -> {
-                        showConfirmPublishDialog()
+                        if (poemDetailsAreValid()) showConfirmPublishDialog()
                         true
                     }
                     R.id.action_poem_delete -> {
@@ -294,6 +288,22 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
 
     }
 
+    private fun poemDetailsAreValid(): Boolean {
+
+        val poem = viewModel.poem.value
+
+        if (poem?.topic == null) {
+            showError(
+                title = "No Topic Found!",
+                message = "Poem Must has a topic to be published!"
+            )
+            return false
+        }
+
+        return true
+
+    }
+
     private fun showConfirmDeleteDialog() {
         val alert = AlertView(
             "Delete Poem!",
@@ -306,12 +316,8 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
         alert.show(requireActivity() as AppCompatActivity)
     }
 
-    private fun showError(message: String) {
-        val alert = AlertView(
-            "Error!",
-            message,
-            AlertStyle.DIALOG
-        )
+    private fun showError(title: String = "Error", message: String) {
+        val alert = AlertView(title, message, AlertStyle.DIALOG)
         alert.addAction(AlertAction("dismiss", AlertActionStyle.NEGATIVE) {})
         alert.show(requireActivity() as AppCompatActivity)
     }

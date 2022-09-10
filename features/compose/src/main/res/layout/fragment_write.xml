@@ -30,20 +30,29 @@
         app:layout_constraintTop_toBottomOf="@+id/edtTitle" />
 
     <HorizontalScrollView
-        android:elevation="4dp"
         android:id="@+id/horizontalScrollView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:scrollbarSize="0.5dp"
         android:background="?attr/colorSurface"
+        android:elevation="4dp"
+        android:scrollbarSize="0.5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/flow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="action_undo,action_redo,action_bold,action_italic,action_underline,action_heading,action_indent,action_outdent,action_align_center,action_align_left,action_align_right,action_align_justify,action_blockquote"
+                app:flow_wrapMode="none"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/action_undo"
@@ -103,6 +112,7 @@
                 android:src="@drawable/ic_baseline_title_24"
                 app:tint="?attr/colorOnBackground" />
 
+
             <ImageView
                 android:id="@+id/action_indent"
                 android:layout_width="wrap_content"
@@ -143,7 +153,6 @@
                 android:src="@drawable/ic_baseline_format_align_left_24"
                 app:tint="?attr/colorOnBackground" />
 
-
             <ImageView
                 android:id="@+id/action_align_right"
                 android:layout_width="wrap_content"
@@ -173,7 +182,8 @@
                 android:padding="12dp"
                 android:src="@drawable/ic_baseline_format_quote_24"
                 app:tint="?attr/colorOnBackground" />
-        </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </HorizontalScrollView>
 

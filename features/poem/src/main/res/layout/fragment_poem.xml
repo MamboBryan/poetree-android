@@ -81,16 +81,15 @@
                     android:layout_height="wrap_content"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:padding="8dp"
-                    android:layout_marginTop="16dp"
                     android:src="@drawable/ic_baseline_favorite_border_24"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_poem_reads" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/tv_poem_likes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2.0k"
+                    tools:text="2.0k"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/iv_poem_like" />
@@ -110,7 +109,7 @@
                     android:id="@+id/tv_poem_bookmarks"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2.0k"
+                    tools:text="2.0k"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/iv_poem_bookmark" />
@@ -130,28 +129,10 @@
                     android:id="@+id/tv_poem_comments"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2.0k"
+                    tools:text="2.0k"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/iv_poem_comment" />
-
-                <ImageView
-                    android:id="@+id/iv_poem_reads"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_baseline_done_all_24"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/tv_poem_reads"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="2.0k"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/iv_poem_reads" />
 
                 <com.mikhaellopez.circularimageview.CircularImageView
                     android:id="@+id/iv_poem_artist"

@@ -6,18 +6,19 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import com.google.android.material.snackbar.Snackbar
+import com.like.IconType
+import com.like.LikeButton
+import com.like.OnLikeListener
 import com.mambo.core.adapters.GenericStateAdapter
 import com.mambo.core.adapters.LazyPagingAdapter
 import com.mambo.core.adapters.getInflater
 import com.mambo.core.utils.*
-import com.mambo.core.viewmodel.MainViewModel
 import com.mambo.data.models.Comment
 import com.mambobryan.features.comments.databinding.FragmentCommentsBinding
 import com.mambobryan.features.comments.databinding.ItemCommentBinding
@@ -45,14 +46,31 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
                 tvCommentUser.text = comment.user.name
                 tvCommentDays.text = daysAgo
                 tvCommentContent.text = comment.content
-                tvCommentLikes.text = prettyCount(comment.likes)
+                tvCommentLikes.text = "${prettyCount(comment.likes)} likes"
 
                 val iconLike = ContextCompat.getDrawable(
                     requireContext(),
                     if (comment.liked) R.drawable.liked else R.drawable.unliked
                 )
 
-                ivCommentLike.setImageDrawable(iconLike)
+                val iconColor = ContextCompat.getColor(
+                    requireContext(),
+                    if (comment.liked) R.color.error else R.color.primary_100
+                )
+
+                ivCommentLike.apply {
+                    isLiked = comment.liked
+                    setIcon(IconType.Heart)
+                    setOnLikeListener(object : OnLikeListener {
+                        override fun liked(likeButton: LikeButton?) {
+                            viewModel.onCommentLiked(commentId = comment.id)
+                        }
+
+                        override fun unLiked(likeButton: LikeButton?) {
+                            viewModel.onCommentUnliked(commentId = comment.id)
+                        }
+                    })
+                }
 
             }
         }
