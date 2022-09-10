@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -15,7 +17,6 @@ import com.irozon.alertview.AlertView
 import com.irozon.alertview.objects.AlertAction
 import com.irozon.sneaker.Sneaker
 import com.mambo.compose.databinding.FragmentComposeBinding
-import com.mambo.core.adapters.ViewPagerAdapter
 import com.mambo.core.utils.LoadingDialog
 import com.mambo.core.utils.toObliviousHumanLanguage
 import com.mambo.data.models.Poem
@@ -37,7 +38,6 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
 
         setupNavigation()
         setupViews()
-        setUpViewPager()
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.events.collect { event ->
@@ -52,6 +52,88 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
                     is ComposeViewModel.ComposeEvent.ShowSuccess -> showSuccess(event.message)
                 }
             }
+        }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        initViews()
+
+    }
+
+    private fun initViews() = binding.apply {
+        edtTitle.setText(viewModel.poemTitle)
+        editor.html = viewModel.poemContent
+    }
+
+    private fun setupViews() = binding.apply {
+
+        toolbarCompose.title = if (viewModel.poem.value == null) "Compose" else "Update"
+        toolbarCompose.inflateMenu(R.menu.menu_compose)
+        toolbarCompose.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.action_compose_preview,
+                R.id.action_compose_stash -> {
+                    viewModel.onStash()
+                    true
+                }
+                R.id.action_compose_publish -> {
+                    showConfirmPublishDialog()
+                    true
+                }
+                R.id.action_compose_delete -> {
+                    showConfirmDeleteDialog()
+                    true
+                }
+                else -> {
+                    false
+                }
+            }
+        }
+
+        edtTitle.doAfterTextChanged { title -> viewModel.poemTitle = title.toString() }
+
+        val textColor = ContextCompat.getColor(requireContext(), R.color.color_on_background)
+        val backgroundColor = ContextCompat.getColor(requireContext(), R.color.color_background)
+
+        editor.setEditorFontSize(16)
+        editor.setEditorFontColor(textColor)
+        editor.setEditorBackgroundColor(backgroundColor)
+        editor.setPadding(16, 16, 16, 16)
+
+        editor.setPlaceholder("Pen down thoughts here...")
+
+        actionUndo.setOnClickListener { editor.undo() }
+
+        actionRedo.setOnClickListener { editor.redo() }
+
+        actionBold.setOnClickListener { editor.setBold() }
+
+        actionItalic.setOnClickListener { editor.setItalic() }
+
+        actionUnderline.setOnClickListener { editor.setUnderline() }
+
+        actionIndent.setOnClickListener { editor.setIndent() }
+
+        actionOutdent.setOnClickListener { editor.setOutdent() }
+
+        actionAlignCenter.setOnClickListener { editor.setAlignCenter() }
+
+        actionAlignLeft.setOnClickListener { editor.setAlignLeft() }
+
+        actionAlignRight.setOnClickListener { editor.setAlignRight() }
+
+        actionAlignJustify.setOnClickListener { editor.setAlignJustifyFull() }
+
+        actionBlockquote.setOnClickListener { editor.setBlockquote() }
+
+        actionHeading.setOnClickListener { editor.setHeading(4) }
+
+        editor.onTextChanged { content, html ->
+            viewModel.poemContent = content ?: ""
+            viewModel.poemHtml = html ?: ""
         }
 
     }
@@ -79,74 +161,6 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
         requireActivity().onBackPressedDispatcher.addCallback(this@ComposeFragment) {
             viewModel.onBackClicked()
         }.isEnabled
-    }
-
-    private fun setupViews() = binding.apply {
-        toolbarCompose.title = if (viewModel.poem.value == null) "Compose" else "Update"
-        toolbarCompose.inflateMenu(R.menu.menu_compose)
-        toolbarCompose.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-
-                R.id.action_compose_edit -> {
-                    showEditView()
-                    true
-                }
-                R.id.action_compose_preview -> {
-                    showPreview()
-                    true
-                }
-                R.id.action_compose_stash -> {
-                    viewModel.onStash()
-                    true
-                }
-                R.id.action_compose_publish -> {
-                    showConfirmPublishDialog()
-                    true
-                }
-                R.id.action_compose_delete -> {
-                    showConfirmDeleteDialog()
-                    true
-                }
-                else -> {
-                    false
-                }
-            }
-        }
-    }
-
-    private fun updateMenu() = binding.apply {
-
-        val menu = toolbarCompose.menu
-        val position = viewpagerCompose.currentItem
-
-        val previewAction = menu.findItem(R.id.action_compose_preview)
-        val editAction = menu.findItem(R.id.action_compose_edit)
-
-        editAction.isVisible = position == 1
-        previewAction.isVisible = position != 1
-
-    }
-
-    private fun setUpViewPager() {
-
-        val fragments = arrayListOf(WriteFragment(), PreviewFragment())
-        val adapter = ViewPagerAdapter(fragments, childFragmentManager, lifecycle)
-
-        binding.apply {
-            viewpagerCompose.isUserInputEnabled = false
-            viewpagerCompose.adapter = adapter
-        }
-
-    }
-
-    private fun showEditView() {
-        binding.apply { viewpagerCompose.setCurrentItem(0, true) }
-        updateMenu()
-    }
-
-    private fun showPreview() {
-        binding.apply { viewpagerCompose.setCurrentItem(1, true) }
-        updateMenu()
     }
 
     private fun showConfirmDeleteDialog() {

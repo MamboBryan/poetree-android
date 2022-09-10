@@ -185,7 +185,8 @@ class ComposeViewModel @Inject constructor(
     }
 
     private fun updateLocal(poem: Poem) = viewModelScope.launch {
-        repository.saveLocal(poem.toLocalPoem())
+        repository.updateLocal(poem.toLocalPoem())
+        updateUi(ComposeEvent.NavigateToBackstack)
     }
 
     private fun deleteLocal(poem: Poem) = viewModelScope.launch {
