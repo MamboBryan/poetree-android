@@ -86,14 +86,18 @@ class PoemViewModel @Inject constructor(
         val html = StringBuilder()
         val prettyTime = PrettyTime()
 
-        val topic = (_poem.value?.topic?.name ?: "Topicless").replaceFirstChar { it.uppercase() }
+        val topic = (_poem.value?.topic?.name ?: "topicless").replaceFirstChar { it.uppercase() }
         val duration = prettyTime.formatDuration(_poem.value?.createdAt.toDate())
-        val reads = "${prettyCount(_reads.value?.second ?: 0)} reads"
+        val reads = "• ${prettyCount(_reads.value?.second ?: 0)} reads"
 
-        html.append("$topic • $duration • $reads")
+        val isLocal = _poem.value?.isLocal() == true
+
+        html.append("$topic • $duration ${reads.takeIf { isLocal.not() } ?: ""}")
         html.append("<h2><b> ${_poem.value?.title}</b></h2>")
-        html.append("By • ${_poem.value?.user?.name ?: "Me"}")
-        html.append("<br><br>")
+        if (isLocal.not()) {
+            html.append("By ${_poem.value?.user?.name ?: "Me"}")
+            html.append("<br><br>")
+        }
         html.append("<i>${_poem.value?.content}</i>")
         html.append("<br><br>")
 

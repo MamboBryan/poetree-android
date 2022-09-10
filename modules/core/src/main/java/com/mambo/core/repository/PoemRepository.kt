@@ -1,5 +1,6 @@
 package com.mambo.core.repository
 
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.mambo.core.source.PoemsMediator
@@ -10,18 +11,27 @@ import com.mambo.data.models.Topic
 import com.mambo.data.requests.CreatePoemRequest
 import com.mambo.data.requests.EditPoemRequest
 import com.mambo.data.requests.PoemRequest
-import com.mambo.local.BookmarksDao
-import com.mambo.local.PoemsDao
+import com.mambo.data.utils.Constants.PAGE_SIZE
+import com.mambo.local.PoetreeDatabase
+import com.mambo.local.daos.BookmarksDao
+import com.mambo.local.daos.PoemsDao
+import com.mambo.local.daos.PublishedDao
 import com.mambo.remote.service.PoemsApi
 import javax.inject.Inject
 
 class PoemRepository @Inject constructor() {
 
     @Inject
+    lateinit var database: PoetreeDatabase
+
+    @Inject
     lateinit var poemsDao: PoemsDao
 
     @Inject
     lateinit var bookmarksDao: BookmarksDao
+
+    @Inject
+    lateinit var publishedDao: PublishedDao
 
     @Inject
     lateinit var poemsApi: PoemsApi
@@ -36,9 +46,6 @@ class PoemRepository @Inject constructor() {
 
     fun unpublishedPoems(userId: String, query: String) =
         Pager(PagingConfig(10)) { poemsDao.getUnPublishedPoems(userId) }.flow
-
-    fun publishedPoems() =
-        Pager(PagingConfig(10)) { poemsDao.getAllPoems() }.flow
 
     fun searchPoems(query: String) = Pager(PagingConfig(10)) { poemsDao.getPoems(query) }.flow
 
@@ -60,7 +67,8 @@ class PoemRepository @Inject constructor() {
 
     suspend fun deleteAllLocal() = poemsDao.deleteAll()
 
-    fun localSavedPoems() = Pager(PagingConfig(20)) { poemsDao.getAllPoems() }.flow
+    fun localPoems(query: String = "") =
+        Pager(PagingConfig(20)) { poemsDao.getPoems(query = query) }.flow
 
     /**
      * BOOKMARKS
@@ -86,7 +94,7 @@ class PoemRepository @Inject constructor() {
 
     suspend fun updatePublished(request: EditPoemRequest) = poemsApi.updatePoem(request)
 
-    suspend fun deletePublished(poemId: String) = poemsApi.deletePoem(PoemRequest(poemId))
+    suspend fun deletePublished(poemId: String) = poemsApi.deletePoem(poemId = poemId)
 
     suspend fun getPublished(poemId: String) = poemsApi.getPoem(PoemRequest(poemId))
 
@@ -96,11 +104,14 @@ class PoemRepository @Inject constructor() {
 
     suspend fun unBookmark(poemId: String) = poemsApi.unBookmarkPoem(poemId = poemId)
 
-    fun publishedPoems(query: String = "") = Pager(PagingConfig(20)) {
-        PoemsMediator(query, poemsApi)
-    }.flow
+    @OptIn(ExperimentalPagingApi::class)
+    fun publishedPoems() = Pager(
+        config = PagingConfig(PAGE_SIZE),
+        remoteMediator = PoemsMediator(poemsApi = poemsApi, database = database),
+        pagingSourceFactory = { publishedDao.getAll() }
+    ).flow
 
-    fun getUserPoems(userId: String) = Pager(PagingConfig(20)) {
+    fun getUserPoems(userId: String) = Pager(PagingConfig(PAGE_SIZE)) {
         UserPoemsMediator(userId, poemsApi)
     }.flow
 

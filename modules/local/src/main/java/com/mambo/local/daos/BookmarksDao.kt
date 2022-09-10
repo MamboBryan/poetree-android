@@ -1,4 +1,4 @@
-package com.mambo.local
+package com.mambo.local.daos
 
 import androidx.paging.PagingSource
 import androidx.room.*

@@ -1,55 +1,134 @@
 package com.mambo.core.source
 
-import androidx.paging.PagingSource
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.LoadType
 import androidx.paging.PagingState
+import androidx.paging.RemoteMediator
+import androidx.room.withTransaction
 import com.mambo.data.models.Poem
+import com.mambo.data.utils.Constants.START_PAGE
+import com.mambo.local.PoetreeDatabase
+import com.mambo.local.daos.PublishedKeys
 import com.mambo.remote.service.PoemsApi
 import okio.IOException
 import retrofit2.HttpException
+import timber.log.Timber
 
+@OptIn(ExperimentalPagingApi::class)
 class PoemsMediator(
-    private val query: String,
     private val poemsApi: PoemsApi,
-) : PagingSource<Int, Poem>() {
+    private val database: PoetreeDatabase,
+) : RemoteMediator<Int, Poem>() {
 
-    override fun getRefreshKey(state: PagingState<Int, Poem>): Int? {
-        return state.anchorPosition?.let { anchorPosition ->
-            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
-                ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
+    override suspend fun load(
+        loadType: LoadType,
+        state: PagingState<Int, Poem>
+    ): MediatorResult {
+
+        val page = when (loadType) {
+            LoadType.PREPEND -> {
+                val articleKeys = getKeysForFirstItem(state)
+                val prevKey = articleKeys?.prevKey
+                    ?: return MediatorResult.Success(endOfPaginationReached = articleKeys != null)
+                prevKey
+            }
+            LoadType.REFRESH -> {
+                val articleKeys = getKeysClosestToCurrentPosition(state)
+                articleKeys?.nextKey ?: START_PAGE
+            }
+            LoadType.APPEND -> {
+                val articleKeys = getCharacterKeysForLastItem(state)
+                val nextKey = articleKeys?.nextKey
+                    ?: return MediatorResult.Success(endOfPaginationReached = articleKeys != null)
+                nextKey
+            }
         }
-    }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Poem> {
+        try {
 
-        // Get the current page from the params
-        val page = params.key ?: 1
+            val response = poemsApi.getPoems(page = page)
 
-        return try {
-            // Get the response from the server
-            val response = poemsApi.getPoems(page)
+            val data = response.data ?: return MediatorResult.Error(Exception(response.message))
 
-            val data = response.data ?: return LoadResult.Error(Exception(response.message))
+            val poems = data.list
 
-            // Get the list of characters in the page
-            val poems = data.list.map { it.toPoemDto() }
+            val isEndOfPagination = data.next == null
 
-            // Get the next key for loading the next page
-            val nextKey = data.next
-            // val nextKey = if (articles.isEmpty()) null else page + 1
+            database.withTransaction {
 
-            // Get the previous key
-            val previousKey = data.previous
+                if (loadType == LoadType.REFRESH) {
+                    database.publishedKeysDao().deleteAll()
+                    database.publishedDao().deleteAll()
+                }
 
-            // Return the LoadResult with characters, previousKey and nextKey
-            LoadResult.Page(data = poems, prevKey = previousKey, nextKey = nextKey)
+                val prevKey = if (page == START_PAGE) null else page - 1
+                val nextKey = if (isEndOfPagination) null else page + 1
+
+                val keys = poems.map { PublishedKeys(it.id, prevKey, nextKey) }
+                val published = poems.map { it.toPublished() }
+
+                database.publishedKeysDao().insert(keys)
+                database.publishedDao().insert(published)
+
+            }
+
+            return MediatorResult.Success(endOfPaginationReached = isEndOfPagination)
 
         } catch (exception: IOException) {
-            return LoadResult.Error(exception)
+            return MediatorResult.Error(exception)
         } catch (exception: HttpException) {
-            return LoadResult.Error(exception)
+            return MediatorResult.Error(exception)
         }
+    }
+
+    private suspend fun getKeysForFirstItem(state: PagingState<Int, Poem>): PublishedKeys? {
+
+        val pagingSource = state.pages.firstOrNull()
+
+        val characters = pagingSource?.data
+
+        if (characters.isNullOrEmpty()) return null
+
+        val firstCharacter = characters.firstOrNull() ?: return null
+
+        val keys = database.publishedKeysDao().getKeysByPoemId(firstCharacter.id)
+
+        Timber.i("Character Key for First Item => $keys")
+
+        return keys
 
     }
 
+    private suspend fun getKeysClosestToCurrentPosition(state: PagingState<Int, Poem>): PublishedKeys? {
+
+        val anchorPosition = state.anchorPosition ?: return null
+
+        val closestItem = state.closestItemToPosition(anchorPosition) ?: return null
+
+        val keys = database.publishedKeysDao().getKeysByPoemId(closestItem.id)
+
+        Timber.i("Character Key for Closest Item => $keys")
+
+        return keys
+
+    }
+
+    private suspend fun getCharacterKeysForLastItem(state: PagingState<Int, Poem>): PublishedKeys? {
+
+        val pagingSource = state.pages.lastOrNull()
+
+        val characters = pagingSource?.data
+
+        if (characters.isNullOrEmpty()) return null
+
+        val lastCharacter = characters.lastOrNull() ?: return null
+
+        val keys = database.publishedKeysDao().getKeysByPoemId(lastCharacter.id)
+
+        Timber.i("Character Key for Last Item => $keys")
+
+        return keys
+
+    }
 
 }

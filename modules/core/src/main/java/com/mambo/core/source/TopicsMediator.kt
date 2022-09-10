@@ -6,7 +6,7 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import com.mambo.data.models.Topic
 import com.mambo.data.responses.toTopicList
-import com.mambo.local.TopicsDao
+import com.mambo.local.daos.TopicsDao
 import com.mambo.remote.service.PoemsApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

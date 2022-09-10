@@ -5,7 +5,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.mambo.core.source.TopicsMediator
 import com.mambo.data.requests.TopicRequest
-import com.mambo.local.TopicsDao
+import com.mambo.local.daos.TopicsDao
 import com.mambo.remote.service.PoemsApi
 import javax.inject.Inject
 

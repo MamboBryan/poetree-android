@@ -1,6 +1,7 @@
 package com.mambo.data.responses
 
 import com.mambo.data.models.PoemDto
+import com.mambo.data.models.Published
 import com.mambo.data.models.Topic
 import com.mambo.data.models.User
 import kotlinx.serialization.Serializable
@@ -27,6 +28,27 @@ data class PoemResponse(
 ) {
     fun toPoemDto() =
         PoemDto(
+            id,
+            createdAt,
+            updatedAt,
+            editedAt,
+            title,
+            content,
+            html,
+            user,
+            topic,
+            reads,
+            read,
+            bookmarks,
+            bookmarked,
+            likes,
+            liked,
+            comments,
+            commented
+        )
+
+    fun toPublished() =
+        Published(
             id,
             createdAt,
             updatedAt,

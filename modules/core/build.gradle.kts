@@ -26,6 +26,8 @@ dependencies {
 
     hilt()
 
+    room()
+
     implementation(Dependencies.Libraries.recyclerviewSelection)
 
     implementation(Dependencies.Libraries.playCoroutines)

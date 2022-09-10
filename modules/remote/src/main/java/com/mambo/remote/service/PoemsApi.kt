@@ -234,10 +234,10 @@ class PoemsApi @Inject constructor(
         response.body()
     }
 
-    suspend fun deletePoem(request: PoemRequest) = safeApiCall<Boolean> {
+    suspend fun deletePoem(poemId: String) = safeApiCall<Boolean> {
         val url = Endpoints.POEM.url
         val response = client.delete(url) {
-            setBody(request)
+            setBody(mapOf("poemId" to poemId))
         }
         response.body()
     }
