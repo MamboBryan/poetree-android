@@ -9,6 +9,10 @@
         app:destination="@+id/flow_feeds" />
 
     <action
+        android:id="@+id/to_bookmarks"
+        app:destination="@+id/flow_bookmarks" />
+
+    <action
         android:id="@+id/from_feeds_to_profile"
         app:destination="@+id/flow_profile" />
 

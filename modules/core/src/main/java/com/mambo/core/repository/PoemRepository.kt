@@ -75,6 +75,8 @@ class PoemRepository @Inject constructor() {
 
     suspend fun deleteBookmark(bookmark: Bookmark) = bookmarksDao.delete(bookmark.id)
 
+    suspend fun deleteBookmark(id: String) = bookmarksDao.delete(id)
+
     suspend fun deleteAllBookmarks() = bookmarksDao.deleteAll()
 
     fun bookmarks(query: String) = Pager(PagingConfig(20)) {

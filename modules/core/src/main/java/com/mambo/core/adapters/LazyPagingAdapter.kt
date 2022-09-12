@@ -146,6 +146,7 @@ class LazyPagingAdapter<T : Any, R : ViewBinding>(
         @DrawableRes icon: Int? = null,
         @ColorRes iconColor: Int? = null,
         @ColorRes color: Int? = null,
+        remove: Boolean = false,
         view: RecyclerView,
         swiped: (item: T) -> Unit
     ) {
@@ -156,9 +157,13 @@ class LazyPagingAdapter<T : Any, R : ViewBinding>(
         )
         val swiper = object : SwipeRight(context = view.context, lazyField = fields) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                getItem(viewHolder.absoluteAdapterPosition)?.let {
+                val position = viewHolder.absoluteAdapterPosition
+                getItem(position)?.let {
+                    when (remove) {
+                        true -> remove(position)
+                        false -> notifyItemChanged(position)
+                    }
                     swiped.invoke(it)
-                    notifyItemChanged(viewHolder.absoluteAdapterPosition)
                 }
             }
 
@@ -170,7 +175,7 @@ class LazyPagingAdapter<T : Any, R : ViewBinding>(
         @DrawableRes icon: Int? = null,
         @ColorRes iconColor: Int? = null,
         @ColorRes color: Int? = null,
-        refresh: Boolean = true,
+        remove: Boolean = true,
         view: RecyclerView,
         swiped: (item: T) -> Unit
     ) {
@@ -181,9 +186,13 @@ class LazyPagingAdapter<T : Any, R : ViewBinding>(
         )
         val swiper = object : SwipeLeft(context = view.context, lazyField = fields) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                getItem(viewHolder.absoluteAdapterPosition)?.let {
+                val position = viewHolder.absoluteAdapterPosition
+                getItem(position)?.let {
+                    when (remove) {
+                        true -> remove(position)
+                        false -> notifyItemChanged(position)
+                    }
                     swiped.invoke(it)
-                    if (refresh) notifyItemChanged(viewHolder.absoluteAdapterPosition)
                 }
             }
 
@@ -243,7 +252,7 @@ class LazyPagingAdapter<T : Any, R : ViewBinding>(
     private abstract inner class SwipeRight(
         private val context: Context,
         private val lazyField: LazySwipeFields?
-    ) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+    ) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
 
         private val icon =
             ContextCompat.getDrawable(
@@ -253,6 +262,7 @@ class LazyPagingAdapter<T : Any, R : ViewBinding>(
 
         private val intrinsicWidth = icon?.intrinsicWidth ?: 0
         private val intrinsicHeight = icon?.intrinsicHeight ?: 0
+
         private val background = ColorDrawable()
         private val backgroundColor =
             ContextCompat.getColor(
@@ -274,7 +284,7 @@ class LazyPagingAdapter<T : Any, R : ViewBinding>(
             recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder
         ): Int {
-            if (viewHolder.absoluteAdapterPosition == 10) return 0
+            if (viewHolder.absoluteAdapterPosition == RecyclerView.NO_POSITION) return 0
             return super.getMovementFlags(recyclerView, viewHolder)
         }
 
@@ -290,6 +300,7 @@ class LazyPagingAdapter<T : Any, R : ViewBinding>(
 
             val itemView = viewHolder.itemView
             val itemHeight = itemView.bottom - itemView.top
+
             val isCanceled = dX == 0f && !isCurrentlyActive
 
             if (isCanceled) {
@@ -312,28 +323,30 @@ class LazyPagingAdapter<T : Any, R : ViewBinding>(
                 return
             }
 
-            // Draw the red delete background
-            background.color = backgroundColor
-            background.setBounds(
-                itemView.right + dX.toInt(),
-                itemView.top,
-                itemView.right,
-                itemView.bottom
-            )
-            background.draw(c)
+            // Draw the background
+            background.apply {
+                color = backgroundColor
+                setBounds(
+                    itemView.left,
+                    itemView.top,
+                    itemView.left + dX.toInt(),
+                    itemView.bottom
+                )
+                draw(c)
+            }
 
-            // Calculate position of delete icon
-            val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
-            val deleteIconMargin = (itemHeight - intrinsicHeight) / 2
-            val deleteIconLeft = itemView.right - deleteIconMargin - intrinsicWidth
-            val deleteIconRight = itemView.right - deleteIconMargin
-            val deleteIconBottom = deleteIconTop + intrinsicHeight
+            // Calculate position of the icon
+            val iconMargin = (itemHeight - intrinsicHeight) / 2
+            val iconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
+            val iconBottom = iconTop + intrinsicHeight
+            val iconRight = itemView.left + iconMargin + intrinsicWidth
+            val iconLeft = itemView.left + iconMargin
 
-            // Draw the delete icon
+            // Draw the icon
             icon?.setTint(
                 ContextCompat.getColor(context, lazyField?.iconColor ?: android.R.color.white)
             )
-            icon?.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
+            icon?.setBounds(iconLeft, iconTop, iconRight, iconBottom)
             icon?.draw(c)
 
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
@@ -348,7 +361,7 @@ class LazyPagingAdapter<T : Any, R : ViewBinding>(
     private abstract inner class SwipeLeft(
         private val context: Context,
         private val lazyField: LazySwipeFields?
-    ) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+    ) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
         private val icon =
             ContextCompat.getDrawable(
@@ -379,7 +392,7 @@ class LazyPagingAdapter<T : Any, R : ViewBinding>(
             recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder
         ): Int {
-            if (viewHolder.absoluteAdapterPosition == 10) return 0
+            if (viewHolder.absoluteAdapterPosition == RecyclerView.NO_POSITION) return 0
             return super.getMovementFlags(recyclerView, viewHolder)
         }
 
@@ -417,24 +430,27 @@ class LazyPagingAdapter<T : Any, R : ViewBinding>(
                 return
             }
 
-            // Draw the red delete background
-            background.color = backgroundColor
-            background.setBounds(
-                itemView.right + dX.toInt(),
-                itemView.top,
-                itemView.right,
-                itemView.bottom
-            )
-            background.draw(c)
+            // Draw the background
+            background.apply {
+                color = backgroundColor
+                setBounds(
+                    itemView.right + dX.toInt(),
+                    itemView.top,
+                    itemView.right,
+                    itemView.bottom
+                )
+                draw(c)
+            }
 
-            // Calculate position of delete icon
+
+            // Calculate position of the icon
             val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
             val deleteIconMargin = (itemHeight - intrinsicHeight) / 2
             val deleteIconLeft = itemView.right - deleteIconMargin - intrinsicWidth
             val deleteIconRight = itemView.right - deleteIconMargin
             val deleteIconBottom = deleteIconTop + intrinsicHeight
 
-            // Draw the delete icon
+            // Draw the the icon
             icon?.setTint(
                 ContextCompat.getColor(context, lazyField?.iconColor ?: android.R.color.white)
             )
