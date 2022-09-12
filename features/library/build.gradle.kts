@@ -12,6 +12,4 @@ dependencies {
     implementation(Dependencies.Libraries.prettyTime)
     implementation(Dependencies.Libraries.coil)
 
-    implementation("androidx.palette:palette:1.0.0")
-
 }

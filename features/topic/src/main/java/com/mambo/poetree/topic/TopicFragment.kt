@@ -74,6 +74,7 @@ class TopicFragment : Fragment(R.layout.fragment_topic) {
             }
             binding.apply {
                 edtName.setText(it?.name)
+                if (it != null) viewModel.updateColor(it.color)
                 btnSave.text = btnText
                 btnDelete.isVisible = false
             }

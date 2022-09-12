@@ -59,6 +59,25 @@
             app:argType="com.mambo.data.models.User" />
     </action>
 
+    <action
+        android:id="@+id/to_topic"
+        app:destination="@+id/flow_topic">
+        <argument
+            android:name="topic"
+            app:argType="com.mambo.data.models.Topic"
+            app:nullable="true" />
+    </action>
+
+    <action
+        android:id="@+id/to_search"
+        app:destination="@+id/flow_search">
+        <argument
+            android:name="topic"
+            app:argType="com.mambo.data.models.Topic"
+            app:nullable="true" />
+    </action>
+
+
     <include app:graph="@navigation/flow_feeds" />
     <include app:graph="@navigation/flow_explore" />
     <include app:graph="@navigation/flow_bookmarks" />

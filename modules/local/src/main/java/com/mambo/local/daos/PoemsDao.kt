@@ -19,7 +19,7 @@ interface PoemsDao {
     suspend fun insert(poem: LocalPoem): Long
 
     @Update
-    suspend fun update(poem: LocalPoem): Int
+    suspend fun update(poem: LocalPoem)
 
     @Delete
     suspend fun delete(poem: LocalPoem)
@@ -37,10 +37,10 @@ interface PoemsDao {
     fun getAll(): Flow<List<Poem>>
 
     @Query("SELECT * FROM poems WHERE id = :id")
-    fun getPoem(id: Int): Flow<Poem>
+    fun getPoem(id: String): Flow<Poem>
 
     @Query("SELECT * FROM poems WHERE id = :id")
-    fun get(id: Long): Poem
+    fun get(id: String): Poem
 
     @Query("SELECT * FROM poems WHERE title LIKE '%' || :query || '%'")
     fun getPoems(query: String): PagingSource<Int, Poem>

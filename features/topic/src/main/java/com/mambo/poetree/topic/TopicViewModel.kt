@@ -1,10 +1,7 @@
 package com.mambo.poetree.topic
 
 import android.graphics.Color
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.mambo.core.repository.TopicsRepository
 import com.mambo.data.models.Topic
 import com.mambo.data.requests.TopicRequest
@@ -15,7 +12,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TopicViewModel @Inject constructor() : ViewModel() {
+class TopicViewModel @Inject constructor(
+    private val state: SavedStateHandle
+) : ViewModel() {
 
     @Inject
     lateinit var repository: TopicsRepository
@@ -23,7 +22,7 @@ class TopicViewModel @Inject constructor() : ViewModel() {
     private val _uiEvents = MutableStateFlow<TopicEvent?>(null)
     val uiEvents: StateFlow<TopicEvent?> get() = _uiEvents
 
-    private val _topic = MutableLiveData<Topic?>(null)
+    private val _topic = state.getLiveData<Topic?>("topic", null)
     val topic: LiveData<Topic?> get() = _topic
 
     private val _color = MutableLiveData<String>()
@@ -58,8 +57,8 @@ class TopicViewModel @Inject constructor() : ViewModel() {
     fun generateRandomColors() {
 
         val list = mutableListOf<String>()
-        for (number in 1 until 6)
-            list.add(String.format("#%06X", 0xFFFFFF and generateRgb()))
+
+        for (number in 1 until 6) list.add(String.format("#%06X", 0xFFFFFF and generateRgb()))
 
         _color.value = String.format("#%06X", 0xFFFFFF and generateRgb())
         _colors.value = list
@@ -77,9 +76,7 @@ class TopicViewModel @Inject constructor() : ViewModel() {
     fun saveTopic(name: String, color: String) {
         when (_topic.value == null) {
             true -> create(name, color)
-            false -> {
-                update(name, color)
-            }
+            false -> update(name, color)
         }
     }
 
@@ -110,7 +107,7 @@ class TopicViewModel @Inject constructor() : ViewModel() {
             val prevName = _topic.value?.name
             val prevColor = _topic.value?.name
 
-            if(name.equals(prevName) and color.equals(prevColor)){
+            if (name.equals(prevName) and color.equals(prevColor)) {
                 _uiEvents.value = TopicEvent.Loading(false)
                 _uiEvents.value = TopicEvent.Error("Nothing changed in topic details")
                 return@launch
@@ -118,6 +115,7 @@ class TopicViewModel @Inject constructor() : ViewModel() {
 
             val request = TopicRequest(
                 name = name.takeIf { it == prevName },
+
                 color = color.takeIf { it == prevColor }
             )
             val response = repository.update(id, request)

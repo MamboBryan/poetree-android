@@ -46,7 +46,7 @@ class MainViewModel @Inject constructor(
 
     val feedPoems = repository.publishedPoems().cachedIn(viewModelScope)
 
-    val topics = topicRepository.topics("").cachedIn(viewModelScope)
+    val topics = topicRepository.getTopics().cachedIn(viewModelScope)
     val publicPoems = repository.publishedPoems().cachedIn(viewModelScope)
 
     private val searchTopic = MutableStateFlow<Topic?>(null)

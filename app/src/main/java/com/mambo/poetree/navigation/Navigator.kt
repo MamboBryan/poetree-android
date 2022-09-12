@@ -6,7 +6,9 @@ import androidx.navigation.fragment.NavHostFragment
 import com.mambo.bookmarks.BookmarkActions
 import com.mambo.compose.ComposeActions
 import com.mambo.data.models.Poem
+import com.mambo.data.models.Topic
 import com.mambo.data.models.User
+import com.mambo.explore.ExploreActions
 import com.mambo.features.home.FeedActions
 import com.mambo.library.LibraryActions
 import com.mambo.poetree.NavigationMainDirections
@@ -24,7 +26,8 @@ import javax.inject.Inject
 @ActivityScoped
 class Navigator @Inject constructor(
     private val controller: NavController
-) : FeedActions, PoemActions, BookmarkActions, ComposeActions, LoadingActions, LibraryActions {
+) : FeedActions, PoemActions, BookmarkActions, ComposeActions, LoadingActions, LibraryActions,
+ExploreActions{
 
     @Module
     @InstallIn(ActivityComponent::class)
@@ -111,6 +114,21 @@ class Navigator @Inject constructor(
     abstract class LibraryModule {
         @Binds
         abstract fun libraryActions(navigator: Navigator): LibraryActions
+    }
+
+    @Module
+    @InstallIn(ActivityComponent::class)
+    abstract class ExploreModule {
+        @Binds
+        abstract fun exploreActions(navigator: Navigator): ExploreActions
+    }
+
+    override fun navigateToSearch(topic: Topic?) {
+        controller.navigate(NavigationMainDirections.toSearch(topic))
+    }
+
+    override fun navigateToTopic(topic: Topic?) {
+        controller.navigate(NavigationMainDirections.toTopic(topic))
     }
 
 

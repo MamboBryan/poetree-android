@@ -19,15 +19,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PublishViewModel @Inject constructor(
-    val poemRepo: PoemRepository,
-    topicsRepo: TopicsRepository
+    private val poemRepo: PoemRepository,
+    private val topicsRepo: TopicsRepository
 ) : ViewModel() {
 
     private val _eventChannel = Channel<TopicEvent?>()
     val events get() = _eventChannel.receiveAsFlow()
 
     private val query = MutableStateFlow("")
-    private val topicsFlow = query.flatMapLatest { query -> topicsRepo.getTopics(query) }
+    private val topicsFlow = query.flatMapLatest { query -> topicsRepo.searchTopics(query) }
     val topics = topicsFlow.cachedIn(viewModelScope)
 
     private val _poem = MutableStateFlow<Poem?>(null)

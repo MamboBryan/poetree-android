@@ -33,48 +33,7 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
     private val binding by viewBinding(FragmentCommentsBinding::bind)
     private val viewModel: CommentViewModel by viewModels()
 
-    private val adapter = LazyPagingAdapter<Comment, ItemCommentBinding>(
-        comparator = Comment.COMPARATOR,
-        create = {
-            ItemCommentBinding.inflate(it.getInflater(), it, false)
-        },
-        bind = { comment ->
-            binding.apply {
-
-                val daysAgo = Date(comment.createdAt.toDateTime() ?: 0).toDaysAgo()
-
-                tvCommentUser.text = comment.user.name
-                tvCommentDays.text = daysAgo
-                tvCommentContent.text = comment.content
-                tvCommentLikes.text = "${prettyCount(comment.likes)} likes"
-
-                val iconLike = ContextCompat.getDrawable(
-                    requireContext(),
-                    if (comment.liked) R.drawable.liked else R.drawable.unliked
-                )
-
-                val iconColor = ContextCompat.getColor(
-                    requireContext(),
-                    if (comment.liked) R.color.error else R.color.primary_100
-                )
-
-                ivCommentLike.apply {
-                    isLiked = comment.liked
-                    setIcon(IconType.Heart)
-                    setOnLikeListener(object : OnLikeListener {
-                        override fun liked(likeButton: LikeButton?) {
-                            viewModel.onCommentLiked(commentId = comment.id)
-                        }
-
-                        override fun unLiked(likeButton: LikeButton?) {
-                            viewModel.onCommentUnliked(commentId = comment.id)
-                        }
-                    })
-                }
-
-            }
-        }
-    )
+    private val adapter = LazyPagingAdapter<Comment, ItemCommentBinding>(Comment.COMPARATOR)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -173,8 +132,49 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
     }
 
     private fun setupRecyclerView() {
+
+        adapter.apply {
+            onCreate { ItemCommentBinding.inflate(it.getInflater(), it, false) }
+            onBind { comment ->
+                binding.apply {
+
+                    val daysAgo = Date(comment.createdAt.toDateTime() ?: 0).toDaysAgo()
+
+                    tvCommentUser.text = comment.user.name
+                    tvCommentDays.text = daysAgo
+                    tvCommentContent.text = comment.content
+                    tvCommentLikes.text = "${prettyCount(comment.likes)} likes"
+
+                    val iconLike = ContextCompat.getDrawable(
+                        requireContext(),
+                        if (comment.liked) R.drawable.liked else R.drawable.unliked
+                    )
+
+                    val iconColor = ContextCompat.getColor(
+                        requireContext(),
+                        if (comment.liked) R.color.error else R.color.primary_100
+                    )
+
+                    ivCommentLike.apply {
+                        isLiked = comment.liked
+                        setIcon(IconType.Heart)
+                        setOnLikeListener(object : OnLikeListener {
+                            override fun liked(likeButton: LikeButton?) {
+                                viewModel.onCommentLiked(commentId = comment.id)
+                            }
+
+                            override fun unLiked(likeButton: LikeButton?) {
+                                viewModel.onCommentUnliked(commentId = comment.id)
+                            }
+                        })
+                    }
+
+                }
+            }
+            onItemClicked { }
+        }
+
         binding.layoutComments.apply {
-            recyclerView.adapter = adapter
             recyclerView.adapter = adapter
             recyclerView.setHasFixedSize(true)
             buttonRetry.setOnClickListener { adapter.retry() }

@@ -2,6 +2,7 @@ package com.mambo.compose
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -63,6 +64,13 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
 
     }
 
+    private fun setupNavigation() = binding.apply {
+        NavigationUI.setupWithNavController(toolbarCompose, findNavController())
+        requireActivity().onBackPressedDispatcher.addCallback(this@ComposeFragment) {
+            viewModel.onBackClicked()
+        }.isEnabled
+    }
+
     private fun initViews() = binding.apply {
         edtTitle.setText(viewModel.poemTitle)
         editor.html = viewModel.poemContent
@@ -74,26 +82,29 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
         toolbarCompose.inflateMenu(R.menu.menu_compose)
         toolbarCompose.setOnMenuItemClickListener { item ->
             when (item.itemId) {
-                R.id.action_compose_preview,
                 R.id.action_compose_stash -> {
                     viewModel.onStash()
                     true
                 }
+                R.id.action_compose_save -> {
+                    viewModel.onStash(preview = true)
+                    true
+                }
                 R.id.action_compose_publish -> {
-                    showConfirmPublishDialog()
+                    if (poemDetailsAreValid()) showConfirmPublishDialog()
                     true
                 }
                 R.id.action_compose_delete -> {
                     showConfirmDeleteDialog()
                     true
                 }
-                else -> {
-                    false
-                }
+                else -> false
+                
             }
         }
 
         edtTitle.doAfterTextChanged { title -> viewModel.poemTitle = title.toString() }
+        fabTopic.setOnClickListener { openSelectTopicBottomSheet() }
 
         val textColor = ContextCompat.getColor(requireContext(), R.color.color_on_background)
         val backgroundColor = ContextCompat.getColor(requireContext(), R.color.color_background)
@@ -138,6 +149,16 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
 
     }
 
+    private fun openSelectTopicBottomSheet() {
+        val sheet = TopicsBottomSheet()
+        sheet.onTopicSelected {
+            Toast.makeText(requireContext(), "${it.name} set as poem topic", Toast.LENGTH_SHORT)
+                .show()
+            viewModel.topic = it
+        }
+        sheet.show(childFragmentManager, sheet.tag)
+    }
+
     private fun showError(message: String) {
         val alert = AlertView(
             title = "Error",
@@ -156,13 +177,6 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
             .sneakSuccess()
     }
 
-    private fun setupNavigation() = binding.apply {
-        NavigationUI.setupWithNavController(toolbarCompose, findNavController())
-        requireActivity().onBackPressedDispatcher.addCallback(this@ComposeFragment) {
-            viewModel.onBackClicked()
-        }.isEnabled
-    }
-
     private fun showConfirmDeleteDialog() {
         val alert = AlertView(
             "Delete Poem!",
@@ -173,6 +187,19 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
             viewModel.onDeleteConfirmed()
         })
         alert.show(requireActivity() as AppCompatActivity)
+    }
+
+    private fun poemDetailsAreValid(): Boolean {
+        val poem = viewModel.poem.value
+
+        if (poem?.topic == null) {
+            showError(
+                message = "Poem Must has a topic to be published!"
+            )
+            return false
+        }
+
+        return true
     }
 
     private fun showConfirmPublishDialog() {

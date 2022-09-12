@@ -7,7 +7,6 @@ import android.view.MenuInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -23,9 +22,6 @@ import com.mambo.core.viewmodel.MainViewModel
 import com.mambo.data.models.Poem
 import com.mambo.library.databinding.FragmentLibraryBinding
 import com.mambo.library.databinding.ItemPoemLibraryBinding
-import com.mambobryan.navigation.Destinations
-import com.mambobryan.navigation.extensions.getDeeplink
-import com.mambobryan.navigation.extensions.navigate
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -46,25 +42,7 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
 
     private val binding by viewBinding(FragmentLibraryBinding::bind)
 
-    private val adapter = LazyPagingAdapter<Poem, ItemPoemLibraryBinding>(
-        comparator = Poem.COMPARATOR,
-        create = {
-            ItemPoemLibraryBinding.inflate(it.getInflater(), it, false)
-        },
-        bind = { poem ->
-            binding.apply {
-
-                val duration = PrettyTime().formatDuration(poem.createdAt.toDate())
-
-                tvPublishedTitle.text = poem.title
-                tvPublishedDuration.text = duration
-
-                val color = poem.topic?.color ?: "#84a1f7"
-                layoutPoemLibrary.setBackgroundColor(Color.parseColor(color))
-
-            }
-        }
-    )
+    private val adapter = LazyPagingAdapter<Poem, ItemPoemLibraryBinding>(Poem.COMPARATOR)
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_library, menu)
@@ -84,15 +62,6 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
         setHasOptionsMenu(true)
 
         initViews()
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.events.collect { event ->
-                when (event) {
-                    LibraryViewModel.LibraryEvent.NavigateToCompose -> navigateToCompose()
-                    LibraryViewModel.LibraryEvent.NavigateToPoem -> navigateToPoem()
-                }
-            }
-        }
 
         lifecycleScope.launch {
             sharedViewModel.libraryPoems.collectLatest { adapter.submitData(it) }
@@ -120,35 +89,48 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
         binding.apply {
             toolbarLibrary.title = "Library"
             (requireActivity() as AppCompatActivity).setSupportActionBar(toolbarLibrary)
+            fabCreatePoem.setOnClickListener { libraryActions.navigateToCompose() }
+        }
 
-            fabCreatePoem.setOnClickListener { viewModel.onComposeButtonClicked() }
+        setupRecyclerview()
 
-            layoutLibraryState.apply {
-                tvEmpty.text = "No Poem Found"
-                tvError.text = "Couldn't load Poems!"
+    }
 
-                recyclerView.adapter = adapter
-                buttonRetry.setOnClickListener { adapter.retry() }
+    private fun setupRecyclerview() {
+
+        adapter.apply {
+            onCreate { ItemPoemLibraryBinding.inflate(it.getInflater(), it, false) }
+            onBind { poem ->
+                binding.apply {
+
+                    val duration = PrettyTime().formatDuration(poem.createdAt.toDate())
+
+                    tvPublishedTitle.text = poem.title
+                    tvPublishedDuration.text = duration
+
+                    val color = poem.topic?.color ?: "#84a1f7"
+                    layoutPoemLibrary.setBackgroundColor(Color.parseColor(color))
+
+                }
             }
+            onItemClicked {
+                libraryActions.navigateToPoem(it)
+            }
+            withLoadStateHeaderAndFooter(
+                header = GenericStateAdapter(adapter::retry),
+                footer = GenericStateAdapter(adapter::retry)
+            )
 
         }
 
-        adapter.onItemSelected {
-            libraryActions.navigateToPoem(it)
+        binding.layoutLibraryState.apply {
+            tvEmpty.text = "No Poem Found"
+            tvError.text = "Couldn't load Poems!"
+
+            recyclerView.adapter = adapter
+            buttonRetry.setOnClickListener { adapter.retry() }
         }
 
-        adapter.withLoadStateHeaderAndFooter(
-            header = GenericStateAdapter(adapter::retry),
-            footer = GenericStateAdapter(adapter::retry)
-        )
-    }
-
-    private fun navigateToCompose() {
-        navigate(getDeeplink(Destinations.COMPOSE))
-    }
-
-    private fun navigateToPoem() {
-        navigate(getDeeplink(Destinations.POEM))
     }
 
 }

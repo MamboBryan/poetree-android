@@ -3,16 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_compose_preview"
-        android:icon="@drawable/ic_outline_remove_red_eye_24"
-        android:title="Preview"
+        android:id="@+id/action_compose_stash"
+        android:icon="@drawable/ic_baseline_save_alt_24"
+        android:title="Stash"
         android:visible="true"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_compose_stash"
-        android:icon="@drawable/ic_baseline_save_alt_24"
-        android:title="Stash"
+        android:id="@+id/action_compose_save"
+        android:icon="@drawable/ic_baseline_save_24"
+        android:title="Save"
         android:visible="true"
         app:showAsAction="ifRoom" />
 

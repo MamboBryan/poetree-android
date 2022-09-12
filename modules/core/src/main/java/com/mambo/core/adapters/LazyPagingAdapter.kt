@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.drawable.ColorDrawable
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
@@ -21,48 +22,125 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class LazyPagingAdapter<T : Any, R : ViewBinding>(
-    val create: (parent: ViewGroup) -> R,
-    val bind: (R.(item: T) -> Unit)? = null,
     val comparator: DiffUtil.ItemCallback<T>
 ) : PagingDataAdapter<T, LazyPagingAdapter<T, R>.LazyViewHolder>(comparator) {
 
-    private var onSwipedRight: ((item: T) -> Unit)? = null
-    private var onSwipedLeft: ((item: T) -> Unit)? = null
-    private var selected: ((item: T) -> Unit)? = null
+    private var mCreate: ((parent: ViewGroup) -> R)? = null
+    private var mBind: (R.(item: T) -> Unit)? = null
+    private var mBindSelected: (R.(item: T, selected: Boolean) -> Unit)? = null
 
-    inner class LazyViewHolder(val binding: R) : RecyclerView.ViewHolder(binding.root) {
+    private var onItemClicked: ((item: T) -> Unit)? = null
+    private var onItemLongClicked: ((item: T) -> Boolean)? = null
+    private var onItemsSelected: ((items: List<T?>) -> Unit)? = null
+    private var onItemSelected: ((item: T?) -> Unit)? = null
+
+    private val selectedItems = mutableListOf<Long>()
+
+    inner class LazyViewHolder(
+        val context: Context,
+        val binding: R?
+    ) : RecyclerView.ViewHolder(binding?.root ?: View(context)) {
 
         init {
 
-            binding.root.setOnClickListener {
-                selected?.invoke(getItem(absoluteAdapterPosition) as T)
+            binding?.let {
+                it.root.setOnClickListener {
+
+                    // ON CLICK
+                    onItemClicked?.invoke(getItem(absoluteAdapterPosition) as T)
+
+                    // CHECK SELECTIONS AND TOGGLE
+                    if (onItemSelected != null || onItemsSelected != null)
+                        when (selectedItems.contains(absoluteAdapterPosition.toLong())) {
+                            true -> removeSelection(absoluteAdapterPosition)
+                            false -> addSelection(absoluteAdapterPosition)
+                        }
+
+                    // ON SINGLE ITEM SELECTED
+                    onItemSelected?.let { mSelect ->
+                        val item = selectedItems.map { position -> getItem(position.toInt()) }
+                            .firstOrNull()
+                        mSelect.invoke(item)
+                    }
+
+                    // ON MULTIPLE ITEM SELECTED
+                    onItemsSelected?.let { mSelects ->
+                        val list = selectedItems.map { position -> getItem(position.toInt()) }
+                        mSelects.invoke(list)
+                    }
+
+                }
+                it.root.setOnLongClickListener {
+                    getItem(absoluteAdapterPosition)?.let { item ->
+                        onItemLongClicked?.invoke(item)
+                    } ?: false
+                }
             }
 
         }
 
         fun bindHolder(item: T) {
-            bind?.let { block -> binding.block(item) }
+            mBind?.let { block -> binding?.block(item) }
+        }
+
+        fun bindHolder(item: T, selected: Boolean) {
+            mBindSelected?.let { block -> binding?.block(item, selected) }
         }
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LazyViewHolder {
-        val binding = create.invoke(parent)
-        return LazyViewHolder(binding)
+        val binding = mCreate?.invoke(parent)
+        return LazyViewHolder(parent.context, binding)
     }
 
     override fun onBindViewHolder(holder: LazyViewHolder, position: Int) {
         val item = getItem(position) as T
-        holder.bindHolder(item)
+        if (onItemSelected != null || onItemsSelected != null)
+            holder.bindHolder(item, selectedItems.contains(position.toLong()))
+        else
+            holder.bindHolder(item)
     }
 
-    fun onItemSelected(block: ((item: T) -> Unit)? = null) {
-        selected = block
+    /**
+     * CREATE VIEWS
+     */
+
+    fun onCreate(create: (parent: ViewGroup) -> R) {
+        mCreate = create
     }
 
-    private fun getMutableList(): MutableList<T> = this.snapshot().filterNotNull().toMutableList()
+    /**
+     * INVOKE BINDINGS
+     */
 
-    private fun updatedPagedData(list: List<T>): PagingData<T> = PagingData.from(list)
+    fun onBind(bind: R.(item: T) -> Unit) {
+        mBind = bind
+    }
+
+    fun onBind(bind: R.(item: T, selected: Boolean) -> Unit) {
+        mBindSelected = bind
+    }
+
+    /**
+     * ADAPTER SELECTIONS, CLICKS, SWIPES
+     */
+
+    fun onItemClicked(block: ((item: T) -> Unit)? = null) {
+        onItemClicked = block
+    }
+
+    fun onItemLongClicked(block: ((item: T) -> Boolean)? = null) {
+        onItemLongClicked = block
+    }
+
+    fun onItemSelected(block: ((item: T?) -> Unit)? = null) {
+        onItemSelected = block
+    }
+
+    fun onItemsSelected(block: ((items: List<T?>) -> Unit)? = null) {
+        onItemsSelected = block
+    }
 
     fun onSwipedRight(
         @DrawableRes icon: Int? = null,
@@ -101,7 +179,7 @@ class LazyPagingAdapter<T : Any, R : ViewBinding>(
             iconColor = iconColor,
             background = color
         )
-        val swiper = object : SwipeRight(context = view.context, lazyField = fields) {
+        val swiper = object : SwipeLeft(context = view.context, lazyField = fields) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 getItem(viewHolder.absoluteAdapterPosition)?.let {
                     swiped.invoke(it)
@@ -111,6 +189,25 @@ class LazyPagingAdapter<T : Any, R : ViewBinding>(
 
         }
         ItemTouchHelper(swiper).attachToRecyclerView(view)
+    }
+
+    private fun getMutableList(): MutableList<T> = this.snapshot().filterNotNull().toMutableList()
+
+    private fun updatedPagedData(list: List<T>): PagingData<T> = PagingData.from(list)
+
+    private fun addSelection(position: Int) {
+        if (selectedItems.contains(position.toLong())) return
+        val previousPosition = selectedItems.firstOrNull()
+        if (onItemSelected != null) selectedItems.clear()
+        selectedItems.add(position.toLong())
+        previousPosition?.toInt()?.let { notifyItemChanged(it) }
+        notifyItemChanged(position)
+    }
+
+    private fun removeSelection(position: Int) {
+        if (!selectedItems.contains(position.toLong())) return
+        selectedItems.remove(position.toLong())
+        notifyItemChanged(position)
     }
 
     fun add(item: T) {
@@ -148,14 +245,119 @@ class LazyPagingAdapter<T : Any, R : ViewBinding>(
         private val lazyField: LazySwipeFields?
     ) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
-        private val deleteIcon =
+        private val icon =
+            ContextCompat.getDrawable(
+                context,
+                lazyField?.drawable ?: com.mambo.core.R.drawable.ic_baseline_edit_24
+            )
+
+        private val intrinsicWidth = icon?.intrinsicWidth ?: 0
+        private val intrinsicHeight = icon?.intrinsicHeight ?: 0
+        private val background = ColorDrawable()
+        private val backgroundColor =
+            ContextCompat.getColor(
+                context,
+                lazyField?.background ?: com.mambo.core.R.color.colorAccent
+            )
+        private val clearPaint =
+            Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) }
+
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            return false
+        }
+
+        override fun getMovementFlags(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder
+        ): Int {
+            if (viewHolder.absoluteAdapterPosition == 10) return 0
+            return super.getMovementFlags(recyclerView, viewHolder)
+        }
+
+        override fun onChildDraw(
+            c: Canvas,
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            dX: Float,
+            dY: Float,
+            actionState: Int,
+            isCurrentlyActive: Boolean
+        ) {
+
+            val itemView = viewHolder.itemView
+            val itemHeight = itemView.bottom - itemView.top
+            val isCanceled = dX == 0f && !isCurrentlyActive
+
+            if (isCanceled) {
+                clearCanvas(
+                    c,
+                    itemView.right + dX,
+                    itemView.top.toFloat(),
+                    itemView.right.toFloat(),
+                    itemView.bottom.toFloat()
+                )
+                super.onChildDraw(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
+                return
+            }
+
+            // Draw the red delete background
+            background.color = backgroundColor
+            background.setBounds(
+                itemView.right + dX.toInt(),
+                itemView.top,
+                itemView.right,
+                itemView.bottom
+            )
+            background.draw(c)
+
+            // Calculate position of delete icon
+            val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
+            val deleteIconMargin = (itemHeight - intrinsicHeight) / 2
+            val deleteIconLeft = itemView.right - deleteIconMargin - intrinsicWidth
+            val deleteIconRight = itemView.right - deleteIconMargin
+            val deleteIconBottom = deleteIconTop + intrinsicHeight
+
+            // Draw the delete icon
+            icon?.setTint(
+                ContextCompat.getColor(context, lazyField?.iconColor ?: android.R.color.white)
+            )
+            icon?.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
+            icon?.draw(c)
+
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+        }
+
+        private fun clearCanvas(c: Canvas?, left: Float, top: Float, right: Float, bottom: Float) {
+            c?.drawRect(left, top, right, bottom, clearPaint)
+        }
+
+    }
+
+    private abstract inner class SwipeLeft(
+        private val context: Context,
+        private val lazyField: LazySwipeFields?
+    ) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+
+        private val icon =
             ContextCompat.getDrawable(
                 context,
                 lazyField?.drawable ?: com.mambo.core.R.drawable.ic_baseline_delete_24
             )
 
-        private val intrinsicWidth = deleteIcon?.intrinsicWidth ?: 0
-        private val intrinsicHeight = deleteIcon?.intrinsicHeight ?: 0
+        private val intrinsicWidth = icon?.intrinsicWidth ?: 0
+        private val intrinsicHeight = icon?.intrinsicHeight ?: 0
         private val background = ColorDrawable()
         private val backgroundColor =
             ContextCompat.getColor(
@@ -233,11 +435,11 @@ class LazyPagingAdapter<T : Any, R : ViewBinding>(
             val deleteIconBottom = deleteIconTop + intrinsicHeight
 
             // Draw the delete icon
-            deleteIcon?.setTint(
+            icon?.setTint(
                 ContextCompat.getColor(context, lazyField?.iconColor ?: android.R.color.white)
             )
-            deleteIcon?.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
-            deleteIcon?.draw(c)
+            icon?.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
+            icon?.draw(c)
 
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
         }

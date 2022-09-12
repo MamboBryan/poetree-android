@@ -7,6 +7,7 @@ import com.mambo.core.source.PoemsMediator
 import com.mambo.core.source.UserPoemsMediator
 import com.mambo.data.models.Bookmark
 import com.mambo.data.models.LocalPoem
+import com.mambo.data.models.Poem
 import com.mambo.data.models.Topic
 import com.mambo.data.requests.CreatePoemRequest
 import com.mambo.data.requests.EditPoemRequest
@@ -41,17 +42,11 @@ class PoemRepository @Inject constructor() {
         else poemsDao.getPoems(query)
     }.flow
 
-    fun bookmarkPoems(query: String) =
-        Pager(PagingConfig(10)) { poemsDao.getBookmarks(query) }.flow
-
-    fun unpublishedPoems(userId: String, query: String) =
-        Pager(PagingConfig(10)) { poemsDao.getUnPublishedPoems(userId) }.flow
-
     fun searchPoems(query: String) = Pager(PagingConfig(10)) { poemsDao.getPoems(query) }.flow
 
     suspend fun save(poem: LocalPoem) = poemsDao.insert(poem)
 
-    suspend fun update(poem: LocalPoem): Int = poemsDao.update(poem)
+    suspend fun update(poem: LocalPoem) = poemsDao.update(poem)
 
     suspend fun delete(poem: LocalPoem) = poemsDao.delete(poem)
 
@@ -62,6 +57,8 @@ class PoemRepository @Inject constructor() {
     suspend fun saveLocal(poem: LocalPoem) = poemsDao.insert(poem)
 
     suspend fun updateLocal(poem: LocalPoem) = poemsDao.update(poem)
+
+    suspend fun getLocal(poem: Poem) = poemsDao.get(poem.id)
 
     suspend fun deleteLocal(poem: LocalPoem) = poemsDao.delete(poem)
 

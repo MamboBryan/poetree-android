@@ -14,6 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
+import com.google.android.material.snackbar.Snackbar
 import com.mambo.bookmarks.databinding.FragmentBookmarksBinding
 import com.mambo.bookmarks.databinding.ItemPoemBookmarkBinding
 import com.mambo.core.adapters.GenericStateAdapter
@@ -23,9 +24,6 @@ import com.mambo.core.extensions.onQueryTextChanged
 import com.mambo.core.utils.*
 import com.mambo.core.viewmodel.MainViewModel
 import com.mambo.data.models.Poem
-import com.mambobryan.navigation.Destinations
-import com.mambobryan.navigation.extensions.getDeeplink
-import com.mambobryan.navigation.extensions.navigate
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -44,27 +42,7 @@ class BookmarksFragment : Fragment(R.layout.fragment_bookmarks) {
     @Inject
     lateinit var bookmarkActions: BookmarkActions
 
-    private val adapter = LazyPagingAdapter<Poem, ItemPoemBookmarkBinding>(
-        comparator = Poem.COMPARATOR,
-        create = {
-            ItemPoemBookmarkBinding.inflate(it.getInflater(), it, false)
-        },
-        bind = { poem ->
-            binding.apply {
-
-                val duration = PrettyTime().formatDuration(poem.createdAt.toDate())
-                val message = " \u2022 $duration "
-
-                tvPoemDuration.text = message
-                tvPoemUser.text = poem.user?.name
-                tvPoemTitle.text = poem.title
-
-                val color = poem.topic?.color ?: "#F7DEE6"
-                layoutBookmarkBg.setBackgroundColor(Color.parseColor(color))
-
-            }
-        }
-    )
+    private val adapter = LazyPagingAdapter<Poem, ItemPoemBookmarkBinding>(Poem.COMPARATOR)
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_bookmarks, menu)
@@ -114,6 +92,50 @@ class BookmarksFragment : Fragment(R.layout.fragment_bookmarks) {
     }
 
     private fun initViews() {
+
+        adapter.apply {
+
+            onCreate {
+                ItemPoemBookmarkBinding.inflate(it.getInflater(), it, false)
+            }
+
+            onBind { poem ->
+                binding.apply {
+
+                    val duration = PrettyTime().formatDuration(poem.createdAt.toDate())
+                    val message = " \u2022 $duration "
+
+                    tvPoemDuration.text = message
+                    tvPoemUser.text = poem.user?.name
+                    tvPoemTitle.text = poem.title
+
+                    val color = poem.topic?.color ?: "#F7DEE6"
+                    layoutBookmarkBg.setBackgroundColor(Color.parseColor(color))
+
+                }
+            }
+
+            onItemClicked {
+                bookmarkActions.navigateToPoem(it)
+            }
+
+            onSwipedRight(view = binding.layoutStateBookmarks.recyclerView) {
+//            viewModel.deleteBookmark(it)
+                Snackbar.make(requireView(), it.title, Snackbar.LENGTH_SHORT).show()
+            }
+
+            onSwipedLeft(view = binding.layoutStateBookmarks.recyclerView) {
+//            viewModel.deleteBookmark(it)
+                Snackbar.make(requireView(), it.title, Snackbar.LENGTH_SHORT).show()
+
+            }
+
+            withLoadStateHeaderAndFooter(
+                header = GenericStateAdapter(adapter::retry),
+                footer = GenericStateAdapter(adapter::retry)
+            )
+        }
+
         binding.apply {
             toolbarBookmarks.title = "Bookmarks"
             (requireActivity() as AppCompatActivity).setSupportActionBar(toolbarBookmarks)
@@ -126,27 +148,9 @@ class BookmarksFragment : Fragment(R.layout.fragment_bookmarks) {
 
                 buttonRetry.setOnClickListener { adapter.retry() }
                 stateContent.setOnRefreshListener { adapter.refresh() }
-
             }
 
         }
-
-        adapter.onItemSelected {
-            bookmarkActions.navigateToPoem(it)
-        }
-
-        adapter.onSwipedRight(view = binding.layoutStateBookmarks.recyclerView) {
-            viewModel.deleteBookmark(it)
-        }
-
-        adapter.withLoadStateHeaderAndFooter(
-            header = GenericStateAdapter(adapter::retry),
-            footer = GenericStateAdapter(adapter::retry)
-        )
     }
 
-    private fun navigateToPoem() {
-        val deeplink = getDeeplink(Destinations.POEM)
-        navigate(deeplink)
-    }
 }
