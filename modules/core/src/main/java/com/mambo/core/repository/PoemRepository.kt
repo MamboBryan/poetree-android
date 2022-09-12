@@ -4,6 +4,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.mambo.core.source.PoemsMediator
+import com.mambo.core.source.SearchedPoemsMediator
 import com.mambo.core.source.UserPoemsMediator
 import com.mambo.data.models.Bookmark
 import com.mambo.data.models.LocalPoem
@@ -17,6 +18,7 @@ import com.mambo.local.PoetreeDatabase
 import com.mambo.local.daos.BookmarksDao
 import com.mambo.local.daos.PoemsDao
 import com.mambo.local.daos.PublishedDao
+import com.mambo.local.daos.SearchedDao
 import com.mambo.remote.service.PoemsApi
 import javax.inject.Inject
 
@@ -32,17 +34,13 @@ class PoemRepository @Inject constructor() {
     lateinit var bookmarksDao: BookmarksDao
 
     @Inject
+    lateinit var searchedDao: SearchedDao
+
+    @Inject
     lateinit var publishedDao: PublishedDao
 
     @Inject
     lateinit var poemsApi: PoemsApi
-
-    fun searchPoems(topic: Topic?, query: String) = Pager(PagingConfig(10)) {
-        if (topic != null) poemsDao.getPoems(query)
-        else poemsDao.getPoems(query)
-    }.flow
-
-    fun searchPoems(query: String) = Pager(PagingConfig(10)) { poemsDao.getPoems(query) }.flow
 
     suspend fun save(poem: LocalPoem) = poemsDao.insert(poem)
 
@@ -106,6 +104,23 @@ class PoemRepository @Inject constructor() {
         config = PagingConfig(PAGE_SIZE),
         remoteMediator = PoemsMediator(poemsApi = poemsApi, database = database),
         pagingSourceFactory = { publishedDao.getAll() }
+    ).flow
+
+    @OptIn(ExperimentalPagingApi::class)
+    fun searchedPoems(topic: Topic?, query: String = "") = Pager(
+        config = PagingConfig(PAGE_SIZE),
+        remoteMediator = SearchedPoemsMediator(
+            topic = topic,
+            query = query,
+            poemsApi = poemsApi,
+            database = database
+        ),
+        pagingSourceFactory = {
+            when {
+                topic != null -> searchedDao.getAll(topic, query)
+                else -> searchedDao.getAll(query)
+            }
+        }
     ).flow
 
     fun getUserPoems(userId: String) = Pager(PagingConfig(PAGE_SIZE)) {

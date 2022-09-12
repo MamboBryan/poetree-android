@@ -14,6 +14,7 @@ import com.mambo.library.LibraryActions
 import com.mambo.poetree.NavigationMainDirections
 import com.mambo.poetree.R
 import com.mambobryan.features.loading.LoadingActions
+import com.mambobryan.features.search.SearchActions
 import com.mambobryan.poetree.poem.PoemActions
 import dagger.Binds
 import dagger.Module
@@ -27,7 +28,7 @@ import javax.inject.Inject
 class Navigator @Inject constructor(
     private val controller: NavController
 ) : FeedActions, PoemActions, BookmarkActions, ComposeActions, LoadingActions, LibraryActions,
-ExploreActions{
+    ExploreActions, SearchActions {
 
     @Module
     @InstallIn(ActivityComponent::class)
@@ -131,5 +132,11 @@ ExploreActions{
         controller.navigate(NavigationMainDirections.toTopic(topic))
     }
 
+    @Module
+    @InstallIn(ActivityComponent::class)
+    abstract class SearchModule {
+        @Binds
+        abstract fun searchActions(navigator: Navigator): SearchActions
+    }
 
 }

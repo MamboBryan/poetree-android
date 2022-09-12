@@ -12,7 +12,6 @@ import com.mambo.local.daos.PublishedKeys
 import com.mambo.remote.service.PoemsApi
 import okio.IOException
 import retrofit2.HttpException
-import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
 class PoemsMediator(
@@ -85,15 +84,13 @@ class PoemsMediator(
 
         val pagingSource = state.pages.firstOrNull()
 
-        val characters = pagingSource?.data
+        val data = pagingSource?.data
 
-        if (characters.isNullOrEmpty()) return null
+        if (data.isNullOrEmpty()) return null
 
-        val firstCharacter = characters.firstOrNull() ?: return null
+        val firstItem = data.firstOrNull() ?: return null
 
-        val keys = database.publishedKeysDao().getKeysByPoemId(firstCharacter.id)
-
-        Timber.i("Character Key for First Item => $keys")
+        val keys = database.publishedKeysDao().getKeysByPoemId(firstItem.id)
 
         return keys
 
@@ -106,8 +103,6 @@ class PoemsMediator(
         val closestItem = state.closestItemToPosition(anchorPosition) ?: return null
 
         val keys = database.publishedKeysDao().getKeysByPoemId(closestItem.id)
-
-        Timber.i("Character Key for Closest Item => $keys")
 
         return keys
 
@@ -124,8 +119,6 @@ class PoemsMediator(
         val lastCharacter = characters.lastOrNull() ?: return null
 
         val keys = database.publishedKeysDao().getKeysByPoemId(lastCharacter.id)
-
-        Timber.i("Character Key for Last Item => $keys")
 
         return keys
 

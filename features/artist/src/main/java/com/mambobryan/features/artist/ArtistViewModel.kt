@@ -1,5 +1,6 @@
 package com.mambobryan.features.artist
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -15,17 +16,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ArtistViewModel @Inject constructor(
-    poemsRepository: PoemRepository
+    repository: PoemRepository,
+    state: SavedStateHandle
 ) : ViewModel() {
 
     private val _eventChannel = Channel<ArtistEvent>()
     val events = _eventChannel.receiveAsFlow()
 
     private val user = MutableStateFlow("")
-    private val _poems = user.flatMapLatest { poemsRepository.searchPoems(it) }
+    private val _poems = user.flatMapLatest { repository.getUserPoems(it) }
     val poems = _poems.cachedIn(viewModelScope)
 
-    fun onPoemClicked(poem: Poem){
+    fun onPoemClicked(poem: Poem) {
         updateUi(ArtistEvent.UpdatePoemInSharedViewModel(poem))
         updateUi(ArtistEvent.NavigateToPoem)
     }

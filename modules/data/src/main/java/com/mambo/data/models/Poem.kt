@@ -170,6 +170,29 @@ data class Published(
     override var commented: Boolean
 ) : Parcelable, Poem(id, title, content, html, createdAt, updatedAt, topic)
 
+@Entity(tableName = "searched_poems")
+@Parcelize
+data class Searched(
+    @PrimaryKey(autoGenerate = false)
+    override val id: String,
+    override val createdAt: String,
+    override val updatedAt: String,
+    val editedAt: String?,
+    override val title: String,
+    override val content: String,
+    override val html: String,
+    override var user: User?,
+    override val topic: Topic,
+    override var reads: Long,
+    override var read: Boolean,
+    override var bookmarks: Long,
+    override var bookmarked: Boolean,
+    override var likes: Long,
+    override var liked: Boolean,
+    override var comments: Long,
+    override var commented: Boolean
+) : Parcelable, Poem(id, title, content, html, createdAt, updatedAt, topic)
+
 data class PoemDto(
     override val id: String,
     override val createdAt: String,

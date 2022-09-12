@@ -267,11 +267,11 @@ class PoemsApi @Inject constructor(
         response.body()
     }
 
-    suspend fun searchPoems(query: String, topic: Int?, page: Int = 1) =
+    suspend fun searchPoems(query: String, topicId: Int?, page: Int = 1) =
         safeApiCall<PagedData<PoemResponse>> {
             val url = Endpoints.POEMS.url
             val response = client.get(url) {
-                if (topic != null) parameter("topic", topic.toString())
+                if (topicId != null) parameter("topic", topicId.toString())
                 parameter("q", query)
                 parameter("page", page.toString())
             }

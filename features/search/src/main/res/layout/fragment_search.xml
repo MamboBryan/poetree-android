@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorSurface">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -19,21 +19,41 @@
                 android:id="@+id/toolbar_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical" />
+                android:gravity="center_vertical"
+                app:layout_constraintBottom_toBottomOf="@+id/searchView_search"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/searchView_search" />
 
             <com.mambobryan.libraries.searchbar.ui.MultiSearch
                 android:id="@+id/searchView_search"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/toolbar_search"
                 app:layout_constraintTop_toTopOf="parent"
                 app:searchIcon="@drawable/ic_baseline_search_24"
                 app:searchRemoveIcon="@drawable/ic_round_clear_24"
                 app:searchSelectionIndicator="@drawable/selected_item_indicator"
                 app:searchTextAppearance="@style/MultiSearchEditTextStyle" />
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
+            <HorizontalScrollView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/searchView_search">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chips_filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </HorizontalScrollView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 

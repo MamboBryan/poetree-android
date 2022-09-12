@@ -53,7 +53,7 @@ class MainViewModel @Inject constructor(
     private val searchQuery = MutableStateFlow("")
     private val _searches = combine(searchTopic, searchQuery) { topic, query ->
         Pair(topic, query)
-    }.flatMapLatest { (topic, query) -> repository.searchPoems(topic, query) }
+    }.flatMapLatest { (topic, query) -> repository.searchedPoems(topic = topic, query = query) }
     val searchedPoems = _searches.cachedIn(viewModelScope)
 
     private val bookmarksQuery = MutableStateFlow("")
@@ -107,7 +107,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun setTopic(topic: Topic?) {
-        _topic.value = topic
+        searchTopic.value = topic
     }
 
     fun setUser(user: User?) {
