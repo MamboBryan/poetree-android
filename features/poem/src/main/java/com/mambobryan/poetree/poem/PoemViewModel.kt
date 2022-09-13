@@ -69,7 +69,6 @@ class PoemViewModel @Inject constructor(
 
             _poem.value?.let {
                 updatePoem(it)
-
             }
 
         }
@@ -363,7 +362,15 @@ class PoemViewModel @Inject constructor(
         val data = response.data
 
         val updatedPoem = data?.toPoemDto()
-        _poem.value = updatedPoem
+
+        updatedPoem?.let {
+            _poem.value = it
+            _reads.value = Pair(it.read, it.reads)
+            _likes.value = Pair(it.liked, it.likes)
+            _bookmarks.value = Pair(it.bookmarked, it.bookmarks)
+            _comments.value = Pair(it.commented, it.comments)
+        }
+
         updatedPoem?.toBookmark()?.let { poemRepository.updateBookmark(it) }
         updateUi(PoemEvent.SneakSuccess("Got poem updates"))
 
