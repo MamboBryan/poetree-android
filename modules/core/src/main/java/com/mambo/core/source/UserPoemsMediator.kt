@@ -3,6 +3,7 @@ package com.mambo.core.source
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.mambo.data.models.Poem
+import com.mambo.data.utils.Constants.START_PAGE
 import com.mambo.remote.service.PoemsApi
 import okio.IOException
 import retrofit2.HttpException
@@ -22,7 +23,7 @@ class UserPoemsMediator(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Poem> {
 
         // Get the current page from the params
-        val page = params.key ?: 1
+        val page = params.key ?: START_PAGE
 
         return try {
             // Get the response from the server

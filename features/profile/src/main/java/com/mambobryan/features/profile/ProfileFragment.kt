@@ -22,17 +22,18 @@ import com.irozon.alertview.AlertStyle
 import com.irozon.alertview.AlertTheme
 import com.irozon.alertview.AlertView
 import com.irozon.alertview.objects.AlertAction
-import com.mambo.core.adapters.ArtistPoemsAdapter
 import com.mambo.core.adapters.GenericStateAdapter
+import com.mambo.core.adapters.LazyPagingAdapter
+import com.mambo.core.adapters.getInflater
 import com.mambo.core.utils.*
 import com.mambo.core.viewmodel.MainViewModel
+import com.mambo.data.models.Poem
+import com.mambo.ui.databinding.ItemPoemArtistBinding
 import com.mambobryan.features.profile.databinding.FragmentProfileBinding
-import com.mambobryan.navigation.Destinations
-import com.mambobryan.navigation.extensions.getDeeplink
-import com.mambobryan.navigation.extensions.navigate
-import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import org.ocpsoft.prettytime.PrettyTime
+import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -40,13 +41,13 @@ import kotlin.math.abs
 @AndroidEntryPoint
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
-    private val binding by viewBinding(FragmentProfileBinding::bind)
+    @Inject
+    lateinit var profileActions: ProfileActions
 
+    private val binding by viewBinding(FragmentProfileBinding::bind)
     private val viewModel: ProfileViewModel by viewModels()
     private val sharedViewModel: MainViewModel by activityViewModels()
-
-    @Inject
-    lateinit var adapter: ArtistPoemsAdapter
+    private val adapter = LazyPagingAdapter<Poem, ItemPoemArtistBinding>(Poem.COMPARATOR)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -59,10 +60,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     ProfileViewModel.ProfileEvent.ShowDarkModeDialog -> showDarkModeDialog()
                     ProfileViewModel.ProfileEvent.HideLoading -> {
                         binding.layoutProfileDetails.progressProfile.isVisible = false
-                    }
-                    is ProfileViewModel.ProfileEvent.NavigateToPoem -> {
-                        sharedViewModel.setPoem(event.poem)
-                        navigateToLanding()
                     }
                     is ProfileViewModel.ProfileEvent.ShowError -> {
                         Snackbar.make(requireView(), event.message, Snackbar.LENGTH_LONG).show()
@@ -99,6 +96,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 it?.let { userDetails ->
                     binding.layoutProfileHeader.tvHeaderTitle.text = userDetails.name
                     binding.layoutProfileDetails.apply {
+                        progressProfile.isVisible = false
                         tvArtistName.text = userDetails.name
                         tvArtistBio.text = userDetails.bio
                         tvArtistReads.text = prettyCount(userDetails.reads ?: 0)
@@ -128,28 +126,50 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     }
 
-    private fun initViews() = binding.apply {
+    private fun initViews() {
+        adapter.apply {
 
-        setUpScrollView()
+            onCreate { ItemPoemArtistBinding.inflate(it.getInflater(), it, false) }
+            onItemClicked { profileActions.navigateToPoem(it) }
+            onBind { poem ->
+                this.apply {
 
-        layoutProfileHeader.ivHeaderDarkMode.setOnClickListener { viewModel.onAppThemeClicked() }
-        layoutProfileHeader.ivHeaderBack.setOnClickListener { findNavController().popBackStack() }
+                    val topic = poem.topic?.name?.replaceFirstChar { it.uppercase() } ?: "Topicless"
 
-        layoutProfilePoems.apply {
-            buttonRetry.setOnClickListener { adapter.retry() }
-            recyclerView.adapter = adapter
-            stateContent.setOnRefreshListener {
-                recyclerView.scrollToPosition(0)
-                adapter.refresh()
+                    val date = Date(poem.createdAt.toDateTime() ?: 0)
+                    val duration = PrettyTime().formatDuration(date)
+                    val message = "$topic  \u2022  $duration "
+
+                    tvPoemTitle.text = poem.title
+                    tvPoemDuration.text = message
+
+                    val color = poem.topic?.color ?: "#94F292"
+                    layoutArtistBg.setBackgroundColor(Color.parseColor(color))
+
+                }
             }
+            withLoadStateHeaderAndFooter(
+                header = GenericStateAdapter(adapter::retry),
+                footer = GenericStateAdapter(adapter::retry)
+            )
         }
 
-        adapter.onPoemClicked { viewModel.onPoemClicked(it) }
+        binding.apply {
 
-        adapter.withLoadStateHeaderAndFooter(
-            header = GenericStateAdapter(adapter::retry),
-            footer = GenericStateAdapter(adapter::retry)
-        )
+            setUpScrollView()
+
+            layoutProfileHeader.ivHeaderDarkMode.setOnClickListener { viewModel.onAppThemeClicked() }
+            layoutProfileHeader.ivHeaderBack.setOnClickListener { findNavController().popBackStack() }
+
+            layoutProfilePoems.apply {
+                buttonRetry.setOnClickListener { adapter.retry() }
+                recyclerView.adapter = adapter
+                stateContent.setOnRefreshListener {
+                    adapter.refresh()
+                }
+            }
+
+        }
     }
 
     private fun setUpScrollView() = binding.apply {
@@ -228,10 +248,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         alert.setTheme(if (isDark) AlertTheme.DARK else AlertTheme.LIGHT)
         alert.show(requireActivity() as AppCompatActivity)
 
-    }
-
-    private fun navigateToLanding() {
-        navigate(getDeeplink(Destinations.POEM))
     }
 
 }

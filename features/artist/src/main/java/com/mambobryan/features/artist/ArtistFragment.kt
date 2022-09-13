@@ -115,9 +115,9 @@ class ArtistFragment : Fragment(R.layout.fragment_artist) {
             viewModel.details.collectLatest {
                 it?.let {
                     binding.apply {
-                        binding.layoutDetails.progressProfile.isVisible = false
                         layoutHeader.tvHeaderTitle.text = it.name
                         layoutDetails.apply {
+                            progressProfile.isVisible = false
                             tvArtistName.text = it.name
                             tvArtistBio.text = it.bio
                             tvArtistReads.text = prettyCount(it.reads ?: 0)

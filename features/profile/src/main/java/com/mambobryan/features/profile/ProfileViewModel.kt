@@ -64,15 +64,12 @@ class ProfileViewModel @Inject constructor(
 
     fun onDarkModeSelected(mode: Int) = viewModelScope.launch { preferences.updateDarkMode(mode) }
 
-    fun onPoemClicked(poem: Poem) = updateUi(ProfileEvent.NavigateToPoem(poem))
-
     private fun updateUi(event: ProfileEvent) = viewModelScope.launch {
         _eventChannel.send(event)
     }
 
     sealed class ProfileEvent {
         object ShowDarkModeDialog : ProfileEvent()
-        data class NavigateToPoem(val poem: Poem) : ProfileEvent()
         data class ShowError(val message: String) : ProfileEvent()
         object HideLoading : ProfileEvent()
     }
