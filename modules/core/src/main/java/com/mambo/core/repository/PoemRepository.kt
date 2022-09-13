@@ -3,6 +3,7 @@ package com.mambo.core.repository
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.mambo.core.source.PoemsMediator
 import com.mambo.core.source.SearchedPoemsMediator
 import com.mambo.core.source.UserPoemsMediator
@@ -20,6 +21,7 @@ import com.mambo.local.daos.PoemsDao
 import com.mambo.local.daos.PublishedDao
 import com.mambo.local.daos.SearchedDao
 import com.mambo.remote.service.PoemsApi
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class PoemRepository @Inject constructor() {
@@ -125,7 +127,7 @@ class PoemRepository @Inject constructor() {
         }
     ).flow
 
-    fun getUserPoems(userId: String) = Pager(PagingConfig(PAGE_SIZE)) {
+    fun getUserPoems(userId: String): Flow<PagingData<Poem>> = Pager(PagingConfig(PAGE_SIZE)) {
         UserPoemsMediator(userId, poemsApi)
     }.flow
 

@@ -31,8 +31,7 @@ class ProfileViewModel @Inject constructor(
 
     val userDetails = preferences.user
 
-    private val _poems =
-        userDetails.map { if (it != null) poemRepository.getUserPoems(it.id!!).first() else null }
+    private val _poems = userDetails.map { if (it != null) poemRepository.getUserPoems(it.id!!).first() else null }
     val poems: Flow<PagingData<Poem>?> get() = _poems
 
     init {

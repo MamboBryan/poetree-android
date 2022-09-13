@@ -13,6 +13,8 @@ class UserRepository @Inject constructor() {
 
     suspend fun getMyDetails() = poemsApi.getMyDetails()
 
+    suspend fun getUserDetails(userId: String) = poemsApi.getUser(userId = userId)
+
     suspend fun setup(request: SetupRequest) = poemsApi.userSetup(request)
 
     suspend fun updateUser(request: UserUpdateRequest) = poemsApi.updateUser(request)

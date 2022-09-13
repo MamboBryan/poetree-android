@@ -13,6 +13,7 @@ import com.mambo.features.home.FeedActions
 import com.mambo.library.LibraryActions
 import com.mambo.poetree.NavigationMainDirections
 import com.mambo.poetree.R
+import com.mambobryan.features.artist.ArtistActions
 import com.mambobryan.features.loading.LoadingActions
 import com.mambobryan.features.search.SearchActions
 import com.mambobryan.poetree.poem.PoemActions
@@ -28,7 +29,7 @@ import javax.inject.Inject
 class Navigator @Inject constructor(
     private val controller: NavController
 ) : FeedActions, PoemActions, BookmarkActions, ComposeActions, LoadingActions, LibraryActions,
-    ExploreActions, SearchActions {
+    ExploreActions, SearchActions, ArtistActions {
 
     @Module
     @InstallIn(ActivityComponent::class)
@@ -137,6 +138,13 @@ class Navigator @Inject constructor(
     abstract class SearchModule {
         @Binds
         abstract fun searchActions(navigator: Navigator): SearchActions
+    }
+
+    @Module
+    @InstallIn(ActivityComponent::class)
+    abstract class ArtistModule {
+        @Binds
+        abstract fun artistActions(navigator: Navigator): ArtistActions
     }
 
 }
