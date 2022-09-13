@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/navigation_main"
-    app:startDestination="@id/flow_loading">
+    app:startDestination="@id/flow_feeds">
 
     <action
         android:id="@+id/to_feeds"

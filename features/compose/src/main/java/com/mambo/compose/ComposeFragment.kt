@@ -99,7 +99,7 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
                     true
                 }
                 else -> false
-                
+
             }
         }
 
@@ -192,10 +192,8 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
     private fun poemDetailsAreValid(): Boolean {
         val poem = viewModel.poem.value
 
-        if (poem?.topic == null) {
-            showError(
-                message = "Poem Must has a topic to be published!"
-            )
+        if ((poem?.topic == null) and (viewModel.topic != null)) {
+            showError(message = "Poem Must has a topic to be published!")
             return false
         }
 

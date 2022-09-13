@@ -119,7 +119,8 @@ class ComposeViewModel @Inject constructor(
 
         if (poem.value != null) {
 
-            val updatedPoem = poem.value!!.copy(title = poemTitle, content = poemContent)
+            val updatedPoem =
+                poem.value!!.copy(title = poemTitle, content = poemContent, topic = topic)
             updateLocal(updatedPoem)
 
         } else {
@@ -148,7 +149,8 @@ class ComposeViewModel @Inject constructor(
         }
 
         if (poem.value?.remoteId != null) {
-            val updatedPoem = poem.value!!.copy(title = poemTitle, content = poemContent)
+            val updatedPoem =
+                poem.value!!.copy(title = poemTitle, content = poemContent, topic = topic)
             updatePublished(updatedPoem)
         } else {
             val newPoem = getNewPoem()
