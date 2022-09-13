@@ -27,6 +27,7 @@ class LazyPagingAdapter<T : Any, R : ViewBinding>(
 
     private var mCreate: ((parent: ViewGroup) -> R)? = null
     private var mBind: (R.(item: T) -> Unit)? = null
+    private var mBindPosition: (R.(item: T, position: Int) -> Unit)? = null
     private var mBindSelected: (R.(item: T, selected: Boolean) -> Unit)? = null
 
     private var onItemClicked: ((item: T) -> Unit)? = null
@@ -81,6 +82,7 @@ class LazyPagingAdapter<T : Any, R : ViewBinding>(
 
         fun bindHolder(item: T) {
             mBind?.let { block -> binding?.block(item) }
+            mBindPosition?.let { block -> binding?.block(item, absoluteAdapterPosition) }
         }
 
         fun bindHolder(item: T, selected: Boolean) {
@@ -116,6 +118,12 @@ class LazyPagingAdapter<T : Any, R : ViewBinding>(
 
     fun onBind(bind: R.(item: T) -> Unit) {
         mBind = bind
+    }
+
+
+    @JvmName("onBindWithPosition")
+    fun onBind(block: R.(item: T, position: Int) -> Unit) {
+        mBindPosition = block
     }
 
     fun onBind(bind: R.(item: T, selected: Boolean) -> Unit) {
@@ -222,6 +230,18 @@ class LazyPagingAdapter<T : Any, R : ViewBinding>(
     fun add(item: T) {
         val list: MutableList<T> = getMutableList()
         list.add(item)
+        updateList(list)
+    }
+
+    fun add(item: T, index: Int) {
+        val list: MutableList<T> = getMutableList()
+        list.add(index = index, element = item)
+        updateList(list)
+    }
+
+    fun update(item: T, index: Int) {
+        val list: MutableList<T> = getMutableList()
+        list.set(index = index, element = item)
         updateList(list)
     }
 

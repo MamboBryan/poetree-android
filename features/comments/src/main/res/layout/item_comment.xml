@@ -45,17 +45,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.like.LikeButton
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_comment_like"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:padding="8dp"
-        app:icon_type="heart"
+        android:layout_margin="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
         app:layout_constraintBottom_toBottomOf="@+id/tv_comment_days"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="@+id/tv_comment_content"
         app:layout_constraintTop_toTopOf="@+id/tv_comment_user"
-        tools:srcCompat="@drawable/ic_baseline_favorite_24" />
+        tools:srcCompat="@drawable/ic_baseline_favorite_16" />
 
     <TextView
         android:id="@+id/tv_comment_likes"
@@ -63,10 +63,38 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tv_comment_content"
         app:layout_constraintTop_toBottomOf="@+id/tv_comment_content"
+        tools:text="TextView" />
+
+    <TextView
+        android:id="@+id/tv_comment_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="update"
+        android:textColor="?attr/colorPrimary"
+        app:layout_constraintStart_toEndOf="@+id/tv_comment_likes"
+        app:layout_constraintTop_toTopOf="@+id/tv_comment_likes" />
+
+    <TextView
+        android:id="@+id/tv_comment_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="delete"
+        android:textColor="?attr/colorPrimary"
+        app:layout_constraintStart_toEndOf="@+id/tv_comment_update"
+        app:layout_constraintTop_toTopOf="@+id/tv_comment_update" />
+
+    <TextView
+        android:id="@+id/tv_comment_edited"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_comment_days"
+        app:layout_constraintStart_toEndOf="@+id/tv_comment_days"
+        app:layout_constraintTop_toBottomOf="@+id/tv_comment_user"
         tools:text="TextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

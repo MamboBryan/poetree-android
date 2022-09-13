@@ -289,12 +289,13 @@ class PoemsApi @Inject constructor(
         response.body()
     }
 
-    suspend fun updateComment(request: UpdateCommentRequest) = safeApiCall<CommentResponse> {
-        val response = client.put(Endpoints.COMMENTS.url) {
-            setBody(request)
+    suspend fun updateComment(request: UpdateCommentRequest) =
+        safeApiCall<CompleteCommentResponse> {
+            val response = client.put(Endpoints.COMMENT.url) {
+                setBody(request)
+            }
+            response.body()
         }
-        response.body()
-    }
 
     suspend fun getComment(commentId: String) = safeApiCall<CompleteCommentResponse> {
         val response = client.post(Endpoints.COMMENT.url) {
@@ -362,18 +363,18 @@ class PoemsApi @Inject constructor(
         response.body()
     }
 
-    suspend fun likeComment(poemId: String) = safeApiCall<Boolean> {
+    suspend fun likeComment(commentId: String) = safeApiCall<Boolean> {
         val url = Endpoints.COMMENT.url.plus("/like")
         val response = client.post(url) {
-            setBody(mapOf("commentId" to poemId))
+            setBody(mapOf("commentId" to commentId))
         }
         response.body()
     }
 
-    suspend fun unLikeComment(poemId: String) = safeApiCall<Boolean> {
+    suspend fun unLikeComment(commentId: String) = safeApiCall<Boolean> {
         val url = Endpoints.COMMENT.url.plus("/unlike")
         val response = client.delete(url) {
-            setBody(mapOf("commentId" to poemId))
+            setBody(mapOf("commentId" to commentId))
         }
         response.body()
     }

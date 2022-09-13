@@ -11,10 +11,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
+import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
-import com.like.IconType
-import com.like.LikeButton
-import com.like.OnLikeListener
 import com.mambo.core.adapters.GenericStateAdapter
 import com.mambo.core.adapters.LazyPagingAdapter
 import com.mambo.core.adapters.getInflater
@@ -57,20 +55,28 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
 
         lifecycleScope.launchWhenStarted {
             adapter.loadStateFlow.collectLatest { state: CombinedLoadStates ->
-                when (state.source.refresh) {
-                    is LoadState.Loading -> binding.layoutComments.showLoading()
-                    is LoadState.Error -> binding.layoutComments.showError()
-                    is LoadState.NotLoading -> {
-                        if (state.append.endOfPaginationReached && adapter.itemCount < 1)
-                            binding.layoutComments.showEmpty()
-                        else
-                            binding.layoutComments.showContent()
+                binding.layoutComments.apply {
+                    when (state.source.refresh) {
+                        is LoadState.Loading -> showLoading()
+                        is LoadState.Error -> showError()
+                        is LoadState.NotLoading -> {
+                            if (state.append.endOfPaginationReached && adapter.itemCount < 1)
+                                showEmpty()
+                            else
+                                showContent()
 
+                        }
                     }
                 }
             }
         }
 
+        viewModel.comment.observe(viewLifecycleOwner) {
+            binding.layoutCommentsEdit.apply {
+                layoutEditing.isVisible = it != null
+                edtComment.setText(it?.content)
+            }
+        }
 
         viewModel.content.observe(viewLifecycleOwner) {
             binding.layoutCommentsEdit.apply {
@@ -91,6 +97,7 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
 
         viewModel.isSendingComment.observe(viewLifecycleOwner) { isLoading ->
             binding.layoutCommentsEdit.apply {
+                layoutEditing.isEnabled = isLoading.not()
                 edtComment.isEnabled = isLoading.not()
                 ivComment.isVisible = isLoading.not()
                 progressComment.isVisible = isLoading
@@ -121,6 +128,7 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
     private fun initViews() = binding.apply {
         toolbar.setNavigationOnClickListener { findNavController().popBackStack() }
         layoutCommentsEdit.apply {
+            ivCommentClose.setOnClickListener { viewModel.setSelectedComment(null) }
             edtComment.doAfterTextChanged { viewModel.onContentUpdated(it.toString()) }
             ivComment.setOnClickListener { viewModel.onCommentSendClicked() }
         }
@@ -135,7 +143,7 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
 
         adapter.apply {
             onCreate { ItemCommentBinding.inflate(it.getInflater(), it, false) }
-            onBind { comment ->
+            onBind { comment: Comment, position: Int ->
                 binding.apply {
 
                     val daysAgo = Date(comment.createdAt.toDateTime() ?: 0).toDaysAgo()
@@ -145,54 +153,87 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
                     tvCommentContent.text = comment.content
                     tvCommentLikes.text = "${prettyCount(comment.likes)} likes"
 
-                    val iconLike = ContextCompat.getDrawable(
-                        requireContext(),
-                        if (comment.liked) R.drawable.liked else R.drawable.unliked
-                    )
+                    val isMyComment = comment.user.id == viewModel.userId
+                    tvCommentUpdate.isVisible = isMyComment
+                    tvCommentDelete.isVisible = isMyComment
+                    tvCommentEdited.apply {
+                        isVisible = comment.updatedAt != null
+                        text = " \u2022 Edited"
 
-                    val iconColor = ContextCompat.getColor(
-                        requireContext(),
-                        if (comment.liked) R.color.error else R.color.primary_100
-                    )
+                    }
+                    tvCommentUpdate.setOnClickListener {
+                        viewModel.setSelectedComment(comment)
+                    }
+
+                    tvCommentDelete.setOnClickListener {
+                        viewModel.updateDeleteComment(comment, position)
+                        adapter.remove(comment)
+                        showDeleteSnackBar(comment, position)
+                    }
+
+                    val likeIcon = when (comment.liked) {
+                        true -> com.mambo.ui.R.drawable.liked
+                        false -> com.mambo.ui.R.drawable.unliked
+                    }
 
                     ivCommentLike.apply {
-                        isLiked = comment.liked
-                        setIcon(IconType.Heart)
-                        setOnLikeListener(object : OnLikeListener {
-                            override fun liked(likeButton: LikeButton?) {
-                                viewModel.onCommentLiked(commentId = comment.id)
-                            }
+                        setImageDrawable(ContextCompat.getDrawable(requireContext(), likeIcon))
+                        setColorFilter(R.color.primary)
+                        setOnClickListener {
 
-                            override fun unLiked(likeButton: LikeButton?) {
-                                viewModel.onCommentUnliked(commentId = comment.id)
+                            val updatedComment = comment.copy(
+                                liked = comment.liked.not(),
+                                likes = when (comment.liked) {
+                                    true -> comment.likes - 1
+                                    false -> comment.likes + 1
+                                }
+                            )
+
+                            adapter.update(item = updatedComment, index = position)
+
+                            when (comment.liked) {
+                                true -> viewModel.onCommentUnliked(commentId = comment.id)
+                                false -> viewModel.onCommentLiked(commentId = comment.id)
                             }
-                        })
+                        }
                     }
 
                 }
             }
-            onItemClicked { }
+            withLoadStateHeaderAndFooter(
+                header = GenericStateAdapter(adapter::retry),
+                footer = GenericStateAdapter(adapter::retry)
+            )
         }
 
         binding.layoutComments.apply {
-            recyclerView.adapter = adapter
-            recyclerView.setHasFixedSize(true)
             buttonRetry.setOnClickListener { adapter.retry() }
-            stateContent.setOnRefreshListener {
-                recyclerView.scrollToPosition(0)
-                adapter.refresh()
+            stateContent.setOnRefreshListener { adapter.refresh() }
+            recyclerView.adapter = adapter
+        }
+
+    }
+
+    private fun showDeleteSnackBar(comment: Comment, position: Int) {
+        val snack = Snackbar.make(requireView(), "Comment Deleted", Snackbar.LENGTH_SHORT)
+        snack.setAction("UNDO") {
+            adapter.add(item = comment, index = position)
+            viewModel.updateDeleteComment(null, null)
+        }
+        snack.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
+            override fun onShown(transientBottomBar: Snackbar?) {
+                super.onShown(transientBottomBar)
             }
-        }
 
-        adapter.withLoadStateHeaderAndFooter(
-            header = GenericStateAdapter(adapter::retry),
-            footer = GenericStateAdapter(adapter::retry)
-        )
-
-        adapter.onSwipedRight(view = binding.layoutComments.recyclerView) {
-            Snackbar.make(requireView(), it.content, Snackbar.LENGTH_SHORT).show()
-        }
-
+            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                super.onDismissed(transientBottomBar, event)
+                when (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
+                    true -> viewModel.onCommentDelete()
+                    false -> viewModel.updateDeleteComment(null, null)
+                }
+            }
+        })
+        snack.show()
     }
 
 }

@@ -25,7 +25,6 @@ import com.mambo.core.adapters.LazyPagingAdapter
 import com.mambo.core.adapters.getInflater
 import com.mambo.core.utils.*
 import com.mambo.data.models.Topic
-import com.mambo.ui.databinding.ItemTopicBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
@@ -91,15 +90,17 @@ class TopicsBottomSheet : BottomSheetDialogFragment() {
 
         lifecycleScope.launchWhenStarted {
             adapter.loadStateFlow.collectLatest { state: CombinedLoadStates ->
-                when (state.source.refresh) {
-                    is LoadState.Loading -> binding.layoutTopics.showLoading()
-                    is LoadState.Error -> binding.layoutTopics.showError()
-                    is LoadState.NotLoading -> {
-                        if (state.append.endOfPaginationReached && adapter.itemCount < 1)
-                            binding.layoutTopics.showEmpty()
-                        else
-                            binding.layoutTopics.showContent()
+                binding.layoutTopics.apply {
+                    when (state.source.refresh) {
+                        is LoadState.Loading -> showLoading()
+                        is LoadState.Error -> showError()
+                        is LoadState.NotLoading -> {
+                            if (state.append.endOfPaginationReached && adapter.itemCount < 1)
+                                showEmpty()
+                            else
+                                showContent()
 
+                        }
                     }
                 }
             }
@@ -111,7 +112,7 @@ class TopicsBottomSheet : BottomSheetDialogFragment() {
 
         adapter.apply {
             onCreate { ItemTopicChooseBinding.inflate(it.getInflater(), it, false) }
-            onBind { topic, selected ->
+            onBind { topic: Topic, selected: Boolean ->
                 binding.apply {
 
                     val context = tvTopicChoice.context

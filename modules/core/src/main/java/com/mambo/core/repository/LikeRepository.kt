@@ -12,8 +12,8 @@ class LikeRepository @Inject constructor() {
 
     suspend fun unLikePoem(poemId: String) = poemsApi.unLikePoem(poemId = poemId)
 
-    suspend fun likeComment(poemId: String) = poemsApi.likeComment(poemId = poemId)
+    suspend fun likeComment(commentId: String) = poemsApi.likeComment(commentId = commentId)
 
-    suspend fun unLikeComment(poemId: String) = poemsApi.unLikeComment(poemId = poemId)
+    suspend fun unLikeComment(commentId: String) = poemsApi.unLikeComment(commentId = commentId)
 
 }

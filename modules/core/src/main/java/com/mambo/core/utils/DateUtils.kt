@@ -57,7 +57,7 @@ fun Date?.toDateTimeString(): String? {
 
 fun Date?.toDaysAgo(): String? {
     if (this == null) return null
-    return PrettyTime().format(this) + " ago"
+    return PrettyTime().format(this)
 }
 
 fun Date.isValidAge(): Boolean {
