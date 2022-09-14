@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_poem_edit"
-        android:title="Edit" />
+        android:icon="@drawable/ic_baseline_edit_24"
+        android:title="Edit"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_poem_publish"
-        android:title="Publish" />
+        android:icon="@drawable/ic_baseline_publish_24"
+        android:title="Publish"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_poem_delete"
-        android:title="Delete" />
+        android:icon="@drawable/ic_baseline_delete_24"
+        android:title="Delete"
+        app:showAsAction="ifRoom" />
+
 </menu>

@@ -42,8 +42,8 @@ object RemoteModule {
         networkInterceptor: NetworkInterceptor,
         loggingInterceptor: HttpLoggingInterceptor
     ) = PoemsClient(
-        authInterceptor = authInterceptor,
         networkInterceptor = networkInterceptor,
+        authInterceptor = authInterceptor,
         loggingInterceptor = loggingInterceptor
     )
 

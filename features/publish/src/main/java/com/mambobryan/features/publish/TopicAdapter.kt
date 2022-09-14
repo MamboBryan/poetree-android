@@ -13,11 +13,11 @@ import javax.inject.Inject
 class TopicAdapter @Inject constructor() :
     PagingDataAdapter<Topic, TopicAdapter.TopicViewHolder>(Topic.COMPARATOR) {
 
-    private lateinit var onTopicClickListener: OnTopicClickListener
     private var selectedPosition = RecyclerView.NO_POSITION
+    private var mListener: ((topic: Topic) -> Unit)? = null
 
-    fun setListener(listener: OnTopicClickListener) {
-        onTopicClickListener = listener
+    fun onTopicSelected(listener: (topic: Topic) -> Unit) {
+        mListener = listener
     }
 
     private fun selectItem(position: Int) {
@@ -40,7 +40,7 @@ class TopicAdapter @Inject constructor() :
                     if (absoluteAdapterPosition != RecyclerView.NO_POSITION) {
                         val topic = getItem(absoluteAdapterPosition)
                         if (topic != null) {
-                            onTopicClickListener.onTopicClicked(topic)
+                            mListener?.invoke(topic)
                             selectItem(absoluteAdapterPosition)
                         }
                     }

@@ -15,11 +15,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.mambo.core.OnTopicClickListener
+import com.irozon.alertview.AlertActionStyle
+import com.irozon.alertview.AlertStyle
+import com.irozon.alertview.AlertView
+import com.irozon.alertview.objects.AlertAction
 import com.mambo.core.adapters.GenericStateAdapter
 import com.mambo.core.extensions.onQueryTextChanged
+import com.mambo.core.extensions.onQueryTextSubmit
 import com.mambo.core.viewmodel.MainViewModel
-import com.mambo.data.models.Topic
 import com.mambobryan.features.publish.databinding.FragmentPublishBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,6 +49,7 @@ class PublishFragment : Fragment(R.layout.fragment_publish) {
         val searchView = searchItem.actionView as SearchView
 
         searchView.onQueryTextChanged { viewModel.onQueryUpdated(it) }
+        searchView.onQueryTextSubmit { viewModel.onQuerySubmitted(it) }
 
         super.onCreateOptionsMenu(menu, inflater)
 
@@ -109,29 +113,24 @@ class PublishFragment : Fragment(R.layout.fragment_publish) {
             viewModel.events.collectLatest { event ->
                 when (event) {
                     is PublishViewModel.TopicEvent.ShowErrorMessage -> {
-                        // TODO: change motion toast to normal toast
-                        MotionToast.createToast(
-                            requireActivity(),
-                            "Error",
-                            event.message,
-                            MotionToastStyle.ERROR,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.SHORT_DURATION,
-                            null
+                        val alert = AlertView(
+                            title = "Error",
+                            message = "\n${event.message}\n",
+                            style = AlertStyle.DIALOG
                         )
+                        alert.addAction(AlertAction("dismiss", AlertActionStyle.DEFAULT) {})
+                        alert.show(requireActivity() as AppCompatActivity)
                     }
                     is PublishViewModel.TopicEvent.ShowSuccessMessage -> {
-                        // TODO: change motion toast to normal toast
-                        MotionToast.createToast(
-                            requireActivity(),
-                            "Success",
-                            event.message,
-                            MotionToastStyle.SUCCESS,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.SHORT_DURATION,
-                            null
+                        val alert = AlertView(
+                            title = "Success",
+                            message = "\n${event.message}\n",
+                            style = AlertStyle.DIALOG
                         )
-                        findNavController().popBackStack()
+                        alert.addAction(AlertAction("dismiss", AlertActionStyle.DEFAULT) {
+                            findNavController().popBackStack()
+                        })
+                        alert.show(requireActivity() as AppCompatActivity)
                     }
                     is PublishViewModel.TopicEvent.UpdateSharedViewModelPoem -> {
                         sharedViewModel.setPoem(event.poem)
@@ -161,11 +160,9 @@ class PublishFragment : Fragment(R.layout.fragment_publish) {
             footer = GenericStateAdapter(adapter::retry)
         )
 
-        adapter.setListener(object : OnTopicClickListener {
-            override fun onTopicClicked(topic: Topic) {
-                viewModel.onTopicSelected(topic)
-            }
-        })
+        adapter.onTopicSelected { topic ->
+            viewModel.onTopicSelected(topic)
+        }
     }
 
     private fun setupViews() = binding.apply {

@@ -2,6 +2,7 @@ package com.mambobryan.features.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mambo.core.repository.PoemRepository
 import com.mambo.data.preferences.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -14,6 +15,9 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val preferences: UserPreferences
 ) : ViewModel() {
+
+    @Inject
+    lateinit var repository: PoemRepository
 
     private val _eventChannel = Channel<SettingsEvent>()
     val events = _eventChannel.receiveAsFlow()
@@ -46,7 +50,8 @@ class SettingsViewModel @Inject constructor(
         updateUi(SettingsEvent.ShowLoadingDialog)
         try {
             preferences.signOut()
-            delay(2500)
+            repository.deleteAllBookmarks()
+            repository.deleteAllLocal()
             updateUi(SettingsEvent.HideLoadingDialog)
             updateUi(SettingsEvent.NavigateToLanding)
         } catch (e: Exception) {
@@ -54,11 +59,11 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    private fun updateUi(event: SettingsEvent)= viewModelScope.launch {
+    private fun updateUi(event: SettingsEvent) = viewModelScope.launch {
         _eventChannel.send(event)
     }
 
-    sealed class SettingsEvent{
+    sealed class SettingsEvent {
         object ShowLogOutDialog : SettingsEvent()
         object ShowLoadingDialog : SettingsEvent()
         object HideLoadingDialog : SettingsEvent()

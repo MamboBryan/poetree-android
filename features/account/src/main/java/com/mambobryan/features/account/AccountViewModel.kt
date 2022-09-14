@@ -93,7 +93,7 @@ class AccountViewModel @Inject constructor(
         try {
 
             val genderValue = if (gender.equals("male", true)) 1 else 0
-            val dateValue = _dob.value.toDate().toDateString() ?: null
+            val dateValue = _dob.value.toDate().toDateString()
 
             val request = UserUpdateRequest(
                 username = username.takeIf { !mUsername.equals(username) },

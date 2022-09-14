@@ -19,15 +19,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PublishViewModel @Inject constructor(
-    val poemRepo: PoemRepository,
-    topicsRepo: TopicsRepository
+    private val poemRepo: PoemRepository,
+    private val topicsRepo: TopicsRepository
 ) : ViewModel() {
 
     private val _eventChannel = Channel<TopicEvent?>()
     val events get() = _eventChannel.receiveAsFlow()
 
     private val query = MutableStateFlow("")
-    private val topicsFlow = query.flatMapLatest { query -> topicsRepo.getTopics(query) }
+    private val topicsFlow = query.flatMapLatest { query -> topicsRepo.searchTopics(query) }
     val topics = topicsFlow.cachedIn(viewModelScope)
 
     private val _poem = MutableStateFlow<Poem?>(null)
@@ -36,6 +36,13 @@ class PublishViewModel @Inject constructor(
     val topic get() = _topic
 
     fun onQueryUpdated(text: String) {
+        query.value = text
+    }
+
+    fun onQuerySubmitted(text: String) {
+        viewModelScope.launch {
+
+        }
         query.value = text
     }
 
@@ -53,11 +60,9 @@ class PublishViewModel @Inject constructor(
 
         try {
 
-            val id = poemRepo.update(updatedPoem)
-            val poem = poemRepo.get(id.toLong())
+            poemRepo.update(updatedPoem.toLocalPoem())
 
-            //update shared view-model poem
-            _eventChannel.send(TopicEvent.UpdateSharedViewModelPoem(poem))
+            _eventChannel.send(TopicEvent.UpdateSharedViewModelPoem(updatedPoem))
             _eventChannel.send(TopicEvent.ShowSuccessMessage("Topic Set Successfully"))
 
         } catch (e: Exception) {

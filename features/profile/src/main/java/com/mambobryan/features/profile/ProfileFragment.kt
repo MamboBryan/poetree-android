@@ -1,5 +1,6 @@
 package com.mambobryan.features.profile
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -10,27 +11,29 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
+import coil.load
+import coil.size.Scale
+import coil.transform.CircleCropTransformation
+import com.google.android.material.snackbar.Snackbar
 import com.irozon.alertview.AlertActionStyle
 import com.irozon.alertview.AlertStyle
 import com.irozon.alertview.AlertTheme
 import com.irozon.alertview.AlertView
 import com.irozon.alertview.objects.AlertAction
-import com.mambo.core.OnPoemClickListener
-import com.mambo.core.adapters.ArtistPoemsAdapter
 import com.mambo.core.adapters.GenericStateAdapter
-import com.mambo.core.utils.prettyCount
+import com.mambo.core.adapters.LazyPagingAdapter
+import com.mambo.core.adapters.getInflater
+import com.mambo.core.utils.*
 import com.mambo.core.viewmodel.MainViewModel
 import com.mambo.data.models.Poem
+import com.mambo.ui.databinding.ItemPoemArtistBinding
 import com.mambobryan.features.profile.databinding.FragmentProfileBinding
-import com.mambobryan.navigation.Destinations
-import com.mambobryan.navigation.extensions.getDeeplink
-import com.mambobryan.navigation.extensions.navigate
-import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import org.ocpsoft.prettytime.PrettyTime
+import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -38,13 +41,13 @@ import kotlin.math.abs
 @AndroidEntryPoint
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
-    private val binding by viewBinding(FragmentProfileBinding::bind)
+    @Inject
+    lateinit var profileActions: ProfileActions
 
+    private val binding by viewBinding(FragmentProfileBinding::bind)
     private val viewModel: ProfileViewModel by viewModels()
     private val sharedViewModel: MainViewModel by activityViewModels()
-
-    @Inject
-    lateinit var adapter: ArtistPoemsAdapter
+    private val adapter = LazyPagingAdapter<Poem, ItemPoemArtistBinding>(Poem.COMPARATOR)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -55,99 +58,118 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             viewModel.events.collect { event ->
                 when (event) {
                     ProfileViewModel.ProfileEvent.ShowDarkModeDialog -> showDarkModeDialog()
-                    is ProfileViewModel.ProfileEvent.NavigateToPoem -> {
-                        sharedViewModel.setPoem(event.poem)
-                        navigateToLanding()
+                    ProfileViewModel.ProfileEvent.HideLoading -> {
+                        binding.layoutProfileDetails.progressProfile.isVisible = false
+                    }
+                    is ProfileViewModel.ProfileEvent.ShowError -> {
+                        Snackbar.make(requireView(), event.message, Snackbar.LENGTH_LONG).show()
                     }
                 }
             }
         }
 
         lifecycleScope.launchWhenStarted {
-            sharedViewModel.publicPoems.collectLatest { adapter.submitData(it) }
+            sharedViewModel.publicPoems.collectLatest {
+                adapter.submitData(it)
+                binding.layoutProfilePoems.stateContent.isRefreshing = false
+            }
         }
 
-        lifecycleScope.launch {
-            adapter.loadStateFlow.collectLatest { loadState ->
-                binding.layoutProfileState.apply {
+        lifecycleScope.launchWhenStarted {
+            adapter.loadStateFlow.collectLatest { state: CombinedLoadStates ->
+                when (state.source.refresh) {
+                    is LoadState.Loading -> binding.layoutProfilePoems.showLoading()
+                    is LoadState.Error -> binding.layoutProfilePoems.showError()
+                    is LoadState.NotLoading -> {
+                        if (state.append.endOfPaginationReached && adapter.itemCount < 1)
+                            binding.layoutProfilePoems.showEmpty()
+                        else
+                            binding.layoutProfilePoems.showContent()
 
-                    stateContent.isVisible = false
-                    stateEmpty.isVisible = false
-                    stateError.isVisible = false
-                    stateLoading.isVisible = false
+                    }
+                }
+            }
+        }
 
-                    when (loadState.source.refresh) {
-                        is LoadState.Loading -> {
-                            stateLoading.isVisible = true
-                        }
+        lifecycleScope.launchWhenResumed {
+            viewModel.userDetails.collectLatest {
+                it?.let { userDetails ->
+                    binding.layoutProfileHeader.tvHeaderTitle.text = userDetails.name
+                    binding.layoutProfileDetails.apply {
+                        progressProfile.isVisible = false
+                        tvArtistName.text = userDetails.name
+                        tvArtistBio.text = userDetails.bio
+                        tvArtistReads.text = prettyCount(userDetails.reads ?: 0)
+                        tvArtistBookmarks.text = prettyCount(userDetails.bookmarks ?: 0)
+                        tvArtistLikes.text = prettyCount(userDetails.likes ?: 0)
 
-                        is LoadState.Error -> {
-                            stateError.isVisible = true
-                            stateContent.isRefreshing = false
-                        }
-
-                        is LoadState.NotLoading -> {
-
-                            if (loadState.append.endOfPaginationReached) {
-                                if (adapter.itemCount < 1)
-                                    stateEmpty.isVisible = true
-                                else {
-                                    stateContent.isVisible = true
-                                }
-                            } else {
-                                stateContent.isVisible = true
-                            }
-
-                            stateContent.isRefreshing = false
-
+                        ivArtistMage.load(Color.parseColor("#000000")) {
+                            scale(Scale.FILL)
+                            crossfade(true)
+                            placeholder(R.drawable.ic_baseline_account_circle_24)
+                            error(R.drawable.ic_baseline_account_circle_24)
+                            transformations(CircleCropTransformation())
                         }
                     }
                 }
             }
         }
 
-    }
-
-    private fun initViews() = binding.apply {
-
-        setupUserView()
-        setUpScrollView()
-
-        layoutProfileHeader.ivHeaderDarkMode.setOnClickListener { viewModel.onAppThemeClicked() }
-        layoutProfileHeader.ivHeaderBack.setOnClickListener { findNavController().popBackStack() }
-
-        layoutProfileState.apply {
-            buttonRetry.setOnClickListener { adapter.retry() }
-            recyclerView.adapter = adapter
-            recyclerView.setHasFixedSize(true)
-            stateContent.setOnRefreshListener {
-                recyclerView.scrollToPosition(0)
-                adapter.refresh()
+        lifecycleScope.launchWhenResumed {
+            viewModel.poems.collectLatest {
+                it?.let { data ->
+                    adapter.submitData(data)
+                    binding.layoutProfilePoems.stateContent.isRefreshing = false
+                }
             }
         }
-        adapter.setListener(object : OnPoemClickListener {
-            override fun onPoemClicked(poem: Poem) {
-                viewModel.onPoemClicked(poem)
-            }
-        })
 
-        adapter.withLoadStateHeaderAndFooter(
-            header = GenericStateAdapter(adapter::retry),
-            footer = GenericStateAdapter(adapter::retry)
-        )
     }
 
-    private fun setupUserView() = binding.apply {
-//        val user = sharedViewModel.user.value
-        layoutProfileHeader.tvHeaderTitle.text = "MamboBryan"
-        layoutProfileDetails.apply {
-            tvArtistName.text = "MamboBryan"
-//            tvArtistBio.text =""
-            tvArtistReads.text = prettyCount(2000000)
-            tvArtistBookmarks.text = prettyCount(20000)
-            tvArtistLikes.text = prettyCount(200000)
+    private fun initViews() {
+        adapter.apply {
+
+            onCreate { ItemPoemArtistBinding.inflate(it.getInflater(), it, false) }
+            onItemClicked { profileActions.navigateToPoem(it) }
+            onBind { poem ->
+                this.apply {
+
+                    val topic = poem.topic?.name?.replaceFirstChar { it.uppercase() } ?: "Topicless"
+
+                    val date = Date(poem.createdAt.toDateTime() ?: 0)
+                    val duration = PrettyTime().formatDuration(date)
+                    val message = "$topic  \u2022  $duration "
+
+                    tvPoemTitle.text = poem.title
+                    tvPoemDuration.text = message
+
+                    val color = poem.topic?.color ?: "#94F292"
+                    layoutArtistBg.setBackgroundColor(Color.parseColor(color))
+
+                }
+            }
+            withLoadStateHeaderAndFooter(
+                header = GenericStateAdapter(adapter::retry),
+                footer = GenericStateAdapter(adapter::retry)
+            )
         }
 
+        binding.apply {
+
+            setUpScrollView()
+
+            layoutProfileHeader.ivHeaderDarkMode.setOnClickListener { viewModel.onAppThemeClicked() }
+            layoutProfileHeader.ivHeaderBack.setOnClickListener { findNavController().popBackStack() }
+
+            layoutProfilePoems.apply {
+                buttonRetry.setOnClickListener { adapter.retry() }
+                recyclerView.adapter = adapter
+                stateContent.setOnRefreshListener {
+                    adapter.refresh()
+                }
+            }
+
+        }
     }
 
     private fun setUpScrollView() = binding.apply {
@@ -226,10 +248,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         alert.setTheme(if (isDark) AlertTheme.DARK else AlertTheme.LIGHT)
         alert.show(requireActivity() as AppCompatActivity)
 
-    }
-
-    private fun navigateToLanding() {
-        navigate(getDeeplink(Destinations.POEM))
     }
 
 }

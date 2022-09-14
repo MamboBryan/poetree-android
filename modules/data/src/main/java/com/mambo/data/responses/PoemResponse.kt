@@ -1,26 +1,90 @@
 package com.mambo.data.responses
 
-import com.mambo.data.models.Topic
-import com.mambo.data.models.User
+import com.mambo.data.models.*
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class PoemResponse(
-    var id: String? = null,
-    var createdAt: String? = null,
-    var updatedAt: String? = null,
-    var editedAt: String? = null,
-    var title: String? = null,
-    var content: String? = null,
-    var html: String? = null,
-    var user: User? = null,
-    var topic: Topic? = null,
-    var reads: Int? = null,
-    var read: Boolean? = null,
-    var bookmarks: Int? = null,
-    var bookmarked: Boolean? = null,
-    var likes: Int? = null,
-    var liked: Boolean? = null,
-    var comments: Int? = null,
-    var commented: Boolean? = null
-)
+    var id: String,
+    var createdAt: String,
+    var updatedAt: String,
+    var editedAt: String?,
+    var title: String,
+    var content: String,
+    var html: String,
+    var user: User,
+    var topic: Topic,
+    var reads: Long,
+    var read: Boolean,
+    var bookmarks: Long,
+    var bookmarked: Boolean,
+    var likes: Long,
+    var liked: Boolean,
+    var comments: Long,
+    var commented: Boolean
+) {
+
+    fun toPoemDto() =
+        PoemDto(
+            id,
+            createdAt,
+            updatedAt,
+            editedAt,
+            title,
+            content,
+            html,
+            user,
+            topic,
+            reads,
+            read,
+            bookmarks,
+            bookmarked,
+            likes,
+            liked,
+            comments,
+            commented
+        )
+
+    fun toPublished() =
+        Published(
+            id,
+            createdAt,
+            updatedAt,
+            editedAt,
+            title,
+            content,
+            html,
+            user,
+            topic,
+            reads,
+            read,
+            bookmarks,
+            bookmarked,
+            likes,
+            liked,
+            comments,
+            commented
+        )
+
+    fun toSearched() =
+        Searched(
+            id,
+            createdAt,
+            updatedAt,
+            editedAt,
+            title,
+            content,
+            html,
+            user,
+            topic,
+            reads,
+            read,
+            bookmarks,
+            bookmarked,
+            likes,
+            liked,
+            comments,
+            commented
+        )
+
+}

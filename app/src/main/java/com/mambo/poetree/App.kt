@@ -3,8 +3,6 @@ package com.mambo.poetree
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.ktx.messaging
 import com.mambo.core.utils.NotificationsHelper
 import com.mambo.core.utils.ThemeHelper
 import com.mambo.data.preferences.UserPreferences
@@ -37,7 +35,6 @@ class App : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
-        Firebase.messaging.subscribeToTopic("featured")
         setupNotificationChannels()
         initTheme()
         plantTimber()

@@ -25,7 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     application: Application,
-    poemRepository: PoemRepository,
+    repository: PoemRepository,
     preferences: UserPreferences,
     state: SavedStateHandle,
     private val topicRepository: TopicsRepository
@@ -44,25 +44,25 @@ class MainViewModel @Inject constructor(
 
     val darkModeFlow = preferences.darkMode
 
-    val feedPoems = poemRepository.feedPoems().cachedIn(viewModelScope)
-    val topics = topicRepository.topics("").cachedIn(viewModelScope)
-    val publicPoems = poemRepository.publishedPoems().cachedIn(viewModelScope)
+    val feedPoems = repository.publishedPoems().cachedIn(viewModelScope)
+
+    val topics = topicRepository.getTopics().cachedIn(viewModelScope)
+    val publicPoems = repository.publishedPoems().cachedIn(viewModelScope)
 
     private val searchTopic = MutableStateFlow<Topic?>(null)
     private val searchQuery = MutableStateFlow("")
     private val _searches = combine(searchTopic, searchQuery) { topic, query ->
-        Triple(topic, query, null)
-    }.flatMapLatest { (topic, query, _) -> poemRepository.searchPoems(topic, query) }
+        Pair(topic, query)
+    }.flatMapLatest { (topic, query) -> repository.searchedPoems(topic = topic, query = query) }
     val searchedPoems = _searches.cachedIn(viewModelScope)
 
     private val bookmarksQuery = MutableStateFlow("")
-    private val _bookmarks = bookmarksQuery.flatMapLatest { poemRepository.searchPoems(it) }
+    private val _bookmarks = bookmarksQuery.flatMapLatest { repository.bookmarks(query = it) }
     val bookmarkedPoems = _bookmarks.cachedIn(viewModelScope)
 
-    private val unpublishedQuery = MutableStateFlow("")
-    private val _unpublished =
-        unpublishedQuery.flatMapLatest { poemRepository.unpublishedPoems("1", it) }
-    val unpublishedPoems = _unpublished.cachedIn(viewModelScope)
+    private val libraryQuery = MutableStateFlow("")
+    private val _libraryPoems = libraryQuery.flatMapLatest { repository.localPoems(query = it) }
+    val libraryPoems = _libraryPoems.cachedIn(viewModelScope)
 
     private val _poem = state.getLiveData<Poem?>("poem", null)
     val poem: LiveData<Poem?> get() = _poem
@@ -107,7 +107,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun setTopic(topic: Topic?) {
-        _topic.value = topic
+        searchTopic.value = topic
     }
 
     fun setUser(user: User?) {
@@ -123,7 +123,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun updateLibraryQuery(query: String) {
-        unpublishedQuery.value = query
+        libraryQuery.value = query
     }
 
     fun setupDailyInteractionReminder() = updateUi(MainEvent.SetupDailyInteractionReminder)

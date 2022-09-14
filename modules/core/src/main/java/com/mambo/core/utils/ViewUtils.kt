@@ -1,8 +1,22 @@
 package com.mambo.core.utils
 
+import android.app.Activity
+import android.content.Context
+import android.view.View
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import com.mambo.ui.databinding.LayoutCompleteRecyclerRefreshBinding
 import com.mambo.ui.databinding.LayoutCompleteRecyclerVerticalBinding
+
+fun View.setupFullHeight() {
+    val layoutParams = this.layoutParams
+    layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT
+    this.layoutParams = layoutParams
+}
 
 fun LayoutCompleteRecyclerVerticalBinding.showLoading(text: String? = null) {
     stateContent.isVisible = false
@@ -44,6 +58,7 @@ fun LayoutCompleteRecyclerRefreshBinding.showLoading(text: String? = null) {
 }
 
 fun LayoutCompleteRecyclerRefreshBinding.showError() {
+    stateContent.isRefreshing = false
     stateContent.isVisible = false
     stateEmpty.isVisible = false
     stateLoading.isVisible = false
@@ -51,6 +66,7 @@ fun LayoutCompleteRecyclerRefreshBinding.showError() {
 }
 
 fun LayoutCompleteRecyclerRefreshBinding.showEmpty() {
+    stateContent.isRefreshing = false
     stateContent.isVisible = false
     stateLoading.isVisible = false
     stateError.isVisible = false
@@ -58,6 +74,7 @@ fun LayoutCompleteRecyclerRefreshBinding.showEmpty() {
 }
 
 fun LayoutCompleteRecyclerRefreshBinding.showContent() {
+    stateContent.isRefreshing = false
     stateEmpty.isVisible = false
     stateLoading.isVisible = false
     stateError.isVisible = false

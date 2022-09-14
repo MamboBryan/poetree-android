@@ -7,13 +7,13 @@ plugins {
     id(Plugins.navigation)
 }
 android {
-    compileSdkVersion(Configs.compileSdkVersion)
+    compileSdkVersion(Android.compileSdkVersion)
 
     defaultConfig {
-        minSdkVersion(Configs.minSdkVersion)
-        targetSdkVersion(Configs.targetSdkVersion)
-        versionCode = Configs.versionCode
-        versionName = Configs.versionName
+        minSdkVersion(Android.minSdkVersion)
+        targetSdkVersion(Android.targetSdkVersion)
+        versionCode = Android.versionCode
+        versionName = Android.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -69,6 +69,7 @@ dependencies {
     implementation(Dependencies.Libraries.lifecycle)
     implementation(Dependencies.Libraries.liveData)
     implementation(Dependencies.Libraries.fragment)
+    implementation(Dependencies.Libraries.paging)
     implementation(Dependencies.Libraries.hilt)
 
     implementation(Dependencies.Libraries.circularImage)
@@ -78,6 +79,8 @@ dependencies {
     implementation(Dependencies.Libraries.delegate)
     implementation(Dependencies.Libraries.wysiwyg)
     implementation(Dependencies.Libraries.sneaker)
+    implementation(Dependencies.Libraries.timber)
+    implementation(Dependencies.Libraries.alert)
     implementation(Dependencies.Libraries.coil)
 
     kapt(Dependencies.Libraries.hiltCompiler)

@@ -13,7 +13,7 @@ data class ServerResponse<T>(
 
 @Serializable
 data class PagedData<T>(
-    val current: Int,
+    val current: Int?,
     val next: Int?,
     val previous: Int?,
     val list: List<T>

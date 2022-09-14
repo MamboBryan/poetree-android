@@ -7,13 +7,13 @@ plugins {
     id(Plugins.navigation)
 }
 android {
-    compileSdkVersion(Configs.compileSdkVersion)
+    compileSdkVersion(Android.compileSdkVersion)
 
     defaultConfig {
-        minSdkVersion(Configs.minSdkVersion)
-        targetSdkVersion(Configs.targetSdkVersion)
-        versionCode = Configs.versionCode
-        versionName = Configs.versionName
+        minSdkVersion(Android.minSdkVersion)
+        targetSdkVersion(Android.targetSdkVersion)
+        versionCode = Android.versionCode
+        versionName = Android.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -76,6 +76,8 @@ dependencies {
     implementation(Dependencies.Libraries.motionToast)
     implementation(Dependencies.Libraries.delegate)
     implementation(Dependencies.Libraries.sneaker)
+    implementation(Dependencies.Libraries.timber)
+    implementation(Dependencies.Libraries.alert)
 
     kapt(Dependencies.Libraries.hiltCompiler)
 

@@ -1,43 +1,48 @@
 package com.mambo.library
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
-import com.mambo.core.OnPoemClickListener
 import com.mambo.core.adapters.GenericStateAdapter
+import com.mambo.core.adapters.LazyPagingAdapter
+import com.mambo.core.adapters.getInflater
 import com.mambo.core.extensions.onQueryTextChanged
+import com.mambo.core.utils.*
 import com.mambo.core.viewmodel.MainViewModel
 import com.mambo.data.models.Poem
 import com.mambo.library.databinding.FragmentLibraryBinding
-import com.mambobryan.navigation.Destinations
-import com.mambobryan.navigation.extensions.getDeeplink
-import com.mambobryan.navigation.extensions.navigate
+import com.mambo.library.databinding.ItemPoemLibraryBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.ocpsoft.prettytime.PrettyTime
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class LibraryFragment : Fragment(R.layout.fragment_library) {
+
+
+    @Inject
+    lateinit var libraryActions: LibraryActions
+
 
     private val sharedViewModel: MainViewModel by activityViewModels()
     private val viewModel: LibraryViewModel by viewModels()
 
     private val binding by viewBinding(FragmentLibraryBinding::bind)
 
-    @Inject
-    lateinit var adapter: LibraryAdapter
+    private val adapter = LazyPagingAdapter<Poem, ItemPoemLibraryBinding>(Poem.COMPARATOR)
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_library, menu)
@@ -58,51 +63,21 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
 
         initViews()
 
+        lifecycleScope.launch {
+            sharedViewModel.libraryPoems.collectLatest { adapter.submitData(it) }
+        }
+
         lifecycleScope.launchWhenStarted {
-            viewModel.events.collect { event ->
-                when (event) {
-                    LibraryViewModel.LibraryEvent.NavigateToCompose -> navigateToCompose()
-                    LibraryViewModel.LibraryEvent.NavigateToPoem -> navigateToPoem()
-                }
-            }
-        }
+            adapter.loadStateFlow.collectLatest { state: CombinedLoadStates ->
+                when (state.source.refresh) {
+                    is LoadState.Loading -> binding.layoutLibraryState.showLoading()
+                    is LoadState.Error -> binding.layoutLibraryState.showError()
+                    is LoadState.NotLoading -> {
+                        if (state.append.endOfPaginationReached && adapter.itemCount < 1)
+                            binding.layoutLibraryState.showEmpty()
+                        else
+                            binding.layoutLibraryState.showContent()
 
-        lifecycleScope.launch {
-            sharedViewModel.unpublishedPoems.collectLatest { adapter.submitData(it) }
-        }
-
-        lifecycleScope.launch {
-            adapter.loadStateFlow.collectLatest { loadState ->
-                binding.layoutLibraryState.apply {
-
-                    stateContent.isVisible = false
-                    stateEmpty.isVisible = false
-                    stateError.isVisible = false
-                    stateLoading.isVisible = false
-
-                    when (loadState.source.refresh) {
-                        is LoadState.Loading -> {
-                            stateLoading.isVisible = true
-                        }
-
-                        is LoadState.Error -> {
-                            stateError.isVisible = true
-                        }
-
-                        is LoadState.NotLoading -> {
-
-                            if (loadState.append.endOfPaginationReached) {
-                                if (adapter.itemCount < 1)
-                                    stateEmpty.isVisible = true
-                                else {
-                                    stateContent.isVisible = true
-                                }
-                            } else {
-                                stateContent.isVisible = true
-                            }
-
-
-                        }
                     }
                 }
             }
@@ -114,38 +89,48 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
         binding.apply {
             toolbarLibrary.title = "Library"
             (requireActivity() as AppCompatActivity).setSupportActionBar(toolbarLibrary)
+            fabCreatePoem.setOnClickListener { libraryActions.navigateToCompose() }
+        }
 
-            fabCreatePoem.setOnClickListener { viewModel.onComposeButtonClicked() }
+        setupRecyclerview()
 
-            layoutLibraryState.apply {
-                tvEmpty.text = "No Poem Found"
-                tvError.text = "Couldn't load Poems!"
+    }
 
-                recyclerView.adapter = adapter
-                buttonRetry.setOnClickListener { adapter.retry() }
+    private fun setupRecyclerview() {
+
+        adapter.apply {
+            onCreate { ItemPoemLibraryBinding.inflate(it.getInflater(), it, false) }
+            onBind { poem ->
+                binding.apply {
+
+                    val duration = PrettyTime().formatDuration(poem.createdAt.toDate())
+
+                    tvPublishedTitle.text = poem.title
+                    tvPublishedDuration.text = duration
+
+                    val color = poem.topic?.color ?: "#84a1f7"
+                    layoutPoemLibrary.setBackgroundColor(Color.parseColor(color))
+
+                }
             }
+            onItemClicked {
+                libraryActions.navigateToPoem(it)
+            }
+            withLoadStateHeaderAndFooter(
+                header = GenericStateAdapter(adapter::retry),
+                footer = GenericStateAdapter(adapter::retry)
+            )
 
         }
 
-        adapter.setListener(object : OnPoemClickListener {
-            override fun onPoemClicked(poem: Poem) {
-                sharedViewModel.setPoem(poem)
-                viewModel.onPoemClicked()
-            }
-        })
+        binding.layoutLibraryState.apply {
+            tvEmpty.text = "No Poem Found"
+            tvError.text = "Couldn't load Poems!"
 
-        adapter.withLoadStateHeaderAndFooter(
-            header = GenericStateAdapter(adapter::retry),
-            footer = GenericStateAdapter(adapter::retry)
-        )
-    }
+            recyclerView.adapter = adapter
+            buttonRetry.setOnClickListener { adapter.retry() }
+        }
 
-    private fun navigateToCompose() {
-        navigate(getDeeplink(Destinations.COMPOSE))
-    }
-
-    private fun navigateToPoem() {
-        navigate(getDeeplink(Destinations.POEM))
     }
 
 }

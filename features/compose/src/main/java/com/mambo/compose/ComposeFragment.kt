@@ -2,69 +2,65 @@ package com.mambo.compose
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
-import com.google.android.material.snackbar.Snackbar
+import com.irozon.alertview.AlertActionStyle
+import com.irozon.alertview.AlertStyle
+import com.irozon.alertview.AlertView
+import com.irozon.alertview.objects.AlertAction
+import com.irozon.sneaker.Sneaker
 import com.mambo.compose.databinding.FragmentComposeBinding
-import com.mambo.core.adapters.ViewPagerAdapter
-import com.mambo.core.viewmodel.MainViewModel
-import com.mambobryan.navigation.Destinations
-import com.mambobryan.navigation.extensions.getDeeplink
-import com.mambobryan.navigation.extensions.navigate
+import com.mambo.core.utils.LoadingDialog
+import com.mambo.core.utils.toObliviousHumanLanguage
+import com.mambo.data.models.Poem
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ComposeFragment : Fragment(R.layout.fragment_compose) {
 
     private val binding by viewBinding(FragmentComposeBinding::bind)
     private val viewModel: ComposeViewModel by viewModels()
-    private val sharedViewModel: MainViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.updatePoem(sharedViewModel.poem.value)
-    }
+    @Inject
+    lateinit var composeActions: ComposeActions
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sharedViewModel.poem.observe(viewLifecycleOwner){
-            viewModel.updatePoem(it)
-        }
-
         setupNavigation()
         setupViews()
-        setUpViewPager()
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.events.collect { event ->
                 when (event) {
-
-                    is ComposeViewModel.ComposeEvent.ShowInvalidInputMessage -> {
-                        Snackbar.make(requireView(), event.message, Snackbar.LENGTH_LONG).show()
-                    }
-
-                    is ComposeViewModel.ComposeEvent.NavigateToPublish -> {
-                        sharedViewModel.setPoem(event.poem)
-                        navigateToPublish()
-                    }
-
-                    ComposeViewModel.ComposeEvent.NavigateToPreview -> showPreview()
-
-                    ComposeViewModel.ComposeEvent.NavigateToComposeView -> showEditView()
-
                     ComposeViewModel.ComposeEvent.NavigateToBackstack -> navigateBack()
-
+                    ComposeViewModel.ComposeEvent.HideLoading -> LoadingDialog.dismiss()
+                    ComposeViewModel.ComposeEvent.ShowLoading -> LoadingDialog.show(requireContext())
+                    is ComposeViewModel.ComposeEvent.ShowInvalidInputMessage -> showError(event.message)
+                    is ComposeViewModel.ComposeEvent.NavigateToPublish -> navigateToPublish(event.poem)
+                    is ComposeViewModel.ComposeEvent.NavigateToPoem -> navigateToPoem(event.poem)
+                    is ComposeViewModel.ComposeEvent.ShowError -> showError(event.message)
+                    is ComposeViewModel.ComposeEvent.ShowSuccess -> showSuccess(event.message)
                 }
             }
         }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        initViews()
 
     }
 
@@ -75,77 +71,153 @@ class ComposeFragment : Fragment(R.layout.fragment_compose) {
         }.isEnabled
     }
 
+    private fun initViews() = binding.apply {
+        edtTitle.setText(viewModel.poemTitle)
+        editor.html = viewModel.poemContent
+    }
+
     private fun setupViews() = binding.apply {
 
-        toolbarCompose.title = if (viewModel.poem == null) "Compose" else "Edit"
+        toolbarCompose.title = if (viewModel.poem.value == null) "Compose" else "Update"
         toolbarCompose.inflateMenu(R.menu.menu_compose)
         toolbarCompose.setOnMenuItemClickListener { item ->
-
             when (item.itemId) {
-
-                R.id.action_compose_edit -> {
-                    viewModel.onEditClicked()
-                    true
-                }
-                R.id.action_compose_preview -> {
-                    viewModel.onPreviewClicked()
-                    true
-                }
                 R.id.action_compose_stash -> {
                     viewModel.onStash()
                     true
                 }
-                R.id.action_compose_choose_topic -> {
-                    viewModel.onPublish()
+                R.id.action_compose_save -> {
+                    viewModel.onStash(preview = true)
                     true
                 }
-                else -> {
-                    false
+                R.id.action_compose_publish -> {
+                    if (poemDetailsAreValid()) showConfirmPublishDialog()
+                    true
                 }
+                R.id.action_compose_delete -> {
+                    showConfirmDeleteDialog()
+                    true
+                }
+                else -> false
+
             }
-            
+        }
+
+        edtTitle.doAfterTextChanged { title -> viewModel.poemTitle = title.toString() }
+        fabTopic.setOnClickListener { openSelectTopicBottomSheet() }
+
+        val textColor = ContextCompat.getColor(requireContext(), R.color.color_on_background)
+        val backgroundColor = ContextCompat.getColor(requireContext(), R.color.color_background)
+
+        editor.setEditorFontSize(16)
+        editor.setEditorFontColor(textColor)
+        editor.setEditorBackgroundColor(backgroundColor)
+        editor.setPadding(16, 16, 16, 16)
+
+        editor.setPlaceholder("Pen down thoughts here...")
+
+        actionUndo.setOnClickListener { editor.undo() }
+
+        actionRedo.setOnClickListener { editor.redo() }
+
+        actionBold.setOnClickListener { editor.setBold() }
+
+        actionItalic.setOnClickListener { editor.setItalic() }
+
+        actionUnderline.setOnClickListener { editor.setUnderline() }
+
+        actionIndent.setOnClickListener { editor.setIndent() }
+
+        actionOutdent.setOnClickListener { editor.setOutdent() }
+
+        actionAlignCenter.setOnClickListener { editor.setAlignCenter() }
+
+        actionAlignLeft.setOnClickListener { editor.setAlignLeft() }
+
+        actionAlignRight.setOnClickListener { editor.setAlignRight() }
+
+        actionAlignJustify.setOnClickListener { editor.setAlignJustifyFull() }
+
+        actionBlockquote.setOnClickListener { editor.setBlockquote() }
+
+        actionHeading.setOnClickListener { editor.setHeading(4) }
+
+        editor.onTextChanged { content, html ->
+            viewModel.poemContent = content ?: ""
+            viewModel.poemHtml = html ?: ""
         }
 
     }
 
-    private fun showEditView() {
-        binding.apply { viewpagerCompose.setCurrentItem(0, true) }
-        updateMenu()
+    private fun openSelectTopicBottomSheet() {
+        val sheet = TopicsBottomSheet()
+        sheet.onTopicSelected {
+            Toast.makeText(requireContext(), "${it.name} set as poem topic", Toast.LENGTH_SHORT)
+                .show()
+            viewModel.topic = it
+        }
+        sheet.show(childFragmentManager, sheet.tag)
     }
 
-    private fun showPreview() {
-        binding.apply { viewpagerCompose.setCurrentItem(1, true) }
-        updateMenu()
+    private fun showError(message: String) {
+        val alert = AlertView(
+            title = "Error",
+            message = "\n${message.toObliviousHumanLanguage()}\n",
+            style = AlertStyle.DIALOG
+        )
+        alert.addAction(AlertAction("dismiss", AlertActionStyle.DEFAULT) {})
+        alert.show(requireActivity() as AppCompatActivity)
     }
 
-    private fun updateMenu() = binding.apply {
-
-        val menu = toolbarCompose.menu
-        val position = viewpagerCompose.currentItem
-
-        val previewAction = menu.findItem(R.id.action_compose_preview)
-        val editAction = menu.findItem(R.id.action_compose_edit)
-
-        editAction.isVisible = position == 1
-        previewAction.isVisible = position != 1
-
+    private fun showSuccess(message: String) {
+        Sneaker.with(requireActivity())
+            .setIcon(R.drawable.ic_baseline_check_circle_24)
+            .setMessage(message)
+            .setTitle("Success")
+            .sneakSuccess()
     }
 
-    private fun setUpViewPager() {
+    private fun showConfirmDeleteDialog() {
+        val alert = AlertView(
+            "Delete Poem!",
+            "You are about to delete this poem. Do you wish you to continue?",
+            AlertStyle.IOS
+        )
+        alert.addAction(AlertAction("Yes", AlertActionStyle.NEGATIVE) {
+            viewModel.onDeleteConfirmed()
+        })
+        alert.show(requireActivity() as AppCompatActivity)
+    }
 
-        val fragments = arrayListOf(WriteFragment(), PreviewFragment())
-        val adapter = ViewPagerAdapter(fragments, childFragmentManager, lifecycle)
+    private fun poemDetailsAreValid(): Boolean {
+        val poem = viewModel.poem.value
 
-        binding.apply {
-            viewpagerCompose.isUserInputEnabled = false
-            viewpagerCompose.adapter = adapter
+        if ((poem?.topic == null) and (viewModel.topic != null)) {
+            showError(message = "Poem Must has a topic to be published!")
+            return false
         }
 
+        return true
     }
 
-    private fun navigateToPublish() {
-        val deeplink = getDeeplink(Destinations.PUBLISH)
-        navigate(deeplink)
+    private fun showConfirmPublishDialog() {
+        val alert = AlertView(
+            "Publish Your Art!",
+            "You are about to publish this poem. Do you wish you to continue?",
+            AlertStyle.IOS
+        )
+        alert.addAction(AlertAction("Yes", AlertActionStyle.NEGATIVE) {
+            viewModel.onPublishConfirmed()
+        })
+        alert.show(requireActivity() as AppCompatActivity)
+    }
+
+    private fun navigateToPoem(poem: Poem) {
+        composeActions.navigateToPoem(poem)
+    }
+
+    private fun navigateToPublish(poem: Poem) {
+        composeActions.navigateToPoem(poem)
     }
 
     private fun navigateBack() {

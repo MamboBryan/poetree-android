@@ -2,33 +2,26 @@ package com.mambo.poetree.ui
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import androidx.work.*
 import com.mambo.core.extensions.isNotNullOrEmpty
 import com.mambo.core.utils.IntentExtras
 import com.mambo.core.viewmodel.MainViewModel
-import com.mambo.core.work.InteractReminderWork
-import com.mambo.core.work.UploadTokenWork
+import com.mambo.poetree.NavigationMainDirections
 import com.mambo.poetree.R
 import com.mambo.poetree.databinding.ActivityMainBinding
 import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
 import com.mambobryan.navigation.extensions.getNavOptionsPopUpTo
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import timber.log.Timber
-import java.util.*
-import java.util.concurrent.TimeUnit
 
 
 @AndroidEntryPoint
@@ -120,7 +113,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateToFeeds() {
-        navController.navigate(getDeeplink(Destinations.FEED), getLoadingNavOptions())
+        // TODO: change to feeds direction
+        navController.navigate(NavigationMainDirections.toBookmarks())
     }
 
     private fun navigateToSetup() {

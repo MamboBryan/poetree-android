@@ -23,9 +23,18 @@ object LocalModule {
             .build()
 
     @Provides
+    fun provideTopicsDao(database: PoetreeDatabase) = database.topicsDao()
+
+    @Provides
     fun providePoemsDao(database: PoetreeDatabase) = database.poemsDao()
 
     @Provides
-    fun provideTopicsDao(database: PoetreeDatabase) = database.topicsDao()
+    fun providerBookmarksDao(database: PoetreeDatabase) = database.bookmarksDao()
+
+    @Provides
+    fun provideSearchedDao(database: PoetreeDatabase) = database.searchedDao()
+
+    @Provides
+    fun providerPublishedPoemsDao(database: PoetreeDatabase) = database.publishedDao()
 
 }

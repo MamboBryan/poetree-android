@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Poetree</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="dummy_txt_short"> Some Random Text    </string>
     <string name="dummy_txt_long"> I\'ve got my mom\'s old phone, but I can\'t afford a pricey wireless plan so I got a free phone number from TextNow and I use the app to talk to my friends for free  </string>

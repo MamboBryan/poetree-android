@@ -18,7 +18,6 @@ import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.util.*
-import kotlin.collections.ArrayList
 
 class WYSIWYG @SuppressLint("SetJavaScriptEnabled") constructor(
     context: Context,
@@ -62,6 +61,27 @@ class WYSIWYG @SuppressLint("SetJavaScriptEnabled") constructor(
     private var mTextChangeListener: OnTextChangeListener? = null
     private var mDecorationStateListener: OnDecorationStateListener? = null
     private var mLoadListener: AfterInitialLoadListener? = null
+    private var mOnTextChange: (() -> Unit)? = null
+
+    // No handling
+    var html: String?
+        get() = mContents
+        set(contents) {
+            var contents = contents
+            if (contents == null) {
+                contents = ""
+            }
+            try {
+                exec(
+                    "javascript:editor.setHtml('" + URLEncoder.encode(
+                        contents,
+                        "UTF-8"
+                    ).toString() + "');"
+                )
+            } catch (e: UnsupportedEncodingException) { // No handling
+            }
+            mContents = contents
+        }
 
     constructor(context: Context)
             : this(context, null) {
@@ -71,12 +91,33 @@ class WYSIWYG @SuppressLint("SetJavaScriptEnabled") constructor(
             : this(context, attrs, R.attr.webViewStyle) {
     }
 
+    init {
+        isVerticalScrollBarEnabled = false
+        isHorizontalScrollBarEnabled = false
+        settings.javaScriptEnabled = true
+        webChromeClient = WebChromeClient()
+        webViewClient = createWebviewClient()
+
+        loadUrl(SETUP_HTML)
+        applyAttributes(context, attrs)
+    }
+
+    companion object {
+        private const val SETUP_HTML = "file:///android_asset/editor.html"
+        private const val CALLBACK_SCHEME = "re-callback://"
+        private const val STATE_SCHEME = "re-state://"
+    }
+
     protected fun createWebviewClient(): EditorWebViewClient {
         return EditorWebViewClient()
     }
 
-    fun setOnTextChangeListener(listener: OnTextChangeListener?) {
-        mTextChangeListener = listener
+    fun onTextChanged(block: (content: String?, html: String?) -> Unit) {
+        mTextChangeListener = object : OnTextChangeListener {
+            override fun onTextChange(text: String?) {
+                block.invoke(html, mContents)
+            }
+        }
     }
 
     fun setOnDecorationChangeListener(listener: OnDecorationStateListener?) {
@@ -127,26 +168,6 @@ class WYSIWYG @SuppressLint("SetJavaScriptEnabled") constructor(
         }
         ta.recycle()
     }
-
-    // No handling
-    var html: String?
-        get() = mContents
-        set(contents) {
-            var contents = contents
-            if (contents == null) {
-                contents = ""
-            }
-            try {
-                exec(
-                    "javascript:editor.setHtml('" + URLEncoder.encode(
-                        contents,
-                        "UTF-8"
-                    ).toString() + "');"
-                )
-            } catch (e: UnsupportedEncodingException) { // No handling
-            }
-            mContents = contents
-        }
 
     fun setEditorFontColor(color: Int) {
         val hex = convertHexColorString(color)
@@ -417,20 +438,4 @@ class WYSIWYG @SuppressLint("SetJavaScriptEnabled") constructor(
         }
     }
 
-    companion object {
-        private const val SETUP_HTML = "file:///android_asset/editor.html"
-        private const val CALLBACK_SCHEME = "re-callback://"
-        private const val STATE_SCHEME = "re-state://"
-    }
-
-    init {
-        isVerticalScrollBarEnabled = false
-        isHorizontalScrollBarEnabled = false
-        settings.javaScriptEnabled = true
-        webChromeClient = WebChromeClient()
-        webViewClient = createWebviewClient()
-
-        loadUrl(SETUP_HTML)
-        applyAttributes(context, attrs)
-    }
 }

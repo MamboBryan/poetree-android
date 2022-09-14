@@ -6,6 +6,49 @@
     android:background="?attr/colorSurface"
     android:elevation="4dp">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_editing"
+        android:layout_width="0dp"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_comment_edit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawablePadding="16dp"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp"
+            android:text="Editing"
+            android:textColor="?attr/colorOnPrimary"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/iv_comment_close"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_comment_close"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:src="@drawable/ic_baseline_close_24"
+            android:tint="?attr/colorOnPrimary"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_comment_edit"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_comment_edit" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
     <EditText
         android:id="@+id/edt_comment"
         android:layout_width="0dp"
@@ -18,7 +61,8 @@
         android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/frameLayout"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_editing" />
 
     <FrameLayout
         android:id="@+id/frameLayout"
@@ -43,8 +87,8 @@
             android:id="@+id/progress_comment"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_margin="16dp"
             android:layout_gravity="center"
+            android:layout_margin="16dp"
             android:indeterminate="true" />
 
     </FrameLayout>

@@ -1,8 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_main"
-    app:startDestination="@id/flow_loading">
+    android:id="@+id/navigation_main"
+    app:startDestination="@id/flow_feeds">
+
+    <action
+        android:id="@+id/to_feeds"
+        app:destination="@+id/flow_feeds" />
+
+    <action
+        android:id="@+id/to_bookmarks"
+        app:destination="@+id/flow_bookmarks" />
+
+    <action
+        android:id="@+id/from_feeds_to_profile"
+        app:destination="@+id/flow_profile" />
+
+    <action
+        android:id="@+id/from_feeds_to_settings"
+        app:destination="@+id/flow_settings" />
+
+    <action
+        android:id="@+id/to_compose"
+        app:destination="@+id/flow_compose">
+
+        <argument
+            android:name="poem"
+            app:argType="com.mambo.data.models.Poem"
+            app:nullable="true" />
+
+    </action>
+
+    <action
+        android:id="@+id/from_poem_to_comments"
+        app:destination="@+id/flow_comments">
+        <argument
+            android:name="poem"
+            app:argType="com.mambo.data.models.Poem" />
+    </action>
+
+    <action
+        android:id="@+id/from_poem_to_compose"
+        app:destination="@+id/flow_compose">
+        <argument
+            android:name="poem"
+            app:argType="com.mambo.data.models.Poem" />
+    </action>
+
+    <action
+        android:id="@+id/to_poem"
+        app:destination="@+id/flow_poem">
+        <argument
+            android:name="poem"
+            app:argType="com.mambo.data.models.Poem" />
+    </action>
+
+    <action
+        android:id="@+id/to_artist"
+        app:destination="@+id/flow_artist">
+        <argument
+            android:name="artist"
+            app:argType="com.mambo.data.models.User" />
+    </action>
+
+    <action
+        android:id="@+id/to_topic"
+        app:destination="@+id/flow_topic">
+        <argument
+            android:name="topic"
+            app:argType="com.mambo.data.models.Topic"
+            app:nullable="true" />
+    </action>
+
+    <action
+        android:id="@+id/to_search"
+        app:destination="@+id/flow_search">
+        <argument
+            android:name="topic"
+            app:argType="com.mambo.data.models.Topic"
+            app:nullable="true" />
+    </action>
+
 
     <include app:graph="@navigation/flow_feeds" />
     <include app:graph="@navigation/flow_explore" />

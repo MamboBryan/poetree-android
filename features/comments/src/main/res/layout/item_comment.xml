@@ -4,92 +4,97 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp">
-
-    <com.mikhaellopez.circularimageview.CircularImageView
-        android:id="@+id/iv_comment_user"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="16dp"
-        app:civ_border="false"
-        android:background="?attr/selectableItemBackground"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/profile" />
+    android:paddingTop="8dp">
 
     <TextView
         android:id="@+id/tv_comment_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="TextView"
         android:textColor="?attr/colorOnBackground"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/iv_comment_user"
-        app:layout_constraintTop_toTopOf="@+id/iv_comment_user" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="TextView" />
 
     <TextView
         android:id="@+id/tv_comment_days"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_comment_user"
-        app:layout_constraintStart_toEndOf="@+id/tv_comment_user"
-        app:layout_constraintTop_toTopOf="@+id/tv_comment_user" />
+        app:layout_constraintStart_toStartOf="@+id/tv_comment_user"
+        app:layout_constraintTop_toBottomOf="@+id/tv_comment_user"
+        tools:text="TextView" />
 
     <TextView
         android:id="@+id/tv_comment_content"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tv_comment_user"
-        app:layout_constraintTop_toBottomOf="@+id/tv_comment_user" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_comment_days"
+        tools:text="TextView" />
 
     <View
         android:id="@+id/view"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="@color/color_divider"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_comment_like" />
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <ImageView
-        android:id="@+id/iv_comment_actions"
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_comment_like"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_comment_user"
-        app:layout_constraintDimensionRatio="h,1:1"
-        android:background="?attr/selectableItemBackground"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/iv_comment_user"
-        app:srcCompat="@drawable/ic_baseline_more_vert_24" />
-
-    <ImageView
-        android:id="@+id/iv_comment_like"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="16dp"
-        android:padding="4dp"
-        android:background="?attr/selectableItemBackground"
+        android:layout_margin="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_comment_days"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="@+id/tv_comment_content"
-        app:layout_constraintTop_toBottomOf="@+id/tv_comment_content"
-        app:srcCompat="@drawable/ic_baseline_favorite_24" />
+        app:layout_constraintTop_toTopOf="@+id/tv_comment_user"
+        tools:srcCompat="@drawable/ic_baseline_favorite_16" />
 
     <TextView
         android:id="@+id/tv_comment_likes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_comment_like"
-        app:layout_constraintEnd_toStartOf="@+id/iv_comment_like"
-        app:layout_constraintTop_toTopOf="@+id/iv_comment_like" />
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tv_comment_content"
+        app:layout_constraintTop_toBottomOf="@+id/tv_comment_content"
+        tools:text="TextView" />
+
+    <TextView
+        android:id="@+id/tv_comment_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="update"
+        android:textColor="?attr/colorPrimary"
+        app:layout_constraintStart_toEndOf="@+id/tv_comment_likes"
+        app:layout_constraintTop_toTopOf="@+id/tv_comment_likes" />
+
+    <TextView
+        android:id="@+id/tv_comment_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="delete"
+        android:textColor="?attr/colorPrimary"
+        app:layout_constraintStart_toEndOf="@+id/tv_comment_update"
+        app:layout_constraintTop_toTopOf="@+id/tv_comment_update" />
+
+    <TextView
+        android:id="@+id/tv_comment_edited"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_comment_days"
+        app:layout_constraintStart_toEndOf="@+id/tv_comment_days"
+        app:layout_constraintTop_toBottomOf="@+id/tv_comment_user"
+        tools:text="TextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

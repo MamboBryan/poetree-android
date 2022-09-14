@@ -12,6 +12,7 @@ data class User(
     var updatedAt: String? = null,
     var name: String? = null,
     var image: String? = null,
+    var email: String? = null,
     var bio: String? = null,
     var dateOfBirth: String? = null,
     var gender: Int? = null

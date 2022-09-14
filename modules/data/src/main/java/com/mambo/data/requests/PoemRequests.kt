@@ -4,11 +4,19 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class EditPoemRequest(
+    val poemId: String,
     val title: String?,
     val content: String?,
     val html: String?,
     val topic: Int?,
-    val poemId: String? = null,
+)
+
+@Serializable
+data class CreatePoemRequest(
+    val title: String,
+    val content: String,
+    val html: String,
+    val topic: Int,
 )
 
 @Serializable

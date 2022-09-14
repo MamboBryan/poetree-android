@@ -1,3 +1,4 @@
+import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.artifacts.dsl.DependencyHandler
 
 fun DependencyHandler.implementation(name: String) {
@@ -27,3 +28,19 @@ fun DependencyHandler.testImplementation(name: String) {
 fun DependencyHandler.androidTestImplementation(name: String) {
     add("androidTestImplementation", name)
 }
+
+fun DependencyHandler.project(
+    path: String,
+    configuration: String? = null
+): ProjectDependency =
+
+    uncheckedCast(
+        project(
+            if (configuration != null) mapOf("path" to path, "configuration" to configuration)
+            else mapOf("path" to path)
+        )
+    )
+
+@Suppress("unchecked_cast")
+fun <T> uncheckedCast(obj: Any?): T =
+    obj as T

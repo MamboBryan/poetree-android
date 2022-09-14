@@ -10,15 +10,15 @@ plugins {
 }
 
 android {
-    compileSdkVersion(Configs.compileSdkVersion)
-    buildToolsVersion(Configs.buildToolsVersion)
+    compileSdkVersion(Android.compileSdkVersion)
+    buildToolsVersion(Android.buildToolsVersion)
 
     defaultConfig {
         applicationId = "com.mambo.poetree"
-        minSdkVersion(Configs.minSdkVersion)
-        targetSdkVersion(Configs.targetSdkVersion)
-        versionCode = Configs.versionCode
-        versionName = Configs.versionName
+        minSdkVersion(Android.minSdkVersion)
+        targetSdkVersion(Android.targetSdkVersion)
+        versionCode = Android.versionCode
+        versionName = Android.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -59,7 +59,7 @@ dependencies {
     implementation(project(Modules.Commons.navigation))
 
     implementation(project(Modules.Features.auth))
-    implementation(project(Modules.Features.home))
+    implementation(project(Modules.Features.feed))
     implementation(project(Modules.Features.poem))
     implementation(project(Modules.Features.search))
     implementation(project(Modules.Features.artist))
@@ -129,9 +129,6 @@ dependencies {
     implementation(Dependencies.Libraries.okHttp)
     implementation(Dependencies.Libraries.androidXStartup)
     implementation ("androidx.core:core-splashscreen:1.0.0-beta01")
-
-    debugImplementation(Dependencies.Libraries.chuckDebug)
-    releaseImplementation(Dependencies.Libraries.chuckRelease)
 
     testImplementation(Dependencies.Libraries.junit)
 
