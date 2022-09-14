@@ -11,6 +11,7 @@ import com.mambo.data.models.Bookmark
 import com.mambo.data.models.LocalPoem
 import com.mambo.data.models.Poem
 import com.mambo.data.models.Topic
+import com.mambo.data.preferences.UserPreferences
 import com.mambo.data.requests.CreatePoemRequest
 import com.mambo.data.requests.EditPoemRequest
 import com.mambo.data.requests.PoemRequest
@@ -22,9 +23,14 @@ import com.mambo.local.daos.PublishedDao
 import com.mambo.local.daos.SearchedDao
 import com.mambo.remote.service.PoemsApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class PoemRepository @Inject constructor() {
+
+    @Inject
+    lateinit var preferences: UserPreferences
 
     @Inject
     lateinit var database: PoetreeDatabase
@@ -126,6 +132,11 @@ class PoemRepository @Inject constructor() {
             }
         }
     ).flow
+
+    fun getMyPoems() = Pager(PagingConfig(PAGE_SIZE)) {
+        val id = runBlocking { preferences.user.firstOrNull()?.id ?: "" }
+        UserPoemsMediator(id, poemsApi)
+    }.flow
 
     fun getUserPoems(userId: String): Flow<PagingData<Poem>> = Pager(PagingConfig(PAGE_SIZE)) {
         UserPoemsMediator(userId, poemsApi)

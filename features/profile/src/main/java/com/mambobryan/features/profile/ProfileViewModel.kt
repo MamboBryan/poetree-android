@@ -2,16 +2,12 @@ package com.mambobryan.features.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
 import com.mambo.core.repository.PoemRepository
 import com.mambo.core.repository.UserRepository
-import com.mambo.data.models.Poem
 import com.mambo.data.preferences.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -31,8 +27,8 @@ class ProfileViewModel @Inject constructor(
 
     val userDetails = preferences.user
 
-    private val _poems = userDetails.map { if (it != null) poemRepository.getUserPoems(it.id!!).first() else null }
-    val poems: Flow<PagingData<Poem>?> get() = _poems
+    private val _poems = poemRepository.getMyPoems()
+    val poems get() = _poems
 
     init {
         runBlocking { mode = preferences.darkMode.first() }
@@ -70,8 +66,8 @@ class ProfileViewModel @Inject constructor(
 
     sealed class ProfileEvent {
         object ShowDarkModeDialog : ProfileEvent()
-        data class ShowError(val message: String) : ProfileEvent()
         object HideLoading : ProfileEvent()
+        data class ShowError(val message: String) : ProfileEvent()
     }
 
 }
