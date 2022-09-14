@@ -47,10 +47,7 @@ class App : Application(), Configuration.Provider {
     }
 
     private fun setupNetworkMonitor() {
-        Timber.i("Network Util called")
         networkMonitoringUtil.register()
-        Timber.i("Network Util finished")
-
     }
 
     private fun setupNotificationChannels() {
@@ -58,12 +55,8 @@ class App : Application(), Configuration.Provider {
     }
 
     private fun initTheme() {
-
         applicationScope.launch {
-
-            val appTheme = preferences.darkMode
-            appTheme.collectLatest { ThemeHelper.applyTheme(it) }
-
+            preferences.darkMode.collectLatest { ThemeHelper.applyTheme(it) }
         }
     }
 

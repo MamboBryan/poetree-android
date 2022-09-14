@@ -9,7 +9,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
-import androidx.recyclerview.widget.SimpleItemAnimator
 import coil.load
 import coil.size.Scale
 import coil.transform.CircleCropTransformation
@@ -52,15 +51,17 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
 
         lifecycleScope.launchWhenStarted {
             adapter.loadStateFlow.collectLatest { state: CombinedLoadStates ->
-                when (state.source.refresh) {
-                    is LoadState.Loading -> binding.layoutFeedState.showLoading()
-                    is LoadState.Error -> binding.layoutFeedState.showError()
-                    is LoadState.NotLoading -> {
-                        if (state.append.endOfPaginationReached && adapter.itemCount < 1)
-                            binding.layoutFeedState.showEmpty()
-                        else
-                            binding.layoutFeedState.showContent()
+                binding.layoutFeedState.apply {
+                    when (state.source.refresh) {
+                        is LoadState.Loading -> showLoading()
+                        is LoadState.Error -> showError()
+                        is LoadState.NotLoading -> {
+                            if (state.append.endOfPaginationReached && adapter.itemCount < 1)
+                                showEmpty()
+                            else
+                                showContent()
 
+                        }
                     }
                 }
             }
@@ -150,7 +151,6 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             btnCreatePoem.setOnClickListener { navigateToCompose() }
 
             layoutFeedState.apply {
-                (recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
                 buttonRetry.setOnClickListener { adapter.retry() }
                 stateContent.setOnRefreshListener { adapter.refresh() }
                 recyclerView.adapter = adapter

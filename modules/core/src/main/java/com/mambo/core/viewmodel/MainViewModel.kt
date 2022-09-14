@@ -9,7 +9,6 @@ import androidx.paging.cachedIn
 import com.google.gson.Gson
 import com.mambo.core.repository.PoemRepository
 import com.mambo.core.repository.TopicsRepository
-import com.mambo.core.utils.ConnectionLiveData
 import com.mambo.data.models.Poem
 import com.mambo.data.models.Topic
 import com.mambo.data.models.User
@@ -38,6 +37,7 @@ class MainViewModel @Inject constructor(
     var isOnBoarded: Boolean
     var isLoggedIn: Boolean
     var isUserSetup: Boolean
+    var darkMode: Int
 
     val darkModeFlow = preferences.darkMode
 
@@ -75,6 +75,7 @@ class MainViewModel @Inject constructor(
 
     init {
         runBlocking {
+            darkMode = preferences.darkMode.first()
             isOnBoarded = preferences.isOnBoarded.first()
             isLoggedIn = preferences.isLoggedIn.first()
             isUserSetup = preferences.isUserSetup.first()
