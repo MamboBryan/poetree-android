@@ -3,6 +3,7 @@ package com.mambo.poetree
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
+import com.mambo.core.utils.NetworkMonitoringUtil
 import com.mambo.core.utils.NotificationsHelper
 import com.mambo.core.utils.ThemeHelper
 import com.mambo.data.preferences.UserPreferences
@@ -26,6 +27,10 @@ class App : Application(), Configuration.Provider {
 
     @Inject
     lateinit var preferences: UserPreferences
+
+    @Inject
+    lateinit var networkMonitoringUtil: NetworkMonitoringUtil
+
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     override fun getWorkManagerConfiguration() =
@@ -35,9 +40,17 @@ class App : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
-        setupNotificationChannels()
         initTheme()
         plantTimber()
+        setupNetworkMonitor()
+        setupNotificationChannels()
+    }
+
+    private fun setupNetworkMonitor() {
+        Timber.i("Network Util called")
+        networkMonitoringUtil.register()
+        Timber.i("Network Util finished")
+
     }
 
     private fun setupNotificationChannels() {

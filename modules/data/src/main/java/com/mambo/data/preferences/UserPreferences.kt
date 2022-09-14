@@ -33,6 +33,7 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
         val USER_DETAILS = stringPreferencesKey("user_details")
         val FORCED_SIGN_OUT = booleanPreferencesKey("logged_out")
         val IMAGE_URL = stringPreferencesKey("image_url")
+        val HAS_NETWORK_CONNECTION = booleanPreferencesKey("has_network_connection")
     }
 
     val darkMode = dataStore.data.map { prefs ->
@@ -65,6 +66,14 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
 
     val forcedLogOut = dataStore.data.map { prefs ->
         prefs[PreferencesKeys.FORCED_SIGN_OUT]
+    }
+
+    val hasNetworkConnection = dataStore.data.map { prefs ->
+        prefs[PreferencesKeys.HAS_NETWORK_CONNECTION]
+    }
+
+    suspend fun updateNetworkConnection(isConnected: Boolean) {
+        dataStore.edit { prefs -> prefs[PreferencesKeys.HAS_NETWORK_CONNECTION] = isConnected }
     }
 
     val user = dataStore.data.map { prefs ->

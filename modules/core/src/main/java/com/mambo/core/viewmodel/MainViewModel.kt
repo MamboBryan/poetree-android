@@ -31,9 +31,6 @@ class MainViewModel @Inject constructor(
     private val topicRepository: TopicsRepository
 ) : AndroidViewModel(application) {
 
-    private val _connection = ConnectionLiveData(application)
-    val connection: ConnectionLiveData get() = _connection
-
     private val _eventChannel = Channel<MainEvent>()
     val events = _eventChannel.receiveAsFlow()
 
@@ -43,6 +40,9 @@ class MainViewModel @Inject constructor(
     var isUserSetup: Boolean
 
     val darkModeFlow = preferences.darkMode
+
+    private val _hasNetworkConnection = preferences.hasNetworkConnection
+    val hasNetworkConnection get() = _hasNetworkConnection
 
     val feedPoems = repository.publishedPoems().cachedIn(viewModelScope)
 

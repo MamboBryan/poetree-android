@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
@@ -21,6 +22,7 @@ import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
 import com.mambobryan.navigation.extensions.getNavOptionsPopUpTo
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 
 
@@ -45,13 +47,17 @@ class MainActivity : AppCompatActivity() {
 
         binding.navBottomMain.setupWithNavController(navController)
 
-        viewModel.connection.observe(this) { isNetworkAvailable ->
-            binding.layoutConnection.constraintLayoutNetworkStatus.isVisible = !isNetworkAvailable
+        lifecycleScope.launchWhenResumed {
+            viewModel.hasNetworkConnection.collectLatest { isNetworkAvailable ->
+                binding.layoutConnection.constraintLayoutNetworkStatus.isVisible =
+                    isNetworkAvailable == false
+            }
         }
 
         setUpDestinationListener()
 
         initNavigation()
+
 
     }
 
