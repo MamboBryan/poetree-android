@@ -233,6 +233,7 @@ class PoemFragment : Fragment(R.layout.fragment_poem) {
 //            )
 
             if (poem.isLocal() or poem.isMine(viewModel.userId)) {
+                toolbar.menu.clear()
                 toolbar.inflateMenu(R.menu.menu_poem)
                 val publish = toolbar.menu.findItem(R.id.action_poem_publish)
                 publish.isVisible = poem.isLocal()
