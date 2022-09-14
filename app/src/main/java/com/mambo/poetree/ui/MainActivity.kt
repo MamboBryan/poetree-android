@@ -113,8 +113,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateToFeeds() {
-        // TODO: change to feeds direction
-        navController.navigate(NavigationMainDirections.toBookmarks())
+        navController.navigate(NavigationMainDirections.toFeeds())
     }
 
     private fun navigateToSetup() {

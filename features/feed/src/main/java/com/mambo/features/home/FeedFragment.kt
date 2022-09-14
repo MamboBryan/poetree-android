@@ -1,5 +1,6 @@
 package com.mambo.features.home
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -8,21 +9,23 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.SimpleItemAnimator
 import coil.load
 import coil.size.Scale
 import coil.transform.CircleCropTransformation
 import com.mambo.core.adapters.GenericStateAdapter
-import com.mambo.core.adapters.PoemPagingAdapter
-import com.mambo.core.utils.showContent
-import com.mambo.core.utils.showEmpty
-import com.mambo.core.utils.showError
-import com.mambo.core.utils.showLoading
+import com.mambo.core.adapters.LazyPagingAdapter
+import com.mambo.core.adapters.getInflater
+import com.mambo.core.extensions.startDrawable
+import com.mambo.core.utils.*
 import com.mambo.core.viewmodel.MainViewModel
 import com.mambo.data.models.Poem
 import com.mambo.features.home.databinding.FragmentFeedBinding
+import com.mambo.ui.databinding.ItemPoemBinding
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import org.ocpsoft.prettytime.PrettyTime
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -36,8 +39,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
     @Inject
     lateinit var feedActions: FeedActions
 
-    @Inject
-    lateinit var adapter: PoemPagingAdapter
+    private val adapter = LazyPagingAdapter<Poem, ItemPoemBinding>(Poem.COMPARATOR)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -79,6 +81,68 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
     }
 
     private fun initViews() {
+
+        adapter.apply {
+            onCreate { ItemPoemBinding.inflate(it.getInflater(), it, false) }
+            onBind { poem: Poem ->
+                this.apply {
+
+                    val date = poem.updatedAt.toDate()
+                    val duration = PrettyTime().formatDuration(date)
+                    val message = " \u2022 $duration "
+
+                    tvPoemUsername.text = poem.user?.name
+                    tvPoemTitle.text = poem.title
+                    tvPoemDate.text = message
+
+                    val likeIcon = when (poem.liked) {
+                        true -> com.mambo.ui.R.drawable.liked
+                        false -> com.mambo.ui.R.drawable.unliked
+                    }
+                    tvLikes.apply {
+                        text = prettyCount(poem.likes)
+                        startDrawable(likeIcon)
+                    }
+
+                    val commentIcon = when (poem.commented) {
+                        true -> com.mambo.ui.R.drawable.commented
+                        false -> com.mambo.ui.R.drawable.uncommented
+                    }
+                    tvComments.apply {
+                        text = prettyCount(poem.comments)
+                        startDrawable(commentIcon)
+                    }
+
+                    val bookmarkIcon = when (poem.bookmarked) {
+                        true -> com.mambo.ui.R.drawable.bookmarked
+                        false -> com.mambo.ui.R.drawable.unbookmarked
+                    }
+                    tvBookmarks.apply {
+                        text = prettyCount(poem.bookmarks)
+                        startDrawable(bookmarkIcon)
+                    }
+
+                    val readIcon = when (poem.read) {
+                        true -> com.mambo.ui.R.drawable.read
+                        false -> com.mambo.ui.R.drawable.unread
+                    }
+                    tvReads.apply {
+                        text = prettyCount(poem.reads)
+                        startDrawable(readIcon)
+                    }
+
+                    val color = poem.topic?.color ?: "#fefefe"
+                    layoutPoem.setBackgroundColor(Color.parseColor(color))
+
+                }
+            }
+            onItemClicked { navigateToPoem(poem = it) }
+            withLoadStateHeaderAndFooter(
+                header = GenericStateAdapter(adapter::retry),
+                footer = GenericStateAdapter(adapter::retry)
+            )
+        }
+
         binding.apply {
 
             imageUser.setOnClickListener { navigateToProfile() }
@@ -86,23 +150,13 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             btnCreatePoem.setOnClickListener { navigateToCompose() }
 
             layoutFeedState.apply {
+                (recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
                 buttonRetry.setOnClickListener { adapter.retry() }
+                stateContent.setOnRefreshListener { adapter.refresh() }
                 recyclerView.adapter = adapter
-                recyclerView.setHasFixedSize(true)
-                stateContent.setOnRefreshListener {
-                    recyclerView.scrollToPosition(0)
-                    adapter.refresh()
-                }
             }
 
         }
-
-        adapter.onPoemClicked { navigateToPoem(poem = it) }
-
-        adapter.withLoadStateHeaderAndFooter(
-            header = GenericStateAdapter(adapter::retry),
-            footer = GenericStateAdapter(adapter::retry)
-        )
 
     }
 
