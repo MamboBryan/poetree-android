@@ -23,8 +23,8 @@ class PoemsClient @Inject constructor(
     fun client() = HttpClient(OkHttp) {
 
         engine {
-            this.addInterceptor(authInterceptor)
             this.addInterceptor(networkInterceptor)
+            this.addInterceptor(authInterceptor)
             this.addInterceptor(loggingInterceptor)
         }
 

@@ -9,7 +9,6 @@ import androidx.paging.cachedIn
 import com.google.gson.Gson
 import com.mambo.core.repository.PoemRepository
 import com.mambo.core.repository.TopicsRepository
-import com.mambo.core.utils.ConnectionLiveData
 import com.mambo.data.models.Poem
 import com.mambo.data.models.Topic
 import com.mambo.data.models.User
@@ -31,9 +30,6 @@ class MainViewModel @Inject constructor(
     private val topicRepository: TopicsRepository
 ) : AndroidViewModel(application) {
 
-    private val _connection = ConnectionLiveData(application)
-    val connection: ConnectionLiveData get() = _connection
-
     private val _eventChannel = Channel<MainEvent>()
     val events = _eventChannel.receiveAsFlow()
 
@@ -41,8 +37,12 @@ class MainViewModel @Inject constructor(
     var isOnBoarded: Boolean
     var isLoggedIn: Boolean
     var isUserSetup: Boolean
+    var darkMode: Int
 
     val darkModeFlow = preferences.darkMode
+
+    private val _hasNetworkConnection = preferences.hasNetworkConnection
+    val hasNetworkConnection get() = _hasNetworkConnection
 
     val feedPoems = repository.publishedPoems().cachedIn(viewModelScope)
 
@@ -75,6 +75,7 @@ class MainViewModel @Inject constructor(
 
     init {
         runBlocking {
+            darkMode = preferences.darkMode.first()
             isOnBoarded = preferences.isOnBoarded.first()
             isLoggedIn = preferences.isLoggedIn.first()
             isUserSetup = preferences.isUserSetup.first()

@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
@@ -21,8 +23,10 @@ import com.mambobryan.navigation.Destinations
 import com.mambobryan.navigation.extensions.getDeeplink
 import com.mambobryan.navigation.extensions.getNavOptionsPopUpTo
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
-
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -35,6 +39,10 @@ class MainActivity : AppCompatActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
 
+        // set dark mode
+        val mode = runBlocking { viewModel.darkModeFlow.firstOrNull() }
+        mode?.let { AppCompatDelegate.setDefaultNightMode(it) }
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -45,13 +53,16 @@ class MainActivity : AppCompatActivity() {
 
         binding.navBottomMain.setupWithNavController(navController)
 
-        viewModel.connection.observe(this) { isNetworkAvailable ->
-            binding.layoutConnection.constraintLayoutNetworkStatus.isVisible = !isNetworkAvailable
-        }
-
         setUpDestinationListener()
 
         initNavigation()
+
+        lifecycleScope.launchWhenResumed {
+            viewModel.hasNetworkConnection.collectLatest { isNetworkAvailable ->
+                binding.layoutConnection.constraintLayoutNetworkStatus.isVisible =
+                    isNetworkAvailable == false
+            }
+        }
 
     }
 
@@ -113,8 +124,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateToFeeds() {
-        // TODO: change to feeds direction
-        navController.navigate(NavigationMainDirections.toBookmarks())
+        navController.navigate(NavigationMainDirections.toFeeds())
     }
 
     private fun navigateToSetup() {

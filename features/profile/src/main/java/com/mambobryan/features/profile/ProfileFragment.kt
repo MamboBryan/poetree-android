@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -26,7 +25,6 @@ import com.mambo.core.adapters.GenericStateAdapter
 import com.mambo.core.adapters.LazyPagingAdapter
 import com.mambo.core.adapters.getInflater
 import com.mambo.core.utils.*
-import com.mambo.core.viewmodel.MainViewModel
 import com.mambo.data.models.Poem
 import com.mambo.ui.databinding.ItemPoemArtistBinding
 import com.mambobryan.features.profile.databinding.FragmentProfileBinding
@@ -46,7 +44,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private val binding by viewBinding(FragmentProfileBinding::bind)
     private val viewModel: ProfileViewModel by viewModels()
-    private val sharedViewModel: MainViewModel by activityViewModels()
     private val adapter = LazyPagingAdapter<Poem, ItemPoemArtistBinding>(Poem.COMPARATOR)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,13 +62,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                         Snackbar.make(requireView(), event.message, Snackbar.LENGTH_LONG).show()
                     }
                 }
-            }
-        }
-
-        lifecycleScope.launchWhenStarted {
-            sharedViewModel.publicPoems.collectLatest {
-                adapter.submitData(it)
-                binding.layoutProfilePoems.stateContent.isRefreshing = false
             }
         }
 
@@ -103,7 +93,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                         tvArtistBookmarks.text = prettyCount(userDetails.bookmarks ?: 0)
                         tvArtistLikes.text = prettyCount(userDetails.likes ?: 0)
 
-                        ivArtistMage.load(Color.parseColor("#000000")) {
+                        ivArtistMage.load(it.image) {
                             scale(Scale.FILL)
                             crossfade(true)
                             placeholder(R.drawable.ic_baseline_account_circle_24)
@@ -117,10 +107,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
         lifecycleScope.launchWhenResumed {
             viewModel.poems.collectLatest {
-                it?.let { data ->
-                    adapter.submitData(data)
-                    binding.layoutProfilePoems.stateContent.isRefreshing = false
-                }
+                adapter.submitData(it)
+                binding.layoutProfilePoems.stateContent.isRefreshing = false
             }
         }
 
@@ -128,7 +116,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private fun initViews() {
         adapter.apply {
-
             onCreate { ItemPoemArtistBinding.inflate(it.getInflater(), it, false) }
             onItemClicked { profileActions.navigateToPoem(it) }
             onBind { poem ->

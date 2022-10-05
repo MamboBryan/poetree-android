@@ -108,14 +108,12 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
                     tvPublishedTitle.text = poem.title
                     tvPublishedDuration.text = duration
 
-                    val color = poem.topic?.color ?: "#84a1f7"
+                    val color = poem.topic?.color ?: "#ECF0FE"
                     layoutPoemLibrary.setBackgroundColor(Color.parseColor(color))
 
                 }
             }
-            onItemClicked {
-                libraryActions.navigateToPoem(it)
-            }
+            onItemClicked { libraryActions.navigateToPoem(it) }
             withLoadStateHeaderAndFooter(
                 header = GenericStateAdapter(adapter::retry),
                 footer = GenericStateAdapter(adapter::retry)

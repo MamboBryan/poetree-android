@@ -16,6 +16,7 @@
         android:id="@+id/layout_scroll_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:contentScrim="?attr/colorPrimary"
         android:orientation="vertical">
 
         <include
