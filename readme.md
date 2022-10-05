@@ -3,7 +3,7 @@
 
 # Poetree
 
-![GitHub Repo stars](https://img.shields.io:/github/stars/MamboBryan/poetree?style=for-the-badge) ![GitHub branch checks state](https://img.shields.io:/github/checks-status/MamboBryan/poetree/develop?style=for-the-badge)
+![GitHub Repo stars](https://img.shields.io:/github/stars/MamboBryan/poetree-android?style=for-the-badge) ![GitHub branch checks state](https://img.shields.io:/github/checks-status/MamboBryan/poetree-android/main?style=for-the-badge)
 
 
 ## Overview
@@ -53,8 +53,8 @@ Poetree provides the following features for users
 
 ## Contributing
 
-![GitHub tag (latest by date)](https://img.shields.io:/github/v/tag/MamboBryan/poetree?style=for-the-badge)
-![GitHub contributors](https://img.shields.io:/github/contributors/MamboBryan/poetree?style=for-the-badge) ![GitHub last commit](https://img.shields.io:/github/last-commit/MamboBryan/poetree?style=for-the-badge) [![Good first issues](https://img.shields.io/github/issues/MamboBryan/poetree/good%20first%20issue?style=for-the-badge)](https://github.com/MamboBryan/poetree/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) ![GitHub](https://img.shields.io:/github/license/MamboBryan/poetree?style=for-the-badge) ![GitHub issues](https://img.shields.io:/github/issues-raw/MamboBryan/poetree?style=for-the-badge) ![GitHub pull requests](https://img.shields.io:/github/issues-pr/MamboBryan/poetree?style=for-the-badge) 
+![GitHub tag (latest by date)](https://img.shields.io:/github/v/tag/MamboBryan/poetree-android?style=for-the-badge)
+![GitHub contributors](https://img.shields.io:/github/contributors/MamboBryan/poetree-android?style=for-the-badge) ![GitHub last commit](https://img.shields.io:/github/last-commit/MamboBryan/poetree-android?style=for-the-badge) [![Good first issues](https://img.shields.io/github/issues/MamboBryan/poetree-android/good%20first%20issue?style=for-the-badge)](https://github.com/MamboBryan/poetree-android/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) ![GitHub](https://img.shields.io:/github/license/MamboBryan/poetree-android?style=for-the-badge) ![GitHub issues](https://img.shields.io:/github/issues-raw/MamboBryan/poetree-android?style=for-the-badge) ![GitHub pull requests](https://img.shields.io:/github/issues-pr/MamboBryan/poetree-android?style=for-the-badge) 
 
 Your contributions are especially welcome.
 Whether it comes in the form of code patches, ideas, discussion, bug reports, encouragement or criticism, your input is needed.
