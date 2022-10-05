@@ -8,13 +8,14 @@
 
 ## Overview
 
-The best open community built for poetry lovers.
+The open community built for poetry lovers.
 
 Poetree is a minimalistic poetry app that helps people freely access art from a global community full of poetry lovers. Whether a reader or a composer, we can all benefit from the beautiful and diverse library of poems and composers.
 
 Why don't you give it a try?
 <br>
-[<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Download from Google Play" height="75">](https://play.google.com/store/apps/details?id=com.mambo.poetree)
+
+[//]: # ([<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Download from Google Play" height="75">]&#40;https://play.google.com/store/apps/details?id=com.mambo.poetree&#41;)
 
 ## Features
 
