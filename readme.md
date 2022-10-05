@@ -59,7 +59,7 @@ Poetree provides the following features for users
 Your contributions are especially welcome.
 Whether it comes in the form of code patches, ideas, discussion, bug reports, encouragement or criticism, your input is needed.
 
-Visit [wiki](https://github.com/MamboBryan/poetree/wiki) to get started.
+[//]: # (Visit [wiki]&#40;https://github.com/MamboBryan/poetree/wiki&#41; to get started.)
 
 ## Sponsor
 
