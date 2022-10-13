@@ -61,6 +61,31 @@ Whether it comes in the form of code patches, ideas, discussion, bug reports, en
 
 [//]: # (Visit [wiki]&#40;https://github.com/MamboBryan/poetree/wiki&#41; to get started.)
 
+### Setup
+
+#### Step 1
+- Fork the repo
+  - on the top right side of the [repository](https://github.com/MamboBryan/poetree-android) click on fork
+  - on the next page you can change the repo name (`optional`) and add a description (`optional`)
+  - check if you want to copy the default branch only
+  - click `create fork`
+
+#### Step 2
+- Generate a Personal Access Token for GitHub
+  - Inside you GitHub account:
+  - Settings -> Developer Settings -> Personal Access Tokens -> Generate new token
+  - Make sure you select the following scopes (“ read:packages”) and Generate a token
+  - After Generating make sure to copy your new personal access token. You cannot see it again! The only option is to generate a new key.
+
+#### Step 3
+- Store your GitHub — Personal Access Token details
+  - Create a github.properties file within your root Android project
+  - In case of a public repository make sure you add this file to .gitignore for keep the token private
+  - Add properties gpr.usr=GITHUB_USERID and gpr.key=PERSONAL_ACCESS_TOKEN
+  - Replace GITHUB_USERID with personal/organisation Github User ID and PERSONAL_ACCESS_TOKEN with the token generated in #Step 1
+
+You're all set. `Build` and `Run`the project!
+
 ## Sponsor
 
 ![GitHub Sponsors](https://img.shields.io:/github/sponsors/MamboBryan?style=for-the-badge)
